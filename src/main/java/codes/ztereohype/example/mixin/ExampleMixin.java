@@ -36,11 +36,14 @@ public class ExampleMixin {
 
 //	@Inject(at = @At(value="INVOKE", shift = At.Shift.AFTER, target = "Lcom/mojang/blaze3d/vertex/VertexBuffer;bind()V", ordinal = 1), method = "renderSky")
 //	private void pushPoseStack(PoseStack poseStack, Matrix4f projectionMatrix, float partialTick, Camera camera, boolean bl, Runnable skyFogSetup, CallbackInfo ci) {
-//		poseStack.pushPose();
-//		poseStack.scale(40,1,1);
+////		float[] scaling = ExampleMod.getScaling();
+////		poseStack.pushPose();
+////		poseStack.scale(scaling[0], scaling[1], scaling[2]);
+//
 //	}
+//
 //	@Inject(at = @At(value="INVOKE", shift = At.Shift.AFTER, target = "Lcom/mojang/blaze3d/vertex/VertexBuffer;drawWithShader(Lcom/mojang/math/Matrix4f;Lcom/mojang/math/Matrix4f;Lnet/minecraft/client/renderer/ShaderInstance;)V", ordinal = 1), method = "renderSky")
 //	private void popPoseStack(PoseStack poseStack, Matrix4f projectionMatrix, float partialTick, Camera camera, boolean bl, Runnable skyFogSetup, CallbackInfo ci) {
-//		poseStack.popPose();
+////		poseStack.popPose();
 //	}
 }

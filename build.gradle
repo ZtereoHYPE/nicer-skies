@@ -44,7 +44,7 @@ dependencies {
 //	modRuntimeOnly include(fabricApi.module("fabric-rendering-data-attachment-v1", project.fabric_version))
 //	modRuntimeOnly include(fabricApi.module("fabric-rendering-fluids-v1", project.fabric_version))
 //	modRuntimeOnly include(fabricApi.module("fabric-resource-loader-v0", project.fabric_version))
-	modRuntimeOnly "maven.modrinth:lithium:${project.lithium_version}"
+//	modRuntimeOnly "maven.modrinth:lithium:${project.lithium_version}"
 	modRuntimeOnly "maven.modrinth:spark:${project.spark_version}"
 	modRuntimeOnly include(fabricApi.module("fabric-command-api-v2", project.fabric_version))
 	modRuntimeOnly include(fabricApi.module("fabric-lifecycle-events-v1", project.fabric_version))
