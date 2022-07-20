@@ -1,9 +1,7 @@
-package codes.ztereohype.example;
+package codes.ztereohype.example.sky;
 
+import com.mojang.blaze3d.vertex.BufferBuilder;
 import net.minecraft.util.Mth;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class Star {
     private final float xCoord;
@@ -46,18 +44,16 @@ public class Star {
     }
 
     public void tick(int ticks) {
-        currentAngle += 0.007f * twinkleSpeed;
-        currentRadius = Mth.lerp(Mth.sin(ticks * twinkleSpeed / 10f) * 0.5f + 0.5f, minRadius, maxRadius);
+        currentAngle += 0.07f * twinkleSpeed;
+        currentRadius = Mth.lerp(Mth.sin(ticks * twinkleSpeed) * 0.5f + 0.5f, minRadius, maxRadius);
     }
 
     //return 4*3 coords for 4 vertices
-    public float[] getVertices() {
-        float[] vertices = new float[12];
-
+    public void setVertices(BufferBuilder bufferBuilder) {
         float cosRot = Mth.cos(currentAngle);
         float sinRot = Mth.sin(currentAngle);
 
-        for(int v = 0; v < 4; ++v) {
+        for (int v = 0; v < 4; ++v) {
             // shift the vector to the 4 corners:
             // vec 0, 1 --> -rad;  vec 2, 3 --> +rad
             float xShift = ((v & 2) - 1) * currentRadius;
@@ -67,16 +63,12 @@ public class Star {
             // magic projection fuckery to turn the shift into an offset applying rotation and polar bs
             float aa = xShift * cosRot - yShift * sinRot;
             float ab = yShift * cosRot + xShift * sinRot;
-            float ae = - aa * projCos;
+            float ae = -aa * projCos;
             float yOffset = aa * projSin;
             float xOffset = ae * sinPolarAngle - ab * cosPolarAngle;
             float zOffset = ab * sinPolarAngle + ae * cosPolarAngle;
 
-            vertices[v * 3    ] = xCoord + xOffset;
-            vertices[v * 3 + 1] = yCoord + yOffset;
-            vertices[v * 3 + 2] = zCoord + zOffset;
+            bufferBuilder.vertex(xCoord + xOffset, yCoord + yOffset, zCoord + zOffset).endVertex();
         }
-
-        return vertices;
     }
 }

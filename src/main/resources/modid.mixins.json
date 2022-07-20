@@ -3,11 +3,10 @@
   "minVersion": "0.8",
   "package": "codes.ztereohype.example.mixin",
   "compatibilityLevel": "JAVA_17",
-  "mixins": [
-    "ExampleMixin",
-    "MixinKeyboardHandler"
-  ],
+  "mixins": [],
   "client": [
+    "MixinKeyboardHandler",
+    "MixinStarRendering",
     "LightTextureInvoker",
     "MixinDebug",
     "MixinLightTexutre"
