@@ -8,6 +8,8 @@ import java.util.ArrayList;
 
 //todo: redo all of the star rendering to be able to use the same vertex buffer object with a uniform or with the posestack
 public class StarManager {
+    private static final BufferBuilder starBufferBuilder = Tesselator.getInstance().getBuilder();
+
     private static final int STAR_ATTEMPTS = 1500;
     public static ArrayList<Star> starList = new ArrayList<>();
 
@@ -34,16 +36,15 @@ public class StarManager {
 
     public static void updateStars(int ticks, VertexBuffer starBuffer) {
         if (!ExampleMod.toggle) return;
-        BufferBuilder bufferBuilder = Tesselator.getInstance().getBuilder();
-        bufferBuilder.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION);
+        starBufferBuilder.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION);
 
         for (Star star : starList) {
             star.tick(ticks);
-            star.setVertices(bufferBuilder);
+            star.setVertices(starBufferBuilder);
         }
 
         starBuffer.bind();
-        starBuffer.upload(bufferBuilder.end());
+        starBuffer.upload(starBufferBuilder.end());
         VertexBuffer.unbind();
     }
 }
