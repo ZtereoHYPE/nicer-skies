@@ -30,8 +30,8 @@ public class MixinLightTexutre {
             warmTint.add(1f, 1f, 1f);
 
             Vector3f dramaticFactor = vector3f2.copy();
-            dramaticFactor.mul(0.25f);
-            dramaticFactor.add(0.75f, 0.75f, 0.76f);
+            dramaticFactor.mul(0.20f);
+            dramaticFactor.add(0.80f, 0.80f, 0.81f);
 
             vector3f2.mul(dramaticFactor.x(), dramaticFactor.y(), dramaticFactor.z());
             vector3f2.mul(warmTint.x(), warmTint.y(), warmTint.z());
