@@ -7,3 +7,6 @@ For setup instructions please see the [fabric wiki page](https://fabricmc.net/wi
 ## License
 
 This template is available under the CC0 license. Feel free to learn from it and incorporate it in your own projects.
+
+## thanks
+thanks to mr grlockengspiel for sqrt() tip

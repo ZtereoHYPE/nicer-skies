@@ -1,4 +1,4 @@
-package codes.ztereohype.example.mixin;
+package codes.ztereohype.example.mixin.debug;
 
 import com.mojang.blaze3d.platform.NativeImage;
 import net.minecraft.client.renderer.LightTexture;

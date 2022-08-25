@@ -5,10 +5,10 @@
   "compatibilityLevel": "JAVA_17",
   "mixins": [],
   "client": [
-    "MixinKeyboardHandler",
+    "debug.MixinKeyboardHandler",
     "MixinStarRendering",
-    "LightTextureInvoker",
-    "MixinDebug",
+    "debug.LightTextureInvoker",
+    "debug.MixinDebug",
     "MixinLightTexutre"
   ],
   "server": [],
