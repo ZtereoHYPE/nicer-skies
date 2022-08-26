@@ -1,12 +1,9 @@
-# Fabric Example Mod
+# UNNAMed wip mod
 
-## Setup
+does funny star rendering and like nebulas and improves the lightmap according to my tastes a little
 
-For setup instructions please see the [fabric wiki page](https://fabricmc.net/wiki/tutorial:setup) that relates to the IDE that you are using.
-
-## License
-
-This template is available under the CC0 license. Feel free to learn from it and incorporate it in your own projects.
+## warning
+ugly code, literally hacked together in the least resistance way:tm:
 
 ## thanks
 thanks to mr grlockengspiel for sqrt() tip
