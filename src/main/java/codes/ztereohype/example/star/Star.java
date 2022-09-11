@@ -1,7 +1,9 @@
-package codes.ztereohype.example.sky;
+package codes.ztereohype.example.star;
 
 import com.mojang.blaze3d.vertex.BufferBuilder;
 import net.minecraft.util.Mth;
+
+import java.awt.*;
 
 public class Star {
     private final float xCoord;
@@ -14,7 +16,9 @@ public class Star {
     private final float latitudeSin;
     private final float latitudeCos;
 
-    private final float twinkleSpeed;
+    private final float resizeSpeed;
+    private final float spinSpeed;
+
     private final float minRadius;
     private final float maxRadius;
 
@@ -25,10 +29,10 @@ public class Star {
     private float currentAngle;
     private float currentRadius;
 
-    public Star(float randX, float randY, float randZ, float size, float temperature, float twinkleSpeed) {
-        this.r = getRedFromKelvin(temperature);
-        this.g = getGreenFromKelvin(temperature);
-        this.b = getBlueFromKelvin(temperature);
+    public Star(float randX, float randY, float randZ, float size, Color color, float resizeSpeed, float spinSpeed) {
+        this.r = color.getRed();
+        this.g = color.getGreen();
+        this.b = color.getBlue();
 
         float invsqrtDistance = Mth.fastInvSqrt(randX * randX + randY * randY + randZ * randZ);
         this.xCoord = randX * invsqrtDistance * 100.0F;
@@ -43,16 +47,18 @@ public class Star {
         this.latitudeSin = (float) Math.sin(proj);
         this.latitudeCos = (float) Math.cos(proj);
 
-        this.twinkleSpeed = twinkleSpeed;
-        this.minRadius = size - 0.13f;
-        this.maxRadius = size + 0.13f;
+        this.spinSpeed = spinSpeed;
+        this.resizeSpeed = resizeSpeed;
+
+        this.minRadius = size - 0.15f;
+        this.maxRadius = size + 0.15f;
         this.currentRadius = size;
-        this.currentAngle = (float) ((twinkleSpeed - 0.03) * 157); // random angle from 0 to 2π
+        this.currentAngle = (spinSpeed + 0.01f) * 628.3f; // random angle from 0 to 2π
     }
 
     public void tick(int ticks) {
-        currentAngle += 0.07f * twinkleSpeed;
-        currentRadius = Mth.lerp(Mth.sin(ticks * twinkleSpeed), minRadius, maxRadius);
+        currentAngle += spinSpeed;
+        currentRadius = Mth.lerp(Mth.sin(ticks * resizeSpeed), minRadius, maxRadius);
     }
 
     //return 4*3 coords for 4 vertices
@@ -110,45 +116,45 @@ public class Star {
     }
 
     // source: https://tannerhelland.com/2012/09/18/convert-temperature-rgb-algorithm-code.html
-    public static int getRedFromKelvin(double kelvins) {
-        kelvins /= 100;
-
-        if (kelvins <= 66) {
-            return 255;
-
-        } else {
-            double red = 329.698727446D * Math.pow(kelvins - 60, -0.1332047592D);
-            return Mth.clamp((int)red, 0, 255);
-        }
-    }
-
-    public static int getGreenFromKelvin(double kelvins) {
-        kelvins /= 100;
-
-        double green;
-        if (kelvins <= 66) {
-            green = 99.4708025861D * Math.log(kelvins) - 161.1195681661D;
-
-        } else {
-            green = 288.1221695283D * Math.pow(kelvins - 60, -0.0755148492D);
-        }
-
-        return Mth.clamp((int)green, 0, 255);
-    }
-
-    public static int getBlueFromKelvin(double kelvins) {
-        kelvins /= 100;
-
-        if (kelvins >= 66) {
-            return 255;
-
-        } else if (kelvins <= 19){
-            return 0;
-
-        } else {
-            double blue = 138.5177312231D * Math.log(kelvins - 60) - 305.0447927307D;
-//            double blue = 138.5177312231D * Math.log(kelvins - 60) - 205.0447927307D;
-            return Mth.clamp((int)blue, 0, 255);
-        }
-    }
+//    public static int getRedFromKelvin(double kelvins) {
+//        kelvins /= 100;
+//
+//        if (kelvins <= 66) {
+//            return 255;
+//
+//        } else {
+//            double red = 329.698727446D * Math.pow(kelvins - 60, -0.1332047592D);
+//            return Mth.clamp((int)red, 0, 255);
+//        }
+//    }
+//
+//    public static int getGreenFromKelvin(double kelvins) {
+//        kelvins /= 100;
+//
+//        double green;
+//        if (kelvins <= 66) {
+//            green = 99.4708025861D * Math.log(kelvins) - 161.1195681661D;
+//
+//        } else {
+//            green = 288.1221695283D * Math.pow(kelvins - 60, -0.0755148492D);
+//        }
+//
+//        return Mth.clamp((int)green, 0, 255);
+//    }
+//
+//    public static int getBlueFromKelvin(double kelvins) {
+//        kelvins /= 100;
+//
+//        if (kelvins >= 66) {
+//            return 255;
+//
+//        } else if (kelvins <= 19){
+//            return 0;
+//
+//        } else {
+//            double blue = 138.5177312231D * Math.log(kelvins - 60) - 305.0447927307D;
+////            double blue = 138.5177312231D * Math.log(kelvins - 60) - 205.0447927307D;
+//            return Mth.clamp((int)blue, 0, 255);
+//        }
+//    }
 }
