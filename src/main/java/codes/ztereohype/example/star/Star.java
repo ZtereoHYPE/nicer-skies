@@ -114,47 +114,4 @@ public class Star {
                      .color(r, g, b, 255)
                      .endVertex();
     }
-
-    // source: https://tannerhelland.com/2012/09/18/convert-temperature-rgb-algorithm-code.html
-//    public static int getRedFromKelvin(double kelvins) {
-//        kelvins /= 100;
-//
-//        if (kelvins <= 66) {
-//            return 255;
-//
-//        } else {
-//            double red = 329.698727446D * Math.pow(kelvins - 60, -0.1332047592D);
-//            return Mth.clamp((int)red, 0, 255);
-//        }
-//    }
-//
-//    public static int getGreenFromKelvin(double kelvins) {
-//        kelvins /= 100;
-//
-//        double green;
-//        if (kelvins <= 66) {
-//            green = 99.4708025861D * Math.log(kelvins) - 161.1195681661D;
-//
-//        } else {
-//            green = 288.1221695283D * Math.pow(kelvins - 60, -0.0755148492D);
-//        }
-//
-//        return Mth.clamp((int)green, 0, 255);
-//    }
-//
-//    public static int getBlueFromKelvin(double kelvins) {
-//        kelvins /= 100;
-//
-//        if (kelvins >= 66) {
-//            return 255;
-//
-//        } else if (kelvins <= 19){
-//            return 0;
-//
-//        } else {
-//            double blue = 138.5177312231D * Math.log(kelvins - 60) - 305.0447927307D;
-////            double blue = 138.5177312231D * Math.log(kelvins - 60) - 205.0447927307D;
-//            return Mth.clamp((int)blue, 0, 255);
-//        }
-//    }
 }
