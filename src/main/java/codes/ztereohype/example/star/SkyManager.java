@@ -220,7 +220,6 @@ public class SkyManager {
         Color color = NEBULA_GRADIENT.getAt(colourValue);
 
         return FastColor.ARGB32.color(alpha, color.getBlue(), color.getGreen(), color.getRed());
-//        return FastColor.ARGB32.color(255, 255, 255, 255);
     }
 }
 

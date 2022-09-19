@@ -2,6 +2,7 @@ package codes.ztereohype.example.mixin;
 
 import codes.ztereohype.example.ExampleMod;
 import codes.ztereohype.example.star.SkyManager;
+import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.*;
 import com.mojang.math.Matrix4f;
 import net.minecraft.client.Camera;
@@ -54,6 +55,7 @@ public abstract class MixinStarRendering {
             locals = LocalCapture.CAPTURE_FAILHARD
     )
     private void drawSkybox(PoseStack poseStack, Matrix4f projectionMatrix, float partialTick, Camera camera, boolean bl, Runnable skyFogSetup, CallbackInfo ci, FogType fogType, Vec3 vec3, float f, float g, float h, BufferBuilder bufferBuilder, ShaderInstance shaderInstance, float[] fs, float i, Matrix4f matrix4f2, float k, int r, int s, int m, float t, float o, float p, float q) {
+        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, level.getStarBrightness(0));
         ExampleMod.nebulaSkybox.render(poseStack, projectionMatrix);
     }
 }
