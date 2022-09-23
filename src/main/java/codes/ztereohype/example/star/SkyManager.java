@@ -2,7 +2,9 @@ package codes.ztereohype.example.star;
 
 import codes.ztereohype.example.ExampleMod;
 import codes.ztereohype.example.Gradient;
+import codes.ztereohype.example.nebula.NebulaSkyboxPainter;
 import codes.ztereohype.example.nebula.Skybox;
+import codes.ztereohype.example.nebula.SkyboxPainter;
 import com.mojang.blaze3d.platform.NativeImage;
 import com.mojang.blaze3d.vertex.*;
 import net.minecraft.util.FastColor;
@@ -24,7 +26,6 @@ public class SkyManager {
     private static final BufferBuilder starBufferBuilder = Tesselator.getInstance().getBuilder();
 
     private static final int STARS = 1500;
-    private static final float SCALING_FACTOR = 1f;
     public static ArrayList<Star> starList = new ArrayList<>();
 
     public static void generateSky() {
@@ -39,7 +40,10 @@ public class SkyManager {
 
         buildGradients();
 
-        generateNebulaTextures(randomSource);
+        PerlinNoise perlinNoise = PerlinNoise.create(randomSource, IntStream.of(1, 2, 3, 4, 5));
+        NebulaSkyboxPainter painter = new NebulaSkyboxPainter(perlinNoise, NEBULA_GRADIENT);
+
+        ExampleMod.nebulaSkybox.paint(painter);
 
         starList.clear();
         generateStars(randomSource);
@@ -72,7 +76,7 @@ public class SkyManager {
             float randZ = randomSource.nextFloat() * 2.0F - 1.0F;
 
             float resizeSpeed = 0.03f + randomSource.nextFloat() * 0.04f;
-            float spinSpeed = randomSource.nextFloat() * 0.02f - 0.01f; // wtf is this?
+            float spinSpeed = randomSource.nextFloat() * 0.02f - 0.01f;
 
             Color starColor = STAR_GRADIENT.getAt(randomSource.nextFloat());
 
@@ -96,130 +100,6 @@ public class SkyManager {
 
         starBuffer.bind();
         starBuffer.upload(starBufferBuilder.end());
-//        VertexBuffer.unbind();
-    }
-
-    public static void generateNebulaTextures(RandomSource randomSource) {
-        PerlinNoise perlinNoise = PerlinNoise.create(randomSource, IntStream.of(1, 2, 3, 4, 5));
-        ImprovedNoise distortionNoise = new ImprovedNoise(randomSource);
-        NativeImage skyNativeTex = ExampleMod.nebulaSkybox.skyTexture.getPixels();
-
-//        for (int face = 0; face < 6; ++face) {
-//            for (int texY = 0; texY < NEBULAS_RESOLUTION; texY++) {
-//                for (int texX = 0; texX < NEBULAS_RESOLUTION; texX++) {
-//                    float x = (texX / (float) NEBULAS_RESOLUTION) * 2 - 1;
-//                    float y = 1;
-//                    float z = (texY / (float) NEBULAS_RESOLUTION) * 2 - 1;
-//
-//
-//
-//                    skyNativeTex.setPixelRGBA(texX + 2 * NEBULAS_RESOLUTION, texY, getFunnyColour(x, y, z, perlinNoise, distortionNoise));
-//                }
-//            }
-//        }
-
-        // top face
-        for (int texY = 0; texY < RESOLUTION; texY++) {
-            for (int texX = 0; texX < RESOLUTION; texX++) {
-                float x = (texX / (float) RESOLUTION) * 2 - 1;
-                float y = 1;
-                float z = (texY / (float) RESOLUTION) * 2 - 1;
-
-                skyNativeTex.setPixelRGBA(texX + 2 * RESOLUTION, texY, getFunnyColour(x, y, z, perlinNoise, distortionNoise));
-            }
-        }
-
-        // bottom face
-        for (int texY = 0; texY < RESOLUTION; texY++) {
-            for (int texX = 0; texX < RESOLUTION; texX++) {
-                float x = (texX / (float) RESOLUTION) * 2 - 1;
-                float y = -1;
-                float z = (texY / (float) RESOLUTION) * 2 - 1;
-
-                skyNativeTex.setPixelRGBA(texX + 2 * RESOLUTION, texY + 2 * RESOLUTION, getFunnyColour(x, y, z, perlinNoise, distortionNoise));
-            }
-        }
-
-        // -x face
-        for (int texY = 0; texY < RESOLUTION; texY++) {
-            for (int texX = 0; texX < RESOLUTION; texX++) {
-                float x = -1;
-                float y = (texY / (float) RESOLUTION) * 2 - 1;
-                float z = (texX / (float) RESOLUTION) * 2 - 1;
-
-                skyNativeTex.setPixelRGBA(texX, texY + RESOLUTION, getFunnyColour(x, y, z, perlinNoise, distortionNoise));
-            }
-        }
-
-        // +x face
-        for (int texY = 0; texY < RESOLUTION; texY++) {
-            for (int texX = 0; texX < RESOLUTION; texX++) {
-                float x = 1;
-                float y = (texY / (float) RESOLUTION) * 2 - 1;
-                float z = (texX / (float) RESOLUTION) * 2 - 1;
-
-                skyNativeTex.setPixelRGBA(texX + 2 * RESOLUTION, texY + RESOLUTION, getFunnyColour(x, y, z, perlinNoise, distortionNoise));
-            }
-        }
-
-        // +z face
-        for (int texY = 0; texY < RESOLUTION; texY++) {
-            for (int texX = 0; texX < RESOLUTION; texX++) {
-                float x = (texX / (float) RESOLUTION) * 2 - 1;
-                float y = (texY / (float) RESOLUTION) * 2 - 1;
-                float z = 1;
-
-                skyNativeTex.setPixelRGBA(texX + RESOLUTION, texY + RESOLUTION, getFunnyColour(x, y, z, perlinNoise, distortionNoise));
-            }
-        }
-
-        // -z face
-        for (int texY = 0; texY < RESOLUTION; texY++) {
-            for (int texX = 0; texX < RESOLUTION; texX++) {
-                float x = (texX / (float) RESOLUTION) * 2 - 1;
-                float y = (texY / (float) RESOLUTION) * 2 - 1;
-                float z = -1;
-
-                skyNativeTex.setPixelRGBA(texX + 3 * RESOLUTION, texY + RESOLUTION, getFunnyColour(x, y, z, perlinNoise, distortionNoise));
-            }
-        }
-
-        ExampleMod.nebulaSkybox.skyTexture.upload();
-    }
-
-    public static int getFunnyColour(float x, float y, float z, PerlinNoise noise, ImprovedNoise subtractionNoise) {
-        double baseNoiseAmount = 0.7f; // the amount of base noise to keep
-
-        float invDistance = Mth.fastInvSqrt(x * x + y * y + z * z);
-
-        //divide by distance to get projection on sphere (shorten the vector)
-        x *= invDistance;
-        y *= invDistance;
-        z *= invDistance;
-
-        float offset = (float) noise.getValue(x * SCALING_FACTOR * 3, y * SCALING_FACTOR * 3, z * SCALING_FACTOR * 3);
-
-        x += offset/5f;
-        y += offset/5f;
-        z += offset/5f;
-
-        // 0..1
-        double noiseValue = Mth.clamp(noise.getValue(x * SCALING_FACTOR, y * SCALING_FACTOR, z * SCALING_FACTOR) + 0.5, 0D, 1D);
-        double subtractionValue = Mth.clamp(subtractionNoise.noise(x * SCALING_FACTOR, y * SCALING_FACTOR, z * SCALING_FACTOR) + 0.5, 0D, 1D);
-
-//        double[] derivates = new double[3];
-//        noise.getOctaveNoise(0).noiseWithDerivative(x * SCALING_FACTOR, y * SCALING_FACTOR, z * SCALING_FACTOR, derivates);
-//        double maxDerivative = Mth.clamp(Math.max(Math.max(derivates[0], derivates[1]), derivates[2]) * 0.5 + 0.5, 0, 0);
-
-        int alpha = (int)(Mth.clamp((noiseValue * (1D / baseNoiseAmount) - (1D / baseNoiseAmount - 1)) * 255D, 1D, 254.99D)); // otherwise death occurs
-
-        alpha = (int) Mth.clamp(alpha - subtractionValue * 255, 0, 255); //todo subtract colour channels separately
-
-        double colourValue = Mth.clamp((alpha / 255D), 0D, 1D);
-
-        Color color = NEBULA_GRADIENT.getAt(colourValue);
-
-        return FastColor.ARGB32.color(alpha, color.getBlue(), color.getGreen(), color.getRed());
     }
 }
 

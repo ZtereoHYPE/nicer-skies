@@ -1,16 +1,22 @@
 package codes.ztereohype.example.nebula;
 
+import codes.ztereohype.example.ExampleMod;
+import com.mojang.blaze3d.platform.NativeImage;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.*;
 import com.mojang.math.Matrix4f;
 import lombok.Getter;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.renderer.texture.DynamicTexture;
+import net.minecraft.world.level.levelgen.synth.ImprovedNoise;
+import net.minecraft.world.level.levelgen.synth.PerlinNoise;
+
+import java.util.stream.IntStream;
 
 public class Skybox {
     public static final int RESOLUTION = 256;
 
-    public final DynamicTexture skyTexture = new DynamicTexture(RESOLUTION * 4, RESOLUTION * 4, false);
+    private final DynamicTexture skyTexture = new DynamicTexture(RESOLUTION * 4, RESOLUTION * 4, false);
 
     private final @Getter VertexBuffer skyboxBuffer = new VertexBuffer();
 
@@ -18,6 +24,7 @@ public class Skybox {
         generateVertices();
     }
 
+    @SuppressWarnings("ConstantConditions")
     public void render(PoseStack poseStack, Matrix4f projectionMatrix) {
         RenderSystem.setShader(GameRenderer::getPositionTexShader);
         RenderSystem.setShaderTexture(0, skyTexture.getId());
@@ -25,7 +32,78 @@ public class Skybox {
         this.skyboxBuffer.bind();
         this.skyboxBuffer.drawWithShader(poseStack.last()
                                                   .pose(), projectionMatrix, GameRenderer.getPositionTexShader());
-        VertexBuffer.unbind();
+    }
+
+    public void paint(SkyboxPainter painter) {
+        NativeImage skyNativeTex = this.skyTexture.getPixels();
+
+        // top face
+        for (int texY = 0; texY < RESOLUTION; texY++) {
+            for (int texX = 0; texX < RESOLUTION; texX++) {
+                float x = (texX / (float) RESOLUTION) * 2 - 1;
+                float y = 1;
+                float z = (texY / (float) RESOLUTION) * 2 - 1;
+
+                skyNativeTex.setPixelRGBA(texX + 2 * RESOLUTION, texY, painter.getColour(x, y, z));
+            }
+        }
+
+        // bottom face
+        for (int texY = 0; texY < RESOLUTION; texY++) {
+            for (int texX = 0; texX < RESOLUTION; texX++) {
+                float x = (texX / (float) RESOLUTION) * 2 - 1;
+                float y = -1;
+                float z = (texY / (float) RESOLUTION) * 2 - 1;
+
+                skyNativeTex.setPixelRGBA(texX + 2 * RESOLUTION, texY + 2 * RESOLUTION, painter.getColour(x, y, z));
+            }
+        }
+
+        // -x face
+        for (int texY = 0; texY < RESOLUTION; texY++) {
+            for (int texX = 0; texX < RESOLUTION; texX++) {
+                float x = -1;
+                float y = (texY / (float) RESOLUTION) * 2 - 1;
+                float z = (texX / (float) RESOLUTION) * 2 - 1;
+
+                skyNativeTex.setPixelRGBA(texX, texY + RESOLUTION, painter.getColour(x, y, z));
+            }
+        }
+
+        // +x face
+        for (int texY = 0; texY < RESOLUTION; texY++) {
+            for (int texX = 0; texX < RESOLUTION; texX++) {
+                float x = 1;
+                float y = (texY / (float) RESOLUTION) * 2 - 1;
+                float z = (texX / (float) RESOLUTION) * 2 - 1;
+
+                skyNativeTex.setPixelRGBA(texX + 2 * RESOLUTION, texY + RESOLUTION, painter.getColour(x, y, z));
+            }
+        }
+
+        // +z face
+        for (int texY = 0; texY < RESOLUTION; texY++) {
+            for (int texX = 0; texX < RESOLUTION; texX++) {
+                float x = (texX / (float) RESOLUTION) * 2 - 1;
+                float y = (texY / (float) RESOLUTION) * 2 - 1;
+                float z = 1;
+
+                skyNativeTex.setPixelRGBA(texX + RESOLUTION, texY + RESOLUTION, painter.getColour(x, y, z));
+            }
+        }
+
+        // -z face
+        for (int texY = 0; texY < RESOLUTION; texY++) {
+            for (int texX = 0; texX < RESOLUTION; texX++) {
+                float x = (texX / (float) RESOLUTION) * 2 - 1;
+                float y = (texY / (float) RESOLUTION) * 2 - 1;
+                float z = -1;
+
+                skyNativeTex.setPixelRGBA(texX + 3 * RESOLUTION, texY + RESOLUTION, painter.getColour(x, y, z));
+            }
+        }
+
+        this.skyTexture.upload();
     }
 
     private void generateVertices() {
@@ -75,6 +153,5 @@ public class Skybox {
 
         skyboxBuffer.bind();
         skyboxBuffer.upload(skyboxBuilder.end());
-//        VertexBuffer.unbind();
     }
 }
