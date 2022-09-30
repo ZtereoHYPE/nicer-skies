@@ -1,9 +1,10 @@
 package codes.ztereohype.example.mixin;
 
 import codes.ztereohype.example.ExampleMod;
-import codes.ztereohype.example.sky.star.Starbox;
 import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.*;
+import com.mojang.blaze3d.vertex.BufferBuilder;
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.blaze3d.vertex.VertexBuffer;
 import com.mojang.math.Matrix4f;
 import net.minecraft.client.Camera;
 import net.minecraft.client.multiplayer.ClientLevel;

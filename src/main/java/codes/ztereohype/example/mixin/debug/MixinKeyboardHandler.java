@@ -1,7 +1,6 @@
 package codes.ztereohype.example.mixin.debug;
 
 import codes.ztereohype.example.ExampleMod;
-import codes.ztereohype.example.sky.star.Starbox;
 import net.minecraft.client.KeyboardHandler;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
