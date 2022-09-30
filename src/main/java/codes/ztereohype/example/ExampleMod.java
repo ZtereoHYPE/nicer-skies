@@ -9,6 +9,6 @@ public class ExampleMod implements ModInitializer {
 
     @Override
     public void onInitialize() {
-        skyManager.generateSky(123L);
+//        skyManager.generateSky(123L);
     }
 }

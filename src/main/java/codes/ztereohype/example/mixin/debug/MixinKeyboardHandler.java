@@ -13,7 +13,7 @@ public class MixinKeyboardHandler {
     private void printKey(long windowPointer, int key, int scanCode, int action, int modifiers, CallbackInfo ci) {
         // \ key, keydown action
         if (key == 92 && action == 1) {
-            ExampleMod.skyManager.generateSky(123L);
+            ExampleMod.skyManager.generateSky(321L);
             ExampleMod.toggle = !ExampleMod.toggle;
         }
     }

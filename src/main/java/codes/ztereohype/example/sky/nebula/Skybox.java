@@ -26,8 +26,7 @@ public class Skybox {
         RenderSystem.setShaderTexture(0, skyTexture.getId());
 
         this.skyboxBuffer.bind();
-        this.skyboxBuffer.drawWithShader(poseStack.last()
-                                                  .pose(), projectionMatrix, GameRenderer.getPositionTexShader());
+        this.skyboxBuffer.drawWithShader(poseStack.last().pose(), projectionMatrix, GameRenderer.getPositionTexShader());
     }
 
     public void paint(SkyboxPainter painter) {
@@ -107,22 +106,22 @@ public class Skybox {
         skyboxBuilder.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
 
         // +z face
-        skyboxBuilder.vertex(-1F, -1F, 1F).uv(0.25f, 0.25f).endVertex();
-        skyboxBuilder.vertex(-1F, 1F, 1F).uv(0.25f, 0.5f).endVertex();
-        skyboxBuilder.vertex(1F, 1F, 1F).uv(0.5f, 0.5f).endVertex();
-        skyboxBuilder.vertex(1F, -1F, 1F).uv(0.5f, 0.25f).endVertex();
+        skyboxBuilder.vertex(-100F, -100F, 100F).uv(0.25f, 0.25f).endVertex();
+        skyboxBuilder.vertex(-100F, 100F, 100F).uv(0.25f, 0.5f).endVertex();
+        skyboxBuilder.vertex(100F, 100F, 100F).uv(0.5f, 0.5f).endVertex();
+        skyboxBuilder.vertex(100F, -100F, 100F).uv(0.5f, 0.25f).endVertex();
 
         // -z face
-        skyboxBuilder.vertex(-1F, -1F, -1F).uv(0.75f, 0.25f).endVertex();
-        skyboxBuilder.vertex(1F, -1F, -1F).uv(1f, 0.25f).endVertex();
-        skyboxBuilder.vertex(1F, 1F, -1F).uv(1f, 0.5f).endVertex();
-        skyboxBuilder.vertex(-1F, 1F, -1F).uv(0.75f, 0.5f).endVertex();
+        skyboxBuilder.vertex(-100F, -100F, -100F).uv(0.75f, 0.25f).endVertex();
+        skyboxBuilder.vertex(100F, -100F, -100F).uv(1f, 0.25f).endVertex();
+        skyboxBuilder.vertex(100F, 100F, -100F).uv(1f, 0.5f).endVertex();
+        skyboxBuilder.vertex(-100F, 100F, -100F).uv(0.75f, 0.5f).endVertex();
 
         // bottom face
-        skyboxBuilder.vertex(-1F, -1F, -1F).uv(0.5f, 0.5f).endVertex();
-        skyboxBuilder.vertex(-1F, -1F, 1F).uv(0.5f, 0.75f).endVertex();
-        skyboxBuilder.vertex(1F, -1F, 1F).uv(0.75f, 0.75f).endVertex();
-        skyboxBuilder.vertex(1F, -1F, -1F).uv(0.75f, 0.5f).endVertex();
+        skyboxBuilder.vertex(-100F, -100F, -100F).uv(0.5f, 0.5f).endVertex();
+        skyboxBuilder.vertex(-100F, -100F, 100F).uv(0.5f, 0.75f).endVertex();
+        skyboxBuilder.vertex(100F, -100F, 100F).uv(0.75f, 0.75f).endVertex();
+        skyboxBuilder.vertex(100F, -100F, -100F).uv(0.75f, 0.5f).endVertex();
 
 //        skyboxBuilder.vertex(-1F, -1F, -1F).uv(0f, 0f).endVertex();
 //        skyboxBuilder.vertex(-1F, -1F, 1F).uv(0f, 1f).endVertex();
@@ -130,22 +129,22 @@ public class Skybox {
 //        skyboxBuilder.vertex(1F, -1F, -1F).uv(1f, 0f).endVertex();
 
         // top face
-        skyboxBuilder.vertex(-1F, 1F, -1F).uv(0.5f, 0f).endVertex();
-        skyboxBuilder.vertex(1F, 1F, -1F).uv(0.75f, 0f).endVertex();
-        skyboxBuilder.vertex(1F, 1F, 1F).uv(0.75f, 0.25f).endVertex();
-        skyboxBuilder.vertex(-1F, 1F, 1F).uv(0.5f, 0.25f).endVertex();
+        skyboxBuilder.vertex(-100F, 100F, -100F).uv(0.5f, 0f).endVertex();
+        skyboxBuilder.vertex(100F, 100F, -100F).uv(0.75f, 0f).endVertex();
+        skyboxBuilder.vertex(100F, 100F, 100F).uv(0.75f, 0.25f).endVertex();
+        skyboxBuilder.vertex(-100F, 100F, 100F).uv(0.5f, 0.25f).endVertex();
 
         // +x face
-        skyboxBuilder.vertex(1F, -1F, -1F).uv(0.5f, 0.25f).endVertex();
-        skyboxBuilder.vertex(1F, -1F, 1F).uv(0.75f, 0.25f).endVertex();
-        skyboxBuilder.vertex(1F, 1F, 1F).uv(0.75f, 0.5f).endVertex();
-        skyboxBuilder.vertex(1F, 1F, -1F).uv(0.5f, 0.5f).endVertex();
+        skyboxBuilder.vertex(100F, -100F, -100F).uv(0.5f, 0.25f).endVertex();
+        skyboxBuilder.vertex(100F, -100F, 100F).uv(0.75f, 0.25f).endVertex();
+        skyboxBuilder.vertex(100F, 100F, 100F).uv(0.75f, 0.5f).endVertex();
+        skyboxBuilder.vertex(100F, 100F, -100F).uv(0.5f, 0.5f).endVertex();
 
         // -x face
-        skyboxBuilder.vertex(-1F, -1F, -1F).uv(0f, 0.25f).endVertex();
-        skyboxBuilder.vertex(-1F, 1F, -1F).uv(0f, 0.5f).endVertex();
-        skyboxBuilder.vertex(-1F, 1F, 1F).uv(0.25f, 0.5f).endVertex();
-        skyboxBuilder.vertex(-1F, -1F, 1F).uv(0.25f, 0.25f).endVertex();
+        skyboxBuilder.vertex(-100F, -100F, -100F).uv(0f, 0.25f).endVertex();
+        skyboxBuilder.vertex(-100F, 100F, -100F).uv(0f, 0.5f).endVertex();
+        skyboxBuilder.vertex(-100F, 100F, 100F).uv(0.25f, 0.5f).endVertex();
+        skyboxBuilder.vertex(-100F, -100F, 100F).uv(0.25f, 0.25f).endVertex();
 
         skyboxBuffer.bind();
         skyboxBuffer.upload(skyboxBuilder.end());
