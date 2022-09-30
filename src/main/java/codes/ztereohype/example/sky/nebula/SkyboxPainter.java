@@ -1,4 +1,4 @@
-package codes.ztereohype.example.nebula;
+package codes.ztereohype.example.sky.nebula;
 
 import net.minecraft.util.Mth;
 import net.minecraft.world.level.levelgen.synth.PerlinNoise;

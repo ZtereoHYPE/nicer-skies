@@ -1,4 +1,4 @@
-package codes.ztereohype.example.star;
+package codes.ztereohype.example.sky.star;
 
 import com.mojang.blaze3d.vertex.BufferBuilder;
 import net.minecraft.util.Mth;

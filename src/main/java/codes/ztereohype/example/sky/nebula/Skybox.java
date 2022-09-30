@@ -1,6 +1,5 @@
-package codes.ztereohype.example.nebula;
+package codes.ztereohype.example.sky.nebula;
 
-import codes.ztereohype.example.ExampleMod;
 import com.mojang.blaze3d.platform.NativeImage;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.*;
@@ -8,10 +7,6 @@ import com.mojang.math.Matrix4f;
 import lombok.Getter;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.renderer.texture.DynamicTexture;
-import net.minecraft.world.level.levelgen.synth.ImprovedNoise;
-import net.minecraft.world.level.levelgen.synth.PerlinNoise;
-
-import java.util.stream.IntStream;
 
 public class Skybox {
     public static final int RESOLUTION = 256;
@@ -20,8 +15,9 @@ public class Skybox {
 
     private final @Getter VertexBuffer skyboxBuffer = new VertexBuffer();
 
-    public Skybox() {
+    public Skybox(SkyboxPainter painter) {
         generateVertices();
+        paint(painter);
     }
 
     @SuppressWarnings("ConstantConditions")

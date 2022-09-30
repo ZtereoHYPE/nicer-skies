@@ -1,4 +1,4 @@
-package codes.ztereohype.example.nebula;
+package codes.ztereohype.example.sky.nebula;
 
 import codes.ztereohype.example.Gradient;
 import net.minecraft.util.FastColor;

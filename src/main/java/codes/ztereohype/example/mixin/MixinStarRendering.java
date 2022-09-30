@@ -1,7 +1,7 @@
 package codes.ztereohype.example.mixin;
 
 import codes.ztereohype.example.ExampleMod;
-import codes.ztereohype.example.star.SkyManager;
+import codes.ztereohype.example.sky.star.Starbox;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.*;
 import com.mojang.math.Matrix4f;
@@ -28,16 +28,16 @@ public abstract class MixinStarRendering {
 
     @Inject(at = @At("HEAD"), method = "createStars", cancellable = true)
     private void generateStars(CallbackInfo ci) {
-        SkyManager.generateSky();
+        ExampleMod.skyManager.generateSky(123L);
         starBuffer = new VertexBuffer();
-        SkyManager.updateStars(ticks, starBuffer);
+        ExampleMod.skyManager.tick(ticks, starBuffer);
         ci.cancel();
     }
 
     @Inject(at = @At("HEAD"), method = "tick")
     private void tickStars(CallbackInfo ci) {
         if (this.level.getStarBrightness(0) < 0.0F) return;
-        SkyManager.updateStars(ticks, starBuffer);
+        ExampleMod.skyManager.tick(ticks, starBuffer);
     }
 
     @ModifyArg(
@@ -56,6 +56,6 @@ public abstract class MixinStarRendering {
     )
     private void drawSkybox(PoseStack poseStack, Matrix4f projectionMatrix, float partialTick, Camera camera, boolean bl, Runnable skyFogSetup, CallbackInfo ci, FogType fogType, Vec3 vec3, float f, float g, float h, BufferBuilder bufferBuilder, ShaderInstance shaderInstance, float[] fs, float i, Matrix4f matrix4f2, float k, int r, int s, int m, float t, float o, float p, float q) {
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, level.getStarBrightness(0));
-        ExampleMod.nebulaSkybox.render(poseStack, projectionMatrix);
+        ExampleMod.skyManager.getSkybox().render(poseStack, projectionMatrix);
     }
 }
