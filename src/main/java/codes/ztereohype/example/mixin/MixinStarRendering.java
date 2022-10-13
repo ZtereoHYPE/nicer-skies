@@ -56,6 +56,7 @@ public abstract class MixinStarRendering {
             locals = LocalCapture.CAPTURE_FAILHARD
     )
     private void drawSkybox(PoseStack poseStack, Matrix4f projectionMatrix, float partialTick, Camera camera, boolean bl, Runnable skyFogSetup, CallbackInfo ci, FogType fogType, Vec3 vec3, float f, float g, float h, BufferBuilder bufferBuilder, ShaderInstance shaderInstance, float[] fs, float i, Matrix4f matrix4f2, float k, int r, int s, int m, float t, float o, float p, float q) {
+        // todo: the star brightness limits skybox's + skyboxes render during rain which is off.
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, level.getStarBrightness(0));
         ExampleMod.skyManager.getSkybox().render(poseStack, projectionMatrix);
     }
