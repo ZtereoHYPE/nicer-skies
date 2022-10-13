@@ -1,4 +1,4 @@
-package codes.ztereohype.example;
+package codes.ztereohype.example.core;
 
 import java.awt.*;
 import java.util.Map;

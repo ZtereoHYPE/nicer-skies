@@ -1,6 +1,6 @@
 package codes.ztereohype.example.sky.star;
 
-import codes.ztereohype.example.Gradient;
+import codes.ztereohype.example.core.Gradient;
 import com.mojang.blaze3d.vertex.*;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.levelgen.synth.ImprovedNoise;

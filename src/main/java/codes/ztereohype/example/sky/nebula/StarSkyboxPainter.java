@@ -1,6 +1,6 @@
 package codes.ztereohype.example.sky.nebula;
 
-import codes.ztereohype.example.Gradient;
+import codes.ztereohype.example.core.Gradient;
 import net.minecraft.util.FastColor;
 import net.minecraft.util.Mth;
 import net.minecraft.world.level.levelgen.synth.PerlinNoise;

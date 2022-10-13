@@ -1,6 +1,6 @@
 package codes.ztereohype.example.mixin.debug;
 
-import codes.ztereohype.example.ExampleMod;
+import codes.ztereohype.example.NicerSkies;
 import net.minecraft.client.KeyboardHandler;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -13,8 +13,8 @@ public class MixinKeyboardHandler {
     private void printKey(long windowPointer, int key, int scanCode, int action, int modifiers, CallbackInfo ci) {
         // \ key, keydown action
         if (key == 92 && action == 1) {
-            ExampleMod.skyManager.generateSky(321L);
-            ExampleMod.toggle = !ExampleMod.toggle;
+            NicerSkies.skyManager.generateSky(321L);
+            NicerSkies.toggle = !NicerSkies.toggle;
         }
     }
 }

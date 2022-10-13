@@ -1,9 +1,8 @@
 package codes.ztereohype.example.sky;
 
-import codes.ztereohype.example.Gradient;
+import codes.ztereohype.example.core.Gradient;
 import codes.ztereohype.example.sky.nebula.NebulaSkyboxPainter;
 import codes.ztereohype.example.sky.nebula.Skybox;
-import codes.ztereohype.example.sky.nebula.StarSkyboxPainter;
 import codes.ztereohype.example.sky.star.Starbox;
 import com.mojang.blaze3d.vertex.VertexBuffer;
 import lombok.Getter;

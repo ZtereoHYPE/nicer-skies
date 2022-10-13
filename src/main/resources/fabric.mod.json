@@ -1,33 +1,29 @@
 {
   "schemaVersion": 1,
-  "id": "modid",
-  "version": "${version}",
-  "name": "Example Mod",
-  "description": "This is an example description! Tell everyone what your mod is about!",
+  "id": "nicer-skies",
+  "version": "0.1.0",
+  "name": "Nicer Skies",
+  "description": "This is a mod that improves the minecraft skies a little whilst keeping the behaviours vanilla and compatible.",
   "authors": [
-    "Me!"
+    "ZtereoHYPE"
   ],
   "contact": {
-    "homepage": "https://fabricmc.net/",
-    "sources": "https://github.com/FabricMC/fabric-example-mod"
+    "sources": "https://github.com/ZtereoHYPE/nicer-skies"
   },
-  "license": "CC0-1.0",
-  "icon": "assets/modid/icon.png",
-  "environment": "*",
+  "license": "LGPLv3",
+  "icon": "assets/nicer_skies/icon.png",
+  "environment": "client",
   "entrypoints": {
     "main": [
-      "codes.ztereohype.example.ExampleMod"
+      "codes.ztereohype.example.NicerSkies"
     ]
   },
   "mixins": [
-    "modid.mixins.json"
+    "nicer_skies.mixins.json"
   ],
   "depends": {
     "fabricloader": ">=0.14.6",
     "minecraft": "~1.19",
     "java": ">=17"
-  },
-  "suggests": {
-    "another-mod": "*"
   }
 }

@@ -1,6 +1,6 @@
 package codes.ztereohype.example.mixin;
 
-import codes.ztereohype.example.ExampleMod;
+import codes.ztereohype.example.NicerSkies;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.BufferBuilder;
 import com.mojang.blaze3d.vertex.PoseStack;
@@ -29,16 +29,16 @@ public abstract class MixinStarRendering {
 
     @Inject(at = @At("HEAD"), method = "createStars", cancellable = true)
     private void generateStars(CallbackInfo ci) {
-        ExampleMod.skyManager.generateSky(321L);
+        NicerSkies.skyManager.generateSky(321L);
         starBuffer = new VertexBuffer();
-        ExampleMod.skyManager.tick(ticks, starBuffer);
+        NicerSkies.skyManager.tick(ticks, starBuffer);
         ci.cancel();
     }
 
     @Inject(at = @At("HEAD"), method = "tick")
     private void tickStars(CallbackInfo ci) {
         if (this.level.getStarBrightness(0) < 0.0F) return;
-        ExampleMod.skyManager.tick(ticks, starBuffer);
+        NicerSkies.skyManager.tick(ticks, starBuffer);
     }
 
     @ModifyArg(
@@ -58,6 +58,6 @@ public abstract class MixinStarRendering {
     private void drawSkybox(PoseStack poseStack, Matrix4f projectionMatrix, float partialTick, Camera camera, boolean bl, Runnable skyFogSetup, CallbackInfo ci, FogType fogType, Vec3 vec3, float f, float g, float h, BufferBuilder bufferBuilder, ShaderInstance shaderInstance, float[] fs, float i, Matrix4f matrix4f2, float k, int r, int s, int m, float t, float o, float p, float q) {
         // todo: the star brightness limits skybox's + skyboxes render during rain which is off.
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, level.getStarBrightness(0));
-        ExampleMod.skyManager.getSkybox().render(poseStack, projectionMatrix);
+        NicerSkies.skyManager.getSkybox().render(poseStack, projectionMatrix);
     }
 }
