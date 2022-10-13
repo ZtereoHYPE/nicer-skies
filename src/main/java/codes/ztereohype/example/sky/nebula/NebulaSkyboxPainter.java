@@ -9,7 +9,7 @@ import java.awt.*;
 
 public class NebulaSkyboxPainter extends SkyboxPainter {
     private static final float SCALING_FACTOR = 1f;
-    private static final float BASE_NOISE_AMOUNT = 0.7f; // the amount of base noise to keep
+    private static final float BASE_NOISE_AMOUNT = 0.56f; // the amount of base noise to keep
 
     private final Gradient nebulaGradient;
 

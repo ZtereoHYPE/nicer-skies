@@ -101,17 +101,34 @@ public class Star {
         float ae3 = firstVertexDistance * latitudeCos;
         float ae4 = secondVertexDistance * latitudeCos;
 
+        // 0
         bufferBuilder.vertex(xCoord + ae1 * longitudeSin - secondVertexDistance * longitudeCos, yCoord + firstVertexDistance * latitudeSin, zCoord + secondVertexDistance * longitudeSin + ae1 * longitudeCos)
                      .color(r, g, b, 255)
                      .endVertex();
+        // 1
         bufferBuilder.vertex(xCoord + ae2 * longitudeSin - thirdVertexDistance * longitudeCos, yCoord + secondVertexDistance * latitudeSin, zCoord + thirdVertexDistance * longitudeSin + ae2 * longitudeCos)
                      .color(r, g, b, 255)
                      .endVertex();
+
         bufferBuilder.vertex(xCoord + ae3 * longitudeSin - fourthVertexDistance * longitudeCos, yCoord + thirdVertexDistance * latitudeSin, zCoord + fourthVertexDistance * longitudeSin + ae3 * longitudeCos)
                      .color(r, g, b, 255)
                      .endVertex();
+
+        // 3
         bufferBuilder.vertex(xCoord + ae4 * longitudeSin - firstVertexDistance * longitudeCos, yCoord + fourthVertexDistance * latitudeSin, zCoord + firstVertexDistance * longitudeSin + ae4 * longitudeCos)
                      .color(r, g, b, 255)
                      .endVertex();
+//        // 1
+//        bufferBuilder.vertex(xCoord + ae2 * longitudeSin - thirdVertexDistance * longitudeCos, yCoord + secondVertexDistance * latitudeSin, zCoord + thirdVertexDistance * longitudeSin + ae2 * longitudeCos)
+//                     .color(r, g, b, 255)
+//                     .endVertex();
+//        // 2
+//        bufferBuilder.vertex(xCoord + ae3 * longitudeSin - fourthVertexDistance * longitudeCos, yCoord + thirdVertexDistance * latitudeSin, zCoord + fourthVertexDistance * longitudeSin + ae3 * longitudeCos)
+//                     .color(r, g, b, 255)
+//                     .endVertex();
+//        // 3
+//        bufferBuilder.vertex(xCoord + ae4 * longitudeSin - firstVertexDistance * longitudeCos, yCoord + fourthVertexDistance * latitudeSin, zCoord + firstVertexDistance * longitudeSin + ae4 * longitudeCos)
+//                     .color(r, g, b, 255)
+//                     .endVertex();
     }
 }

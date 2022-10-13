@@ -26,7 +26,7 @@ public class Starbox {
         generateStars(randomSource);
     }
 
-    public void generateStars(RandomSource randomSource) {
+    private void generateStars(RandomSource randomSource) {
         ImprovedNoise noise = new ImprovedNoise(randomSource);
 
         for (int i = 0; i < this.stars; ++i) {

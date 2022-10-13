@@ -29,7 +29,7 @@ public abstract class MixinStarRendering {
 
     @Inject(at = @At("HEAD"), method = "createStars", cancellable = true)
     private void generateStars(CallbackInfo ci) {
-        ExampleMod.skyManager.generateSky(123L);
+        ExampleMod.skyManager.generateSky(321L);
         starBuffer = new VertexBuffer();
         ExampleMod.skyManager.tick(ticks, starBuffer);
         ci.cancel();
