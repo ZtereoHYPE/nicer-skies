@@ -15,7 +15,7 @@ public class Gradient {
         if (index < 0 || index > 1) {
             throw new IllegalArgumentException("Index must be between 0 and 1");
         }
-
+        
         Color color = new Color(red,green,blue);
         gradient.put(index, color);
     }
