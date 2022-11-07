@@ -5,7 +5,7 @@ import net.minecraft.util.FastColor;
 import net.minecraft.util.Mth;
 import net.minecraft.world.level.levelgen.synth.PerlinNoise;
 
-import java.awt.*;
+import java.awt.Color;
 
 public class NebulaSkyboxPainter extends SkyboxPainter {
     private static final float SCALING_FACTOR = 1f;
@@ -38,9 +38,8 @@ public class NebulaSkyboxPainter extends SkyboxPainter {
         // Value to be subtracted from noise at coord, 0..1
         double subtractionValue = Mth.clamp(noise.getOctaveNoise(1).noise(x * SCALING_FACTOR, y * SCALING_FACTOR, z * SCALING_FACTOR) + 0.5, 0D, 1D);
 
-//        double[] derivates = new double[3];
-//        noise.getOctaveNoise(0).noiseWithDerivative(x * SCALING_FACTOR, y * SCALING_FACTOR, z * SCALING_FACTOR, derivates);
-//        double maxDerivative = Mth.clamp(Math.max(Math.max(derivates[0], derivates[1]), derivates[2]) * 0.5 + 0.5, 0, 0);
+        double[] derivates = new double[3];
+        noise.getOctaveNoise(0).noiseWithDerivative(x * SCALING_FACTOR, y * SCALING_FACTOR, z * SCALING_FACTOR, derivates);
 
         // Find a base background colour to use (xyz interpoaltion across sky, gamer mode)
         int blueness, greenness, redness;
@@ -52,18 +51,15 @@ public class NebulaSkyboxPainter extends SkyboxPainter {
 
         alpha = (int) Mth.clamp(alpha - subtractionValue * 128, 50, 255);
 
-        //todo: make nebulas be -1..+1 and they can also subtract a little from the main colour, but they can also add some yellow or red or idk
-
         double colourValue = (Mth.clamp((noiseValue * (1D / BASE_NOISE_AMOUNT) - (1D / BASE_NOISE_AMOUNT - 1)), 0.01D, 0.9999D));
         Color color = nebulaGradient.getAt(colourValue);
         double bgPresence = Mth.clamp(Math.log10(-colourValue + 1) + 1, 0D, 1D);
 
         int red, green, blue;
-        red = (int) ((colourValue * color.getRed()) + redness * bgPresence);
-        green = (int) ((colourValue * color.getGreen()) + greenness * bgPresence);
-        blue = (int) ((colourValue * color.getBlue()) + blueness * bgPresence);
+        red = Mth.clamp((int) ((colourValue * color.getRed()) + redness * bgPresence) - (int)(derivates[0] * colourValue * 127), 0, 255);
+        green = Mth.clamp((int) ((colourValue * color.getGreen()) + greenness * bgPresence) - (int)(derivates[1] * colourValue * 64), 0, 255);
+        blue = Mth.clamp((int) ((colourValue * color.getBlue()) + blueness * bgPresence) - (int)(derivates[2] * colourValue * 127), 0, 255);
 
         return FastColor.ARGB32.color(alpha, blue, green, red);
-//        return FastColor.ARGB32.color(alpha, color.getBlue(), color.getGreen(), color.getRed());
     }
 }
