@@ -13,8 +13,8 @@ public class MixinKeyboardHandler {
     private void printKey(long windowPointer, int key, int scanCode, int action, int modifiers, CallbackInfo ci) {
         // \ key, keydown action
         if (key == 92 && action == 1) {
-            NicerSkies.skyManager.generateSky(321L);
-            NicerSkies.toggle = !NicerSkies.toggle;
+            NicerSkies.skyManager.generateSky(15156);
+//            NicerSkies.toggle = !NicerSkies.toggle;
         }
     }
 }

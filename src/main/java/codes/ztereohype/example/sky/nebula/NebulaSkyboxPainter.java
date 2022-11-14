@@ -46,17 +46,23 @@ public class NebulaSkyboxPainter extends SkyboxPainter {
         int baseG = (int) ((y/2 + 0.5) * 127);
         int baseR = (int) ((z/2 + 0.5) * 127);
 
-        int alpha = (int)(Mth.clamp((noiseValue * (1 / BASE_NOISE_AMOUNT) - (1 / BASE_NOISE_AMOUNT - 1)) * 255, 20, 254.99f)); // otherwise death occurs
+//        double noiseAmount = (Mth.clamp((noiseValue * (1 / BASE_NOISE_AMOUNT) - (1 / BASE_NOISE_AMOUNT - 1)) * 255, 0, 255)); // otherwise death occurs
+//
+//        int alpha = (int) Mth.clamp((int)noiseAmount - subtractionValue * 128, 50, 255);
 
-        alpha = (int) Mth.clamp(alpha - subtractionValue * 128, 50, 255);
-
-        double nebulaFactor = (Mth.clamp((noiseValue * (1D / BASE_NOISE_AMOUNT) - (1D / BASE_NOISE_AMOUNT - 1)), 0.01, 0.9999));
+        double nebulaFactor = (Mth.clamp((noiseValue * (1D / BASE_NOISE_AMOUNT) - (1D / BASE_NOISE_AMOUNT - 1)), 0, 0.99));
         Color nebula = nebulaGradient.getAt(nebulaFactor);
         double bgFactor = Mth.clamp(Math.log10(-nebulaFactor + 1) + 1, 0, 1);
 
         int r = Mth.clamp((int) ((nebulaFactor * nebula.getRed()) + baseR * bgFactor) - (int)(ds[0] * nebulaFactor * 127), 0, 255);
-        int g = Mth.clamp((int) ((nebulaFactor * nebula.getGreen()) + baseG * bgFactor) - (int)(ds[1] * nebulaFactor * 64), 0, 255);
+        int g = Mth.clamp((int) ((nebulaFactor * nebula.getGreen()) + baseG * bgFactor) - (int)(ds[1] * nebulaFactor * 63), 0, 255);
         int b = Mth.clamp((int) ((nebulaFactor * nebula.getBlue()) + baseB * bgFactor) - (int)(ds[2] * nebulaFactor * 127), 0, 255);
+
+//        int r = Mth.clamp((int) (baseR * bgFactor), 0, 255);
+//        int g = Mth.clamp((int) (baseG * bgFactor), 0, 255);
+//        int b = Mth.clamp((int) (baseB * bgFactor), 0, 255);
+
+        int alpha = Mth.clamp((int)((1 - bgFactor) * 255), 50, 255);
 
         return FastColor.ARGB32.color(alpha, b, g, r);
     }

@@ -9,7 +9,7 @@ import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.renderer.texture.DynamicTexture;
 
 public class Skybox {
-    public static final int RESOLUTION = 256;
+    public static final int RESOLUTION = 512;
 
     private final DynamicTexture skyTexture = new DynamicTexture(RESOLUTION * 4, RESOLUTION * 4, false);
 
