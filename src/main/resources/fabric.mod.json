@@ -16,6 +16,9 @@
   "entrypoints": {
     "main": [
       "codes.ztereohype.example.NicerSkies"
+    ],
+    "modmenu": [
+      "codes.ztereohype.example.gui.ModMenuSettingsApi"
     ]
   },
   "mixins": [

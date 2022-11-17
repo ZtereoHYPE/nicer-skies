@@ -37,6 +37,7 @@ public abstract class MixinStarRendering {
 
     @Inject(at = @At("HEAD"), method = "tick")
     private void tickStars(CallbackInfo ci) {
+        if (!NicerSkies.config.getTwinklingStars()) return;
         if (this.level.getStarBrightness(0) < 0.0F) return;
         NicerSkies.skyManager.tick(ticks, starBuffer);
     }
@@ -56,6 +57,7 @@ public abstract class MixinStarRendering {
             locals = LocalCapture.CAPTURE_FAILHARD
     )
     private void drawSkybox(PoseStack poseStack, Matrix4f projectionMatrix, float partialTick, Camera camera, boolean bl, Runnable skyFogSetup, CallbackInfo ci, FogType fogType, Vec3 vec3, float f, float g, float h, BufferBuilder bufferBuilder, ShaderInstance shaderInstance, float[] fs, float i, Matrix4f matrix4f2, float k, int r, int s, int m, float t, float o, float p, float q) {
+        if (!NicerSkies.config.getNebulas()) return;
         float alpha = 2 * level.getStarBrightness(partialTick) * (1.0F - this.level.getRainLevel(partialTick));
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, alpha);
         NicerSkies.skyManager.getSkybox().render(poseStack, projectionMatrix);

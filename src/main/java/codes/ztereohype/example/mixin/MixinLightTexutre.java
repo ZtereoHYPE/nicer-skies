@@ -1,5 +1,6 @@
 package codes.ztereohype.example.mixin;
 
+import codes.ztereohype.example.NicerSkies;
 import com.mojang.math.Vector3f;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.renderer.LightTexture;
@@ -17,6 +18,7 @@ public abstract class MixinLightTexutre {
             locals = LocalCapture.CAPTURE_FAILHARD
     )
     private void injectWarmLight(float partialTicks, CallbackInfo ci, ClientLevel clientLevel, float f, float g, float h, float i, float j, float l, float k, Vector3f vector3f, float m, Vector3f vector3f2, int n, int o, float p, float q, float r, float s, float t, boolean bl, float v, Vector3f vector3f5) {
+        if (!NicerSkies.config.getLightmapTweaked()) return;
         Vector3f warmTint = new Vector3f(0.36F, 0.13F, -0.15F);
 
         float warmness = o / 15f * // increase w/ blocklight
