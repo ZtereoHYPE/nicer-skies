@@ -1,12 +1,12 @@
 package codes.ztereohype.example.config;
 
 public class Config {
-    public Config(boolean tweakedLigthmap, boolean twinklingStars, boolean nebulas, String nebulaType) {
+    public Config(boolean tweakedLigthmap, boolean twinklingStars, boolean nebulas, String nebulaType, float nebulaStrength) {
         this.tweakedLigthmap = tweakedLigthmap;
         this.twinklingStars = twinklingStars;
         this.nebulas = nebulas;
 
-        this.nebulaConfig = new NebulaConfig(nebulaType);
+        this.nebulaConfig = new NebulaConfig(nebulaType, nebulaStrength);
     }
 
     private boolean tweakedLigthmap;
@@ -44,11 +44,13 @@ public class Config {
     }
 
     public static final class NebulaConfig {
-        public NebulaConfig(String nebulaType) {
+        public NebulaConfig(String nebulaType, float nebulaStrength) {
             this.nebulaType = nebulaType;
+            this.nebulaStrength = nebulaStrength;
         }
 
         private String nebulaType;
+        private float nebulaStrength;
 
         public String getNebulaType() {
             return this.nebulaType;
@@ -56,6 +58,14 @@ public class Config {
 
         public void setNebulaType(String nebulaType) {
             this.nebulaType = nebulaType;
+        }
+
+        public float getNebulaStrength() {
+            return this.nebulaStrength;
+        }
+
+        public void setNebulaStrength(float nebulaStrength) {
+            this.nebulaStrength = nebulaStrength;
         }
     }
 
@@ -65,7 +75,7 @@ public class Config {
                 "tweakedLigthmap=" + tweakedLigthmap +
                 ", twinklingStars=" + twinklingStars +
                 ", nebulas=" + nebulas +
-                ", nebulaConfig type=" + nebulaConfig.getNebulaType() +
+                ", nebulaConfig=" + nebulaConfig +
                 '}';
     }
 }

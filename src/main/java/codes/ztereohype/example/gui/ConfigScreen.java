@@ -2,16 +2,20 @@ package codes.ztereohype.example.gui;
 
 import codes.ztereohype.example.NicerSkies;
 import codes.ztereohype.example.config.ConfigManager;
+import codes.ztereohype.example.config.NebulaType;
 import codes.ztereohype.example.gui.widget.Separator;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.components.AbstractSliderButton;
 import net.minecraft.client.gui.components.Checkbox;
+import net.minecraft.client.gui.components.CycleButton;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 
 public class ConfigScreen extends Screen {
     private Screen lastScreen;
     private ConfigManager cm = NicerSkies.config;
+
     protected ConfigScreen(Screen lastScreen) {
         super(Component.literal("Nicer Skies Config"));
         this.lastScreen = lastScreen;
@@ -26,6 +30,7 @@ public class ConfigScreen extends Screen {
                 cm.setNebulas(!cm.getNebulas());
             }
         });
+
         addRenderableWidget(new Checkbox(20, 90, 20, 20, Component.literal("Twinlke Stars"), cm.getTwinklingStars()) {
             @Override
             public void onPress() {
@@ -33,16 +38,41 @@ public class ConfigScreen extends Screen {
                 cm.setTwinklingStars(!cm.getTwinklingStars());
             }
         });
+
         addRenderableWidget(new Checkbox(20, 120, 20, 20, Component.literal("Custom Lightmap"), cm.getLightmapTweaked()) {
             @Override
             public void onPress() {
                 super.onPress();
                 cm.setLightmapTweaked(!cm.getLightmapTweaked());
+                Minecraft.getInstance().gameRenderer.lightTexture().tick();
             }
         });
+
         addRenderableOnly(new Separator(this.width / 2, 30, this.height - 40));
 
-        addRenderableWidget(new Slider)
+        CycleButton<NebulaType> nebulaType = CycleButton.builder((NebulaType value) -> Component.literal(value.getTypeString()))
+                                                    .withValues(NebulaType.values())
+                                                    .withTooltip((type) -> minecraft.font.split(Component.literal("Currently disabled as there's only one type of nebula"), 200))
+                                                    .create(this.width / 2 + (this.width / 2 - 150) / 2, 60, 150, 20, Component.literal("Nebula Type"), (button, value) -> {
+                                                NicerSkies.config.setNebulaType(value);
+                                            });
+        if (NebulaType.values().length < 2)
+            nebulaType.active = false; // deactivate while theres only one!
+
+        addRenderableWidget(nebulaType);
+
+        float strength = cm.getNebulaStrength();
+        addRenderableWidget(new AbstractSliderButton(this.width / 2 + (this.width / 2 - 150) / 2, 90, 150, 20, Component.literal("Nebula Strength: " + (int) (strength * 100) + "%"), strength) {
+            @Override
+            protected void updateMessage() {
+                this.setMessage(Component.literal("Nebula Strength: " + (int) (this.value * 100) + "%"));
+            }
+
+            @Override
+            protected void applyValue() {
+                NicerSkies.config.setNebulaStrength((float)this.value);
+            }
+        });
     }
 
     @Override

@@ -6,7 +6,6 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.logging.LogManager;
 
 public class ConfigManager {
     private static final Gson gson = new Gson();
@@ -20,7 +19,7 @@ public class ConfigManager {
                 file.getParentFile().mkdirs();
                 file.createNewFile();
 
-                config = new Config(false, true, true, "rainbow");
+                config = new Config(false, true, true, "rainbow", 1f);
 
                 gson.toJson(config, new FileWriter(file));
             } else {
@@ -33,7 +32,7 @@ public class ConfigManager {
         } catch (IOException e) {
             // todo setup logger properly
             e.printStackTrace();
-            config = new Config(false, true, true, "rainbow");
+            config = new Config(false, true, true, "rainbow", 1f);
         }
 
         return new ConfigManager(config, file);
@@ -61,6 +60,10 @@ public class ConfigManager {
         return NebulaType.getFromString(config.getNebulaConfig().getNebulaType());
     }
 
+    public float getNebulaStrength() {
+        return config.getNebulaConfig().getNebulaStrength();
+    }
+
     public void setLightmapTweaked(boolean tweaked) {
         config.setTweakedLigthmap(tweaked);
         save(file);
@@ -78,6 +81,11 @@ public class ConfigManager {
 
     public void setNebulaType(NebulaType type) {
         config.getNebulaConfig().setNebulaType(type.getTypeString());
+        save(file);
+    }
+
+    public void setNebulaStrength(float strength) {
+        config.getNebulaConfig().setNebulaStrength(strength);
         save(file);
     }
 

@@ -1,7 +1,7 @@
 package codes.ztereohype.example.config;
 
 public enum NebulaType {
-    RAINBOW("rainbow");
+    RAINBOW("Rainbow");
 
     private final String type;
 

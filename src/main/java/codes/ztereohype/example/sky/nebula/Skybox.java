@@ -1,5 +1,6 @@
 package codes.ztereohype.example.sky.nebula;
 
+import codes.ztereohype.example.NicerSkies;
 import com.mojang.blaze3d.platform.NativeImage;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.*;
@@ -24,6 +25,7 @@ public class Skybox {
     public void render(PoseStack poseStack, Matrix4f projectionMatrix) {
         RenderSystem.setShader(GameRenderer::getPositionTexShader);
         RenderSystem.setShaderTexture(0, skyTexture.getId());
+        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, NicerSkies.config.getNebulaStrength());
 
         this.skyboxBuffer.bind();
         this.skyboxBuffer.drawWithShader(poseStack.last().pose(), projectionMatrix, GameRenderer.getPositionTexShader());
