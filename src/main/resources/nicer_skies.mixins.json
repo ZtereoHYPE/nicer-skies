@@ -5,11 +5,12 @@
   "compatibilityLevel": "JAVA_17",
   "mixins": [],
   "client": [
-    "debug.MixinKeyboardHandler",
+    "MinecraftMixin",
+    "MixinLightTexutre",
     "MixinStarRendering",
     "debug.LightTextureInvoker",
     "debug.MixinDebug",
-    "MixinLightTexutre"
+    "debug.MixinKeyboardHandler"
   ],
   "server": [],
   "injectors": {

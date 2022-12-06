@@ -14,6 +14,7 @@ import java.util.stream.IntStream;
 public class SkyManager {
     private @Getter Starbox starbox;
     private @Getter Skybox skybox;
+    private @Getter boolean isInitialized = false;
 
     private final Gradient starGradient = new Gradient();
     private final Gradient nebulaGradient = new Gradient();
@@ -24,6 +25,8 @@ public class SkyManager {
         starGradient.clear();
 
         buildGradients();
+
+        System.out.println(seed);
 
         RandomSource randomSource = RandomSource.create(seed); //todo: world seed/hash server ip
 
@@ -38,6 +41,7 @@ public class SkyManager {
 
     public void tick(int ticks, VertexBuffer starBuffer) {
         this.starbox.updateStars(ticks, starBuffer);
+        this.isInitialized = true;
     }
 
     public void buildGradients() {

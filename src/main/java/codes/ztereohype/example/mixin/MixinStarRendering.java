@@ -1,11 +1,11 @@
 package codes.ztereohype.example.mixin;
 
 import codes.ztereohype.example.NicerSkies;
+import codes.ztereohype.example.core.NebulaSeedManager;
 import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.BufferBuilder;
-import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.blaze3d.vertex.VertexBuffer;
+import com.mojang.blaze3d.vertex.*;
 import com.mojang.math.Matrix4f;
+import lombok.Setter;
 import net.minecraft.client.Camera;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.renderer.GameRenderer;
@@ -29,9 +29,14 @@ public abstract class MixinStarRendering {
 
     @Inject(at = @At("HEAD"), method = "createStars", cancellable = true)
     private void generateStars(CallbackInfo ci) {
-        NicerSkies.skyManager.generateSky(212421L);
         starBuffer = new VertexBuffer();
-        NicerSkies.skyManager.tick(ticks, starBuffer);
+
+        BufferBuilder builder = Tesselator.getInstance().getBuilder();
+        builder.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_COLOR);
+
+        starBuffer.bind();
+        starBuffer.upload(builder.end());
+
         ci.cancel();
     }
 
@@ -57,9 +62,13 @@ public abstract class MixinStarRendering {
             locals = LocalCapture.CAPTURE_FAILHARD
     )
     private void drawSkybox(PoseStack poseStack, Matrix4f projectionMatrix, float partialTick, Camera camera, boolean bl, Runnable skyFogSetup, CallbackInfo ci, FogType fogType, Vec3 vec3, float f, float g, float h, BufferBuilder bufferBuilder, ShaderInstance shaderInstance, float[] fs, float i, Matrix4f matrix4f2, float k, int r, int s, int m, float t, float o, float p, float q) {
-        if (!NicerSkies.config.getNebulas()) return;
+        if (!NicerSkies.config.getNebulas() || !NicerSkies.skyManager.isInitialized()) return;
         float alpha = 2 * level.getStarBrightness(partialTick) * (1.0F - this.level.getRainLevel(partialTick));
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, alpha);
         NicerSkies.skyManager.getSkybox().render(poseStack, projectionMatrix);
     }
+
+//    public void setStarBuffer(VertexBuffer starBuffer) {
+//        this.starBuffer = starBuffer;
+//    }
 }

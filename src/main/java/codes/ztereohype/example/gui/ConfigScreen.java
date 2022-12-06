@@ -7,6 +7,7 @@ import codes.ztereohype.example.gui.widget.Separator;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.AbstractSliderButton;
+import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.Checkbox;
 import net.minecraft.client.gui.components.CycleButton;
 import net.minecraft.client.gui.screens.Screen;
@@ -73,6 +74,15 @@ public class ConfigScreen extends Screen {
                 NicerSkies.config.setNebulaStrength((float)this.value);
             }
         });
+
+        //reload nebula button
+//        addRenderableWidget(new Button(this.width / 2 + (this.width / 2 - 150) / 2, 120, 150, 20, Component.literal("Reload Nebula"), (button) -> {
+//            NicerSkies.skyManager.generateSky(NebulaSeedManager.getSeed());
+//        }));
+
+        addRenderableWidget(new Button(this.width / 2 - 100, this.height - 30, 200, 20, Component.literal("Back"), (button) -> {
+            minecraft.setScreen(lastScreen);
+        }));
     }
 
     @Override
