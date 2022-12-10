@@ -5,7 +5,6 @@ import com.mojang.blaze3d.vertex.*;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.levelgen.synth.ImprovedNoise;
 
-import java.awt.*;
 import java.util.ArrayList;
 
 public class Starbox {
@@ -37,10 +36,10 @@ public class Starbox {
             float resizeSpeed = 0.03f + randomSource.nextFloat() * 0.04f;
             float spinSpeed = randomSource.nextFloat() * 0.02f - 0.01f;
 
-            Color starColor = starGradient.getAt(randomSource.nextFloat());
+            int[] starColor = starGradient.getAt(randomSource.nextFloat());
 
             float starRadius = 0.15F + randomSource.nextFloat() * 0.15F;
-            double starValue = noise.noise(randX*2.5f, randY*2.5f, randZ*2.5f) + 0.5;
+            double starValue = noise.noise(randX * 2.5f, randY * 2.5f, randZ * 2.5f) + 0.5;
 
             float squaredDistance = randX * randX + randY * randY + randZ * randZ;
             if (squaredDistance < 1.0 && squaredDistance > 0.01 && starValue > 0.2) {

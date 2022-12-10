@@ -1,11 +1,10 @@
 package codes.ztereohype.example.core;
 
-import java.awt.*;
 import java.util.Map;
 import java.util.TreeMap;
 
 public class Gradient {
-    private final TreeMap<Double, Color> gradient;
+    private final TreeMap<Double, int[]> gradient;
 
     public Gradient() {
         this.gradient = new TreeMap<>();
@@ -15,8 +14,8 @@ public class Gradient {
         if (index < 0 || index > 1) {
             throw new IllegalArgumentException("Index must be between 0 and 1");
         }
-        
-        Color color = new Color(red,green,blue);
+
+        int[] color = {red, green, blue};
         gradient.put(index, color);
     }
 
@@ -28,12 +27,12 @@ public class Gradient {
         gradient.clear();
     }
 
-    public Color getAt(double value) {
+    public int[] getAt(double value) {
         if (value < 0D || value > 1D) {
             throw new IllegalArgumentException("Value must be between 0 and 1");
         }
 
-        Map.Entry<Double, Color> floorEntry, ceilingEntry;
+        Map.Entry<Double, int[]> floorEntry, ceilingEntry;
 
         floorEntry = gradient.floorEntry(value);
         if (floorEntry == null) { // we're under the lowest, return the lowest
@@ -48,13 +47,13 @@ public class Gradient {
         double ratio = (value - floorEntry.getKey()) / (ceilingEntry.getKey() - floorEntry.getKey());
         double invRatio = 1 - ratio;
 
-        Color firstColor = floorEntry.getValue();
-        Color secondColor = ceilingEntry.getValue();
+        int[] firstColor = floorEntry.getValue();
+        int[] secondColor = ceilingEntry.getValue();
 
-        long red   = Math.round(secondColor.getRed()   * ratio + firstColor.getRed()   * invRatio);
-        long green = Math.round(secondColor.getGreen() * ratio + firstColor.getGreen() * invRatio);
-        long blue  = Math.round(secondColor.getBlue()  * ratio + firstColor.getBlue()  * invRatio);
+        long red = Math.round(secondColor[0] * ratio + firstColor[0] * invRatio);
+        long green = Math.round(secondColor[1] * ratio + firstColor[1] * invRatio);
+        long blue = Math.round(secondColor[2] * ratio + firstColor[2] * invRatio);
 
-        return new Color((int)red, (int)green, (int)blue);
+        return new int[]{(int) red, (int) green, (int) blue};
     }
 }

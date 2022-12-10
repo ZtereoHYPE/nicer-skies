@@ -1,9 +1,8 @@
 package codes.ztereohype.example.sky.star;
 
 import com.mojang.blaze3d.vertex.BufferBuilder;
+import lombok.Getter;
 import net.minecraft.util.Mth;
-
-import java.awt.*;
 
 public class Star {
     private final float xCoord;
@@ -27,12 +26,12 @@ public class Star {
     private final int b;
 
     private float currentAngle;
-    private float currentRadius;
+    private @Getter float currentRadius;
 
-    public Star(float randX, float randY, float randZ, float size, Color color, float resizeSpeed, float spinSpeed) {
-        this.r = color.getRed();
-        this.g = color.getGreen();
-        this.b = color.getBlue();
+    public Star(float randX, float randY, float randZ, float size, int[] color, float resizeSpeed, float spinSpeed) {
+        this.r = color[0];
+        this.g = color[1];
+        this.b = color[2];
 
         float invsqrtDistance = Mth.fastInvSqrt(randX * randX + randY * randY + randZ * randZ);
         this.xCoord = randX * invsqrtDistance * 100.0F;
