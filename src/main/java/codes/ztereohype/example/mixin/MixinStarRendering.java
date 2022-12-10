@@ -1,11 +1,8 @@
 package codes.ztereohype.example.mixin;
 
 import codes.ztereohype.example.NicerSkies;
-import codes.ztereohype.example.core.NebulaSeedManager;
-import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.*;
 import com.mojang.math.Matrix4f;
-import lombok.Setter;
 import net.minecraft.client.Camera;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.renderer.GameRenderer;
@@ -42,7 +39,7 @@ public abstract class MixinStarRendering {
 
     @Inject(at = @At("HEAD"), method = "tick")
     private void tickStars(CallbackInfo ci) {
-        if (!NicerSkies.config.getTwinklingStars()) return;
+        if (!NicerSkies.config.getTwinklingStars() && NicerSkies.skyManager.isInitialized()) return;
         if (this.level.getStarBrightness(0) < 0.0F) return;
         NicerSkies.skyManager.tick(ticks, starBuffer);
     }
@@ -63,12 +60,6 @@ public abstract class MixinStarRendering {
     )
     private void drawSkybox(PoseStack poseStack, Matrix4f projectionMatrix, float partialTick, Camera camera, boolean bl, Runnable skyFogSetup, CallbackInfo ci, FogType fogType, Vec3 vec3, float f, float g, float h, BufferBuilder bufferBuilder, ShaderInstance shaderInstance, float[] fs, float i, Matrix4f matrix4f2, float k, int r, int s, int m, float t, float o, float p, float q) {
         if (!NicerSkies.config.getNebulas() || !NicerSkies.skyManager.isInitialized()) return;
-        float alpha = 2 * level.getStarBrightness(partialTick) * (1.0F - this.level.getRainLevel(partialTick));
-        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, alpha);
         NicerSkies.skyManager.getSkybox().render(poseStack, projectionMatrix);
     }
-
-//    public void setStarBuffer(VertexBuffer starBuffer) {
-//        this.starBuffer = starBuffer;
-//    }
 }

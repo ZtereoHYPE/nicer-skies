@@ -6,8 +6,11 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.*;
 import com.mojang.math.Matrix4f;
 import lombok.Getter;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.renderer.texture.DynamicTexture;
+import net.minecraft.util.Mth;
 
 public class Skybox {
     public static final int RESOLUTION = 512;
@@ -25,12 +28,17 @@ public class Skybox {
     public void render(PoseStack poseStack, Matrix4f projectionMatrix) {
         RenderSystem.setShader(GameRenderer::getPositionTexShader);
         RenderSystem.setShaderTexture(0, skyTexture.getId());
-        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, NicerSkies.config.getNebulaStrength());
+
+        float alpha = getSkyboxBrightness(Minecraft.getInstance().level);
+
+        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, alpha);
 
         this.skyboxBuffer.bind();
-        this.skyboxBuffer.drawWithShader(poseStack.last().pose(), projectionMatrix, GameRenderer.getPositionTexShader());
+        this.skyboxBuffer.drawWithShader(poseStack.last()
+                                                  .pose(), projectionMatrix, GameRenderer.getPositionTexShader());
     }
 
+    // todo: maybe multithread the hecc out of the generation to sped up the loading time
     public void paint(SkyboxPainter painter) {
         NativeImage skyNativeTex = this.skyTexture.getPixels();
 
@@ -150,5 +158,17 @@ public class Skybox {
 
         skyboxBuffer.bind();
         skyboxBuffer.upload(skyboxBuilder.end());
+    }
+
+    private float getSkyboxBrightness(ClientLevel level) {
+        float config = NicerSkies.config.getNebulaStrength();
+
+        float timeOfDay = level.getTimeOfDay(0);
+        float nightness = 1.0F - (Mth.cos(timeOfDay * (float) (Math.PI * 2)) * 4.0F + 0.5F);
+        nightness = Mth.clamp(nightness, 0.0F, 1.0F);
+
+        float rain = level.getRainLevel(0);
+
+        return nightness * (1f - rain) * config;
     }
 }
