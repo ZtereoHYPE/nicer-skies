@@ -18,15 +18,13 @@ public class SkyManager {
 
     private final Gradient starGradient = new Gradient();
     private final Gradient nebulaGradient = new Gradient();
-    private final Gradient starryGradient = new Gradient();
+//    private final Gradient starryGradient = new Gradient();
 
     public void generateSky(long seed) {
         nebulaGradient.clear();
         starGradient.clear();
 
         buildGradients();
-
-        System.out.println(seed);
 
         RandomSource randomSource = RandomSource.create(seed); //todo: world seed/hash server ip
 
