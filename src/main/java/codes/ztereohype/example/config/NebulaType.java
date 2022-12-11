@@ -12,14 +12,4 @@ public enum NebulaType {
     public String getTypeString() {
         return type;
     }
-
-    // bad?
-    public static NebulaType getFromString(String type) {
-        for (NebulaType nebulaType : NebulaType.values()) {
-            if (nebulaType.getTypeString().equals(type)) {
-                return nebulaType;
-            }
-        }
-        return null;
-    }
 }
