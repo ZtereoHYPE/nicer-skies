@@ -14,4 +14,8 @@ public class NebulaSeedManager {
             return Objects.requireNonNull(Minecraft.getInstance().getCurrentServer()).ip.hashCode();
         }
     }
+
+    public static boolean canGetSeed() {
+        return Minecraft.getInstance().hasSingleplayerServer() || Minecraft.getInstance().getCurrentServer() != null;
+    }
 }

@@ -1,5 +1,7 @@
 package codes.ztereohype.example.sky;
 
+import codes.ztereohype.example.NicerSkies;
+import codes.ztereohype.example.config.ConfigManager;
 import codes.ztereohype.example.core.Gradient;
 import codes.ztereohype.example.sky.nebula.NebulaSkyboxPainter;
 import codes.ztereohype.example.sky.nebula.Skybox;
@@ -21,6 +23,8 @@ public class SkyManager {
 //    private final Gradient starryGradient = new Gradient();
 
     public void generateSky(long seed) {
+        ConfigManager cm = NicerSkies.config;
+
         nebulaGradient.clear();
         starGradient.clear();
 
@@ -29,7 +33,7 @@ public class SkyManager {
         RandomSource randomSource = RandomSource.create(seed); //todo: world seed/hash server ip
 
         PerlinNoise perlinNoise = PerlinNoise.create(randomSource, IntStream.of(1, 2, 3, 4, 5));
-        NebulaSkyboxPainter painter = new NebulaSkyboxPainter(perlinNoise, nebulaGradient);
+        NebulaSkyboxPainter painter = new NebulaSkyboxPainter(perlinNoise, nebulaGradient, cm.getNebulaNoiseScale(), cm.getNebulaNoiseAmount(), cm.getNebulaBaseColourAmount());
 
 //        StarSkyboxPainter painter = new StarSkyboxPainter(perlinNoise, starryGradient);
 

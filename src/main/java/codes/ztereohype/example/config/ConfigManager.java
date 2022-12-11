@@ -8,6 +8,8 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public class ConfigManager {
+    public static final Config DEFAULT_CONFIG = new Config(false, true, true, NebulaType.RAINBOW.getTypeString(), 1f, 0.5f, 1f, 128);
+
     private static final Gson gson = new Gson();
     private final Config config;
     private final File file;
@@ -19,7 +21,7 @@ public class ConfigManager {
                 file.getParentFile().mkdirs();
                 file.createNewFile();
 
-                config = new Config(false, true, true, "rainbow", 1f);
+                config = cloneConfig(DEFAULT_CONFIG);
 
                 gson.toJson(config, new FileWriter(file));
             } else {
@@ -32,7 +34,7 @@ public class ConfigManager {
         } catch (IOException e) {
             // todo setup logger properly
             e.printStackTrace();
-            config = new Config(false, true, true, "rainbow", 1f);
+            config = cloneConfig(DEFAULT_CONFIG);
         }
 
         return new ConfigManager(config, file);
@@ -57,11 +59,23 @@ public class ConfigManager {
     }
 
     public NebulaType getNebulaType() {
-        return NebulaType.getFromString(config.getNebulaConfig().getNebulaType());
+        return NebulaType.valueOf(config.getNebulaConfig().getNebulaType().toUpperCase());
     }
 
     public float getNebulaStrength() {
         return config.getNebulaConfig().getNebulaStrength();
+    }
+
+    public float getNebulaNoiseAmount() {
+        return config.getNebulaConfig().getNebulaNoiseAmount();
+    }
+
+    public float getNebulaNoiseScale() {
+        return config.getNebulaConfig().getNebulaNoiseScale();
+    }
+
+    public int getNebulaBaseColourAmount() {
+        return config.getNebulaConfig().getBaseColourAmount();
     }
 
     public void setLightmapTweaked(boolean tweaked) {
@@ -89,6 +103,21 @@ public class ConfigManager {
         save(file);
     }
 
+    public void setNebulaNoiseAmount(float amount) {
+        config.getNebulaConfig().setNebulaNoiseAmount(amount);
+        save(file);
+    }
+
+    public void setNebulaNoiseScale(float scale) {
+        config.getNebulaConfig().setNebulaNoiseScale(scale);
+        save(file);
+    }
+
+    public void setNebulaBaseColourAmount(int amount) {
+        config.getNebulaConfig().setBaseColourAmount(amount);
+        save(file);
+    }
+
     public void save(File file) {
         try (FileWriter writer = new FileWriter(file)) {
             writer.write(gson.toJson(config));
@@ -98,5 +127,22 @@ public class ConfigManager {
             // todo setup logger properly
 //            LogManager.getLogManager().getLogger("NicerSkies").warning("Failed to save config file!");
         }
+    }
+
+    private static Config cloneConfig(Config config) {
+        return gson.fromJson(gson.toJson(config), Config.class);
+    }
+
+    public boolean nebulaConfigEquals(Config config) {
+        return this.config.getNebulaConfig().equals(config.getNebulaConfig());
+    }
+
+    public void resetNebulaSettings() {
+        config.getNebulaConfig().setNebulaType(DEFAULT_CONFIG.getNebulaConfig().getNebulaType());
+        config.getNebulaConfig().setNebulaStrength(DEFAULT_CONFIG.getNebulaConfig().getNebulaStrength());
+        config.getNebulaConfig().setNebulaNoiseAmount(DEFAULT_CONFIG.getNebulaConfig().getNebulaNoiseAmount());
+        config.getNebulaConfig().setNebulaNoiseScale(DEFAULT_CONFIG.getNebulaConfig().getNebulaNoiseScale());
+        config.getNebulaConfig().setBaseColourAmount(DEFAULT_CONFIG.getNebulaConfig().getBaseColourAmount());
+        save(file);
     }
 }

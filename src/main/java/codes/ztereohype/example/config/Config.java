@@ -1,12 +1,15 @@
 package codes.ztereohype.example.config;
 
+import lombok.Data;
+
+@Data
 public class Config {
-    public Config(boolean tweakedLigthmap, boolean twinklingStars, boolean nebulas, String nebulaType, float nebulaStrength) {
+    public Config(boolean tweakedLigthmap, boolean twinklingStars, boolean nebulas, String nebulaType, float nebulaStrength, float nebulaNoiseAmount, float nebulaNoiseScale, int baseColourAmount) {
         this.tweakedLigthmap = tweakedLigthmap;
         this.twinklingStars = twinklingStars;
         this.nebulas = nebulas;
 
-        this.nebulaConfig = new NebulaConfig(nebulaType, nebulaStrength);
+        this.nebulaConfig = new NebulaConfig(nebulaType, nebulaStrength, nebulaNoiseAmount, nebulaNoiseScale, baseColourAmount);
     }
 
     private boolean tweakedLigthmap;
@@ -15,67 +18,20 @@ public class Config {
 
     private final NebulaConfig nebulaConfig;
 
-    public boolean isTweakedLigthmap() {
-        return this.tweakedLigthmap;
-    }
-
-    public boolean isTwinklingStars() {
-        return this.twinklingStars;
-    }
-
-    public boolean isNebulas() {
-        return this.nebulas;
-    }
-
-    public NebulaConfig getNebulaConfig() {
-        return this.nebulaConfig;
-    }
-
-    public void setTweakedLigthmap(boolean tweakedLigthmap) {
-        this.tweakedLigthmap = tweakedLigthmap;
-    }
-
-    public void setTwinklingStars(boolean twinklingStars) {
-        this.twinklingStars = twinklingStars;
-    }
-
-    public void setNebulas(boolean nebulas) {
-        this.nebulas = nebulas;
-    }
-
+    @Data
     public static final class NebulaConfig {
-        public NebulaConfig(String nebulaType, float nebulaStrength) {
+        public NebulaConfig(String nebulaType, float nebulaStrength, float nebulaNoiseAmount, float nebulaNoiseScale, int baseColourAmount) {
             this.nebulaType = nebulaType;
             this.nebulaStrength = nebulaStrength;
+            this.nebulaNoiseAmount = nebulaNoiseAmount;
+            this.nebulaNoiseScale = nebulaNoiseScale;
+            this.baseColourAmount = baseColourAmount;
         }
 
         private String nebulaType;
         private float nebulaStrength;
-
-        public String getNebulaType() {
-            return this.nebulaType;
-        }
-
-        public void setNebulaType(String nebulaType) {
-            this.nebulaType = nebulaType;
-        }
-
-        public float getNebulaStrength() {
-            return this.nebulaStrength;
-        }
-
-        public void setNebulaStrength(float nebulaStrength) {
-            this.nebulaStrength = nebulaStrength;
-        }
-    }
-
-    @Override
-    public String toString() {
-        return "Config{" +
-                "tweakedLigthmap=" + tweakedLigthmap +
-                ", twinklingStars=" + twinklingStars +
-                ", nebulas=" + nebulas +
-                ", nebulaConfig=" + nebulaConfig +
-                '}';
+        private float nebulaNoiseAmount;
+        private float nebulaNoiseScale;
+        private int baseColourAmount;
     }
 }

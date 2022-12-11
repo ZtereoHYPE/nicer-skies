@@ -6,15 +6,19 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.level.levelgen.synth.PerlinNoise;
 
 public class NebulaSkyboxPainter extends SkyboxPainter {
-    private static final float SCALING_FACTOR = 1f;
-    private static final float NOISE_AMOUNT = 0.51f; // the amount of base noise to keep
-    private static final int BASE_COLOUR_STRENGTH = 128;
+    private final float scalingFactor;
+    private final float noiseAmount; // the amount of base noise to keep
+    private final int baseColourStrength;
 
     private final Gradient nebulaGradient;
 
-    public NebulaSkyboxPainter(PerlinNoise noise, Gradient nebula_gradient) {
+    public NebulaSkyboxPainter(PerlinNoise noise, Gradient nebulaGradient, float scalingFactor, float noiseAmount, int baseColourStrength) {
         super(noise);
-        nebulaGradient = nebula_gradient;
+        this.nebulaGradient = nebulaGradient;
+
+        this.scalingFactor = scalingFactor;
+        this.noiseAmount = noiseAmount;
+        this.baseColourStrength = baseColourStrength;
     }
 
     @Override
@@ -26,26 +30,34 @@ public class NebulaSkyboxPainter extends SkyboxPainter {
         z = projCoords[2];
 
         // Get offset
-        float offset = (float) noise.getValue(x * SCALING_FACTOR * 3, y * SCALING_FACTOR * 3, z * SCALING_FACTOR * 3);
+        float offset = (float) noise.getValue(x * scalingFactor * 3, y * scalingFactor * 3, z * scalingFactor * 3);
         x = Mth.clamp(x + offset / 5f, -1f, 1f);
         y = Mth.clamp(y + offset / 5f, -1f, 1f);
         z = Mth.clamp(z + offset / 5f, -1f, 1f);
 
         // Value of noise at coord, 0..1
-        double noiseValue = Mth.clamp(noise.getValue(x * SCALING_FACTOR, y * SCALING_FACTOR, z * SCALING_FACTOR) + 0.5, 0, 1);
+        double noiseValue = Mth.clamp(noise.getValue(x * scalingFactor, y * scalingFactor, z * scalingFactor) + 0.5, 0, 1);
 
         // Value to be subtracted from noise at coord, 0..1
-        double subtractionValue = Mth.clamp(noise.getOctaveNoise(1).noise(x * SCALING_FACTOR, y * SCALING_FACTOR, z * SCALING_FACTOR) + 0.5, 0D, 1D);
+        double subtractionValue = Mth.clamp(noise.getOctaveNoise(1)
+                                                 .noise(x * scalingFactor, y * scalingFactor, z * scalingFactor) + 0.5, 0D, 1D);
 
         double[] ds = new double[3];
-        noise.getOctaveNoise(0).noiseWithDerivative(x * SCALING_FACTOR, y * SCALING_FACTOR, z * SCALING_FACTOR, ds);
+        noise.getOctaveNoise(0).noiseWithDerivative(x * scalingFactor, y * scalingFactor, z * scalingFactor, ds);
 
         // Find a base background colour to use (xyz interpoaltion across sky, gamer mode)
-        int baseB = (int) ((x / 2 + 0.5) * BASE_COLOUR_STRENGTH);
-        int baseG = (int) ((y / 2 + 0.5) * BASE_COLOUR_STRENGTH);
-        int baseR = (int) ((z / 2 + 0.5) * BASE_COLOUR_STRENGTH);
+        int baseB = (int) ((x / 2 + 0.5) * baseColourStrength);
+        int baseG = (int) ((y / 2 + 0.5) * baseColourStrength);
+        int baseR = (int) ((z / 2 + 0.5) * baseColourStrength);
 
-        double nebulaFactor = (Mth.clamp((noiseValue * (1D / NOISE_AMOUNT) - (1D / NOISE_AMOUNT - 1)), 0, 0.99));
+        // Turn off nebula rendering if noiseAmount is 0. (user expected behaviour)
+        double nebulaFactor;
+        if (noiseAmount != 0) {
+            nebulaFactor = (Mth.clamp((noiseValue * (1D / noiseAmount) - (1D / noiseAmount - 1)), 0, 0.99));
+        } else {
+            nebulaFactor = 0;
+        }
+
         int[] nebula = nebulaGradient.getAt(nebulaFactor);
         double bgFactor = Mth.clamp(Math.log10(-nebulaFactor + 1) + 1, 0, 1);
 
