@@ -1,16 +1,13 @@
 {
   "required": true,
   "minVersion": "0.8",
-  "package": "codes.ztereohype.example.mixin",
+  "package": "codes.ztereohype.nicerskies.mixin",
   "compatibilityLevel": "JAVA_17",
   "mixins": [],
   "client": [
-    "codes.ztereohype.nicer.skies.mixin.MinecraftMixin",
-    "codes.ztereohype.nicer.skies.mixin.MixinLightTexutre",
-    "codes.ztereohype.nicer.skies.mixin.MixinStarRendering",
-    "codes.ztereohype.nicer.skies.mixin.debug.LightTextureInvoker",
-    "codes.ztereohype.nicer.skies.mixin.debug.MixinDebug",
-    "codes.ztereohype.nicer.skies.mixin.debug.MixinKeyboardHandler"
+    "MinecraftMixin",
+    "MixinLightTexutre",
+    "MixinStarRendering"
   ],
   "server": [],
   "injectors": {
