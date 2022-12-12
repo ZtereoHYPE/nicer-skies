@@ -139,7 +139,6 @@ public class ConfigScreen extends Screen {
         //reset to default
         addRenderableWidget(new Button(this.width / 2 + (this.width / 2 - 150) / 2 + 76, 156, 74, 20, Component.literal("Reset"), (button) -> {
             cm.resetNebulaSettings();
-            // find better way to reload screen
             this.clearWidgets();
             this.init();
             invalidated = true;
