@@ -15,10 +15,10 @@
   "environment": "client",
   "entrypoints": {
     "main": [
-      "codes.ztereohype.example.NicerSkies"
+      "codes.ztereohype.nicerskies.NicerSkies"
     ],
     "modmenu": [
-      "codes.ztereohype.example.gui.ModMenuSettingsApi"
+      "codes.ztereohype.nicerskies.gui.ModMenuSettingsApi"
     ]
   },
   "mixins": [
