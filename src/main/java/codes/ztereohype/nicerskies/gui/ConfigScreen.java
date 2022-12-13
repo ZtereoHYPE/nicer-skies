@@ -128,7 +128,7 @@ public class ConfigScreen extends Screen {
         addRenderableWidget(new Button(this.width / 2 + (this.width / 2 - 150) / 2, 156, 74, 20, Component.literal("Apply"), (button) -> {
             NicerSkies.skyManager.generateSky(NebulaSeedManager.getSeed());
             invalidated = false;
-        }) {
+        }, null) {
             @Override
             public void render(@NotNull PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
                 this.active = invalidated && NebulaSeedManager.canGetSeed();
@@ -142,7 +142,7 @@ public class ConfigScreen extends Screen {
             this.clearWidgets();
             this.init();
             invalidated = true;
-        }) {
+        }, null) {
             @Override
             public void render(@NotNull PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
                 this.active = !isDefaultNebulaSettings();
@@ -150,10 +150,12 @@ public class ConfigScreen extends Screen {
             }
         });
 
+        addRenderableWidget(Button.builder(Component.literal("Back"), (button) -> this.onClose())
+                                  .pos(this.width / 2 - 100, this.height - 30)
+                                  .size(200, 20)
+                                  .build());
+        super.init();
 
-        addRenderableWidget(new Button(this.width / 2 - 100, this.height - 30, 200, 20, Component.literal("Back"), (button) -> {
-            this.onClose();
-        }));
     }
 
     @Override
