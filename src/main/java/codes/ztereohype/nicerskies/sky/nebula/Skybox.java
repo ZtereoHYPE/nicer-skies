@@ -31,7 +31,7 @@ public class Skybox {
 
         float alpha = getSkyboxBrightness(Minecraft.getInstance().level);
 
-        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, alpha);
+        RenderSystem.setShaderColor(alpha, alpha, alpha, 1F);
 
         this.skyboxBuffer.bind();
         this.skyboxBuffer.drawWithShader(poseStack.last()
@@ -164,8 +164,8 @@ public class Skybox {
         float config = NicerSkies.config.getNebulaStrength();
 
         float timeOfDay = level.getTimeOfDay(0);
-        float nightness = 1.0F - (Mth.cos(timeOfDay * (float) (Math.PI * 2)) * 4.0F + 0.5F);
-        nightness = Mth.clamp(nightness, 0.0F, 1.0F);
+        float nightness = 1F - (Mth.cos(timeOfDay * (float) (Math.PI * 2)) * 4.0F + 0.5F);
+        nightness = Mth.clamp(nightness, (NicerSkies.config.getRenderDuringDay() ? 1f : 0f), 1.0F);
 
         float rain = level.getRainLevel(0);
 

@@ -8,7 +8,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public class ConfigManager {
-    public static final Config DEFAULT_CONFIG = new Config(false, true, true, NebulaType.RAINBOW.getTypeString(), 1f, 0.5f, 1f, 128);
+    public static final Config DEFAULT_CONFIG = new Config(false, true, true, NebulaType.RAINBOW.getTypeString(), 1f, 0.5f, 1f, 128, false);
 
     private static final Gson gson = new Gson();
     private final Config config;
@@ -78,6 +78,10 @@ public class ConfigManager {
         return config.getNebulaConfig().getBaseColourAmount();
     }
 
+    public boolean getRenderDuringDay() {
+        return config.getNebulaConfig().isRenderDuringDay();
+    }
+
     public void setLightmapTweaked(boolean tweaked) {
         config.setTweakedLigthmap(tweaked);
         save(file);
@@ -115,6 +119,10 @@ public class ConfigManager {
 
     public void setNebulaBaseColourAmount(int amount) {
         config.getNebulaConfig().setBaseColourAmount(amount);
+        save(file);
+    }
+    public void setRenderDuringDay(boolean bl) {
+        config.getNebulaConfig().setRenderDuringDay(bl);
         save(file);
     }
 
