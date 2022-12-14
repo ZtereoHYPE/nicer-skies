@@ -65,8 +65,16 @@ public class ConfigScreen extends Screen {
 //
 //        addRenderableWidget(nebulaType);
 
+        addRenderableWidget(new Checkbox(this.width / 2 + (this.width / 2 - 150) / 2, 60, 20, 20, Component.literal("Render During Day"), cm.getRenderDuringDay()) {
+            @Override
+            public void onPress() {
+                super.onPress();
+                cm.setRenderDuringDay(!cm.getRenderDuringDay());
+            }
+        });
+
         float strength = cm.getNebulaStrength();
-        addRenderableWidget(new AbstractSliderButton(this.width / 2 + (this.width / 2 - 150) / 2, 60, 150, 20, Component.literal("Nebula Strength: " + (int) (strength * 100) + "%"), strength) {
+        addRenderableWidget(new AbstractSliderButton(this.width / 2 + (this.width / 2 - 150) / 2, 84, 150, 20, Component.literal("Nebula Strength: " + (int) (strength * 100) + "%"), strength) {
             @Override
             protected void updateMessage() {
                 this.setMessage(Component.literal("Nebula Strength: " + (int) (this.value * 100) + "%"));
@@ -79,7 +87,7 @@ public class ConfigScreen extends Screen {
         });
 
         float noiseAmount = cm.getNebulaNoiseAmount();
-        addRenderableWidget(new AbstractSliderButton(this.width / 2 + (this.width / 2 - 150) / 2, 84, 150, 20, Component.literal("Nebula Amount: " + (int) (noiseAmount * 100) + "%"), noiseAmount) {
+        addRenderableWidget(new AbstractSliderButton(this.width / 2 + (this.width / 2 - 150) / 2, 108, 150, 20, Component.literal("Nebula Amount: " + (int) (noiseAmount * 100) + "%"), noiseAmount) {
             @Override
             protected void updateMessage() {
                 invalidated = true;
@@ -93,7 +101,7 @@ public class ConfigScreen extends Screen {
         });
 
         int baseColourAmount = cm.getNebulaBaseColourAmount();
-        addRenderableWidget(new AbstractSliderButton(this.width / 2 + (this.width / 2 - 150) / 2, 108, 150, 20, Component.literal("Background Strength: " + baseColourAmount), baseColourAmount / 255f) {
+        addRenderableWidget(new AbstractSliderButton(this.width / 2 + (this.width / 2 - 150) / 2, 132, 150, 20, Component.literal("Background Strength: " + baseColourAmount), baseColourAmount / 255f) {
             @Override
             protected void updateMessage() {
                 invalidated = true;
@@ -107,7 +115,7 @@ public class ConfigScreen extends Screen {
         });
 
         float nebulaNoiseScale = cm.getNebulaNoiseScale();
-        addRenderableWidget(new AbstractSliderButton(this.width / 2 + (this.width / 2 - 150) / 2, 132, 150, 20, Component.literal("Nebula Scale: " + nebulaNoiseScale), Math.round((nebulaNoiseScale - 0.5f) / 1.5f * 100) / 100f) {
+        addRenderableWidget(new AbstractSliderButton(this.width / 2 + (this.width / 2 - 150) / 2, 156, 150, 20, Component.literal("Nebula Scale: " + nebulaNoiseScale), Math.round((nebulaNoiseScale - 0.5f) / 1.5f * 100) / 100f) {
             @Override
             protected void updateMessage() {
                 invalidated = true;
@@ -125,7 +133,7 @@ public class ConfigScreen extends Screen {
         });
 
         //reload nebula button
-        addRenderableWidget(new Button(this.width / 2 + (this.width / 2 - 150) / 2, 156, 74, 20, Component.literal("Apply"), (button) -> {
+        addRenderableWidget(new Button(this.width / 2 + (this.width / 2 - 150) / 2, 180, 74, 20, Component.literal("Apply"), (button) -> {
             NicerSkies.skyManager.generateSky(NebulaSeedManager.getSeed());
             invalidated = false;
         }) {
@@ -137,7 +145,7 @@ public class ConfigScreen extends Screen {
         });
 
         //reset to default
-        addRenderableWidget(new Button(this.width / 2 + (this.width / 2 - 150) / 2 + 76, 156, 74, 20, Component.literal("Reset"), (button) -> {
+        addRenderableWidget(new Button(this.width / 2 + (this.width / 2 - 150) / 2 + 76, 180, 74, 20, Component.literal("Reset"), (button) -> {
             cm.resetNebulaSettings();
             // find better way to reload screen
             this.clearWidgets();
