@@ -2,10 +2,10 @@ package codes.ztereohype.nicerskies.gui.widget;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.gui.GuiComponent;
-import net.minecraft.client.gui.components.Widget;
+import net.minecraft.client.gui.components.Renderable;
 import org.jetbrains.annotations.NotNull;
 
-public class Separator extends GuiComponent implements Widget {
+public class Separator extends GuiComponent implements Renderable {
     private final int x;
     private final int y;
     private final int height;

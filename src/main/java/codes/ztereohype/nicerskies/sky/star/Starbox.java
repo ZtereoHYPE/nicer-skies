@@ -25,6 +25,7 @@ public class Starbox {
         generateStars(randomSource);
     }
 
+    // not good practice: decrementing iteration variable
     private void generateStars(RandomSource randomSource) {
         ImprovedNoise noise = new ImprovedNoise(randomSource);
 

@@ -1,9 +1,10 @@
 package codes.ztereohype.nicerskies.mixin;
 
 import codes.ztereohype.nicerskies.NicerSkies;
-import com.mojang.math.Vector3f;
+import lombok.SneakyThrows;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.renderer.LightTexture;
+import org.joml.Vector3f;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -14,10 +15,11 @@ import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 public abstract class MixinLightTexutre {
     @Inject(
             method = "updateLightTexture",
-            at = @At(value = "INVOKE", target = "Lcom/mojang/math/Vector3f;clamp(FF)V", shift = At.Shift.BEFORE, ordinal = 2),
+            at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/LightTexture;clampColor(Lorg/joml/Vector3f;)V", shift = At.Shift.BEFORE, ordinal = 2),
             locals = LocalCapture.CAPTURE_FAILHARD
     )
-    private void injectWarmLight(float partialTicks, CallbackInfo ci, ClientLevel clientLevel, float f, float g, float h, float i, float j, float l, float k, Vector3f vector3f, float m, Vector3f vector3f2, int n, int o, float p, float q, float r, float s, float t, boolean bl, float v, Vector3f vector3f5) {
+    @SneakyThrows
+    private void injectWarmLight(float partialTicks, CallbackInfo ci, ClientLevel clientLevel, float f, float g, float h, float i, float j, float l, float k, Vector3f vector3f, float m, Vector3f vector3f2, int n, int o, float p, float q, float r, float s, float t, boolean bl, float v, Vector3f vector3f5)  {
         if (!NicerSkies.config.getLightmapTweaked()) return;
         Vector3f warmTint = new Vector3f(0.36F, 0.13F, -0.15F);
 
@@ -28,7 +30,7 @@ public abstract class MixinLightTexutre {
         warmTint.mul(warmness);
         warmTint.add(1f, 1f, 1f);
 
-        Vector3f dramaticFactor = vector3f2.copy();
+        Vector3f dramaticFactor = (Vector3f) vector3f2.clone();
         dramaticFactor.mul(0.20f);
         dramaticFactor.add(0.80f, 0.80f, 0.81f);
 
