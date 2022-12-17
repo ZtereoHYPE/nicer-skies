@@ -4,7 +4,9 @@ import codes.ztereohype.nicerskies.NicerSkies;
 import com.mojang.blaze3d.platform.NativeImage;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.*;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.SneakyThrows;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.renderer.GameRenderer;
@@ -12,10 +14,16 @@ import net.minecraft.client.renderer.texture.DynamicTexture;
 import net.minecraft.util.Mth;
 import org.joml.Matrix4f;
 
+import java.util.concurrent.*;
+import java.util.function.BiFunction;
+
+
 public class Skybox {
     public static final int RESOLUTION = 512;
 
     private final DynamicTexture skyTexture = new DynamicTexture(RESOLUTION * 4, RESOLUTION * 4, false);
+
+    private final ExecutorService skyExecutor = Executors.newCachedThreadPool();
 
     private final @Getter VertexBuffer skyboxBuffer = new VertexBuffer();
 
@@ -41,74 +49,76 @@ public class Skybox {
     // todo: maybe multithread the hecc out of the generation to sped up the loading time
     public void paint(SkyboxPainter painter) {
         NativeImage skyNativeTex = this.skyTexture.getPixels();
+        CountDownLatch latch = new CountDownLatch(PaintTask.TextureLocation.values().length);
 
-        // top face
-        for (int texY = 0; texY < RESOLUTION; texY++) {
-            for (int texX = 0; texX < RESOLUTION; texX++) {
-                float x = (texX / (float) RESOLUTION) * 2 - 1;
-                float y = 1;
-                float z = (texY / (float) RESOLUTION) * 2 - 1;
-
-                skyNativeTex.setPixelRGBA(texX + 2 * RESOLUTION, texY, painter.getColour(x, y, z));
-            }
+        for (PaintTask.TextureLocation location : PaintTask.TextureLocation.values()) {
+            skyExecutor.execute(new PaintTask(skyNativeTex, painter, location, latch));
         }
 
-        // bottom face
-        for (int texY = 0; texY < RESOLUTION; texY++) {
-            for (int texX = 0; texX < RESOLUTION; texX++) {
-                float x = (texX / (float) RESOLUTION) * 2 - 1;
-                float y = -1;
-                float z = (texY / (float) RESOLUTION) * 2 - 1;
-
-                skyNativeTex.setPixelRGBA(texX + 2 * RESOLUTION, texY + 2 * RESOLUTION, painter.getColour(x, y, z));
-            }
-        }
-
-        // -x face
-        for (int texY = 0; texY < RESOLUTION; texY++) {
-            for (int texX = 0; texX < RESOLUTION; texX++) {
-                float x = -1;
-                float y = (texY / (float) RESOLUTION) * 2 - 1;
-                float z = (texX / (float) RESOLUTION) * 2 - 1;
-
-                skyNativeTex.setPixelRGBA(texX, texY + RESOLUTION, painter.getColour(x, y, z));
-            }
-        }
-
-        // +x face
-        for (int texY = 0; texY < RESOLUTION; texY++) {
-            for (int texX = 0; texX < RESOLUTION; texX++) {
-                float x = 1;
-                float y = (texY / (float) RESOLUTION) * 2 - 1;
-                float z = (texX / (float) RESOLUTION) * 2 - 1;
-
-                skyNativeTex.setPixelRGBA(texX + 2 * RESOLUTION, texY + RESOLUTION, painter.getColour(x, y, z));
-            }
-        }
-
-        // +z face
-        for (int texY = 0; texY < RESOLUTION; texY++) {
-            for (int texX = 0; texX < RESOLUTION; texX++) {
-                float x = (texX / (float) RESOLUTION) * 2 - 1;
-                float y = (texY / (float) RESOLUTION) * 2 - 1;
-                float z = 1;
-
-                skyNativeTex.setPixelRGBA(texX + RESOLUTION, texY + RESOLUTION, painter.getColour(x, y, z));
-            }
-        }
-
-        // -z face
-        for (int texY = 0; texY < RESOLUTION; texY++) {
-            for (int texX = 0; texX < RESOLUTION; texX++) {
-                float x = (texX / (float) RESOLUTION) * 2 - 1;
-                float y = (texY / (float) RESOLUTION) * 2 - 1;
-                float z = -1;
-
-                skyNativeTex.setPixelRGBA(texX + 3 * RESOLUTION, texY + RESOLUTION, painter.getColour(x, y, z));
-            }
+        try {
+            latch.await(10, TimeUnit.SECONDS);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
         }
 
         this.skyTexture.upload();
+    }
+
+    @AllArgsConstructor
+    private static class PaintTask implements Runnable {
+        private NativeImage skyNativeTex;
+        private SkyboxPainter painter;
+        private TextureLocation location;
+        private CountDownLatch latch;
+
+        public void run() {
+            for (int texY = 0; texY < RESOLUTION; texY++) {
+                for (int texX = 0; texX < RESOLUTION; texX++) {
+                    float x = location.getXFunc().apply(texX, texY);
+                    float y = location.getYFunc().apply(texX, texY);
+                    float z = location.getZFunc().apply(texX, texY);
+
+                    skyNativeTex.setPixelRGBA(location.getXLocation(texX), location.getYLocation(texY), painter.getColour(x, y, z));
+                }
+            }
+
+            latch.countDown();
+        }
+
+        @AllArgsConstructor
+        private enum CoordMap {
+            X((texX, texY) -> (texX / (float) RESOLUTION) * 2 - 1),
+            Y((texX, texY) -> (texY / (float) RESOLUTION) * 2 - 1),
+            ONE((texX, texY) -> 1F),
+            NEG_ONE((texX, texY) -> -1F);
+
+            @Getter
+            private BiFunction<Integer, Integer, Float> map;
+        }
+
+        @AllArgsConstructor
+        public enum TextureLocation {
+            TOP(CoordMap.X.getMap(), CoordMap.ONE.getMap(), CoordMap.Y.getMap(), 2, 0),
+            BOTTOM(CoordMap.X.getMap(), CoordMap.NEG_ONE.getMap(), CoordMap.Y.getMap(), 2, 2),
+            POS_Z(CoordMap.X.getMap(), CoordMap.Y.getMap(), CoordMap.ONE.getMap(), 1, 1),
+            NEG_Z(CoordMap.X.getMap(), CoordMap.Y.getMap(), CoordMap.NEG_ONE.getMap(), 3, 1),
+            POS_X(CoordMap.ONE.getMap(), CoordMap.Y.getMap(), CoordMap.X.getMap(), 2, 1),
+            NEG_X(CoordMap.NEG_ONE.getMap(), CoordMap.Y.getMap(), CoordMap.X.getMap(), 0, 1);
+
+            private final @Getter BiFunction<Integer, Integer, Float> xFunc;
+            private final @Getter BiFunction<Integer, Integer, Float> yFunc;
+            private final @Getter BiFunction<Integer, Integer, Float> zFunc;
+            private final int shiftX;
+            private final int shiftY;
+
+            public int getXLocation(int texX) {
+                return texX + shiftX * RESOLUTION;
+            }
+
+            public int getYLocation(int texY) {
+                return texY + shiftY * RESOLUTION;
+            }
+        }
     }
 
     private void generateVertices() {
