@@ -1,18 +1,16 @@
 package codes.ztereohype.nicerskies.core;
 
+import codes.ztereohype.nicerskies.IClientLevelAccessor;
 import net.minecraft.client.Minecraft;
-import net.minecraft.world.level.Level;
-
-import java.util.Objects;
 
 public class NebulaSeedManager {
     public static long getSeed() {
-        if (Minecraft.getInstance().hasSingleplayerServer()) {
-            // calculate seed from overworld seed
-            return Objects.hash(Minecraft.getInstance().getSingleplayerServer().getLevel(Level.OVERWORLD).getSeed());
-        } else {
-            return Objects.requireNonNull(Minecraft.getInstance().getCurrentServer()).ip.hashCode();
+
+        // Use hashed seed. This is available in
+        if (Minecraft.getInstance().level != null) {
+            return ((IClientLevelAccessor) Minecraft.getInstance().level).nicerSkies_getHashedSeed();
         }
+        return 0;
     }
 
     public static boolean canGetSeed() {

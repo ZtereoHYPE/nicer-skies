@@ -1,6 +1,6 @@
 plugins {
-	id 'fabric-loom' version '0.12-SNAPSHOT'
-	id 'io.github.juuxel.loom-quiltflower' version '1.7.1'	// to use genSourcesWithQuiltflower
+	id 'fabric-loom' version '1.0-SNAPSHOT'
+	id 'io.github.juuxel.loom-quiltflower' version '1.8.0'	// to use genSourcesWithQuiltflower
 	id "me.champeau.jmh" version "0.6.6"
 }
 
@@ -29,10 +29,8 @@ dependencies {
 	modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
 
 	mappings loom.layered {
+		it.officialMojangMappings()
 		it.parchment("org.parchmentmc.data:parchment-1.19.2:2022.08.10@zip") // https://ldtteam.jfrog.io/ui/native/parchmentmc-public/org/parchmentmc/data/parchment-1.18.1/BLEEDING-SNAPSHOT
-		it.officialMojangMappings {
-			setNameSyntheticMembers(false)
-		}
 	}
 
 	// apis
@@ -41,7 +39,7 @@ dependencies {
 	// devenv mods
 	modRuntimeOnly "maven.modrinth:lazydfu:${project.lazydfu_version}"
 	modRuntimeOnly "maven.modrinth:starlight:${project.starlight_version}"
-//	modRuntimeOnly "maven.modrinth:lithium:${project.lithium_version}"
+	//modRuntimeOnly "maven.modrinth:lithium:${project.lithium_version}"
 	modRuntimeOnly "maven.modrinth:spark:${project.spark_version}"
 	modRuntimeOnly include(fabricApi.module("fabric-command-api-v2", project.fabric_version))
 	modRuntimeOnly include(fabricApi.module("fabric-lifecycle-events-v1", project.fabric_version))
