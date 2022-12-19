@@ -1,10 +1,10 @@
 package codes.ztereohype.nicerskies.mixin;
 
 import codes.ztereohype.nicerskies.NicerSkies;
+import com.mojang.math.Vector3f;
 import lombok.SneakyThrows;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.renderer.LightTexture;
-import org.joml.Vector3f;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -15,7 +15,7 @@ import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 public abstract class MixinLightTexutre {
     @Inject(
             method = "updateLightTexture",
-            at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/LightTexture;clampColor(Lorg/joml/Vector3f;)V", shift = At.Shift.BEFORE, ordinal = 2),
+            at = @At(value = "INVOKE", target = "Lcom/mojang/math/Vector3f;clamp(FF)V", shift = At.Shift.BEFORE, ordinal = 2),
             locals = LocalCapture.CAPTURE_FAILHARD
     )
     @SneakyThrows
@@ -30,7 +30,7 @@ public abstract class MixinLightTexutre {
         warmTint.mul(warmness);
         warmTint.add(1f, 1f, 1f);
 
-        Vector3f dramaticFactor = (Vector3f) vector3f2.clone();
+        Vector3f dramaticFactor = vector3f2.copy();
         dramaticFactor.mul(0.20f);
         dramaticFactor.add(0.80f, 0.80f, 0.81f);
 

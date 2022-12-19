@@ -2,6 +2,7 @@ package codes.ztereohype.nicerskies.mixin;
 
 import codes.ztereohype.nicerskies.NicerSkies;
 import com.mojang.blaze3d.vertex.*;
+import com.mojang.math.Matrix4f;
 import net.minecraft.client.Camera;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.renderer.GameRenderer;
@@ -9,7 +10,6 @@ import net.minecraft.client.renderer.LevelRenderer;
 import net.minecraft.client.renderer.ShaderInstance;
 import net.minecraft.world.level.material.FogType;
 import net.minecraft.world.phys.Vec3;
-import org.joml.Matrix4f;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
@@ -46,7 +46,7 @@ public abstract class MixinStarRendering {
 
     @ModifyArg(
             method = "renderSky",
-            at = @At(value = "INVOKE", target = "Lcom/mojang/blaze3d/vertex/VertexBuffer;drawWithShader(Lorg/joml/Matrix4f;Lorg/joml/Matrix4f;Lnet/minecraft/client/renderer/ShaderInstance;)V", ordinal = 1),
+            at = @At(value = "INVOKE", target = "Lcom/mojang/blaze3d/vertex/VertexBuffer;drawWithShader(Lcom/mojang/math/Matrix4f;Lcom/mojang/math/Matrix4f;Lnet/minecraft/client/renderer/ShaderInstance;)V", ordinal = 1),
             index = 2
     )
     private ShaderInstance injectStarColour(ShaderInstance shaderInstance) {
