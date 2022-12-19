@@ -6,7 +6,6 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.SneakyThrows;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.renderer.GameRenderer;
@@ -14,7 +13,10 @@ import net.minecraft.client.renderer.texture.DynamicTexture;
 import net.minecraft.util.Mth;
 import org.joml.Matrix4f;
 
-import java.util.concurrent.*;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 import java.util.function.BiFunction;
 
 
@@ -46,7 +48,6 @@ public class Skybox {
                                                   .pose(), projectionMatrix, GameRenderer.getPositionTexShader());
     }
 
-    // todo: maybe multithread the hecc out of the generation to sped up the loading time
     public void paint(SkyboxPainter painter) {
         NativeImage skyNativeTex = this.skyTexture.getPixels();
         CountDownLatch latch = new CountDownLatch(PaintTask.TextureLocation.values().length);
