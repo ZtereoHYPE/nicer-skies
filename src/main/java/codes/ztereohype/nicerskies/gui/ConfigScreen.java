@@ -175,7 +175,7 @@ public class ConfigScreen extends Screen {
 
     @Override
     public void onClose() {
-        if (invalidated) {
+        if (invalidated && NebulaSeedManager.canGetSeed()) {
             NicerSkies.skyManager.generateSky(NebulaSeedManager.getSeed());
         }
         minecraft.setScreen(lastScreen);
