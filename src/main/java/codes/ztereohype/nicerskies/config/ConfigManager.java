@@ -1,11 +1,14 @@
 package codes.ztereohype.nicerskies.config;
 
+import codes.ztereohype.nicerskies.NicerSkies;
 import com.google.gson.Gson;
+import net.fabricmc.loader.impl.util.log.LogHandler;
 
 import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.logging.LogManager;
 
 public class ConfigManager {
     public static final Config DEFAULT_CONFIG = new Config(false, true, true, NebulaType.RAINBOW.getTypeString(), 1f, 0.5f, 1f, 128, false);
@@ -32,7 +35,7 @@ public class ConfigManager {
                 }
             }
         } catch (IOException e) {
-            // todo setup logger properly
+            NicerSkies.LOGGER.warning("Failed to read config file, falling back to default config");
             e.printStackTrace();
             config = cloneConfig(DEFAULT_CONFIG);
         }
@@ -129,11 +132,9 @@ public class ConfigManager {
     public void save(File file) {
         try (FileWriter writer = new FileWriter(file)) {
             writer.write(gson.toJson(config));
-//            System.out.println("Saved config " + );
         } catch (IOException e) {
             e.printStackTrace();
-            // todo setup logger properly
-//            LogManager.getLogManager().getLogger("NicerSkies").warning("Failed to save config file!");
+            NicerSkies.LOGGER.warning("Failed to save config file!");
         }
     }
 
