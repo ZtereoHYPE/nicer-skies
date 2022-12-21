@@ -4,6 +4,12 @@ import lombok.Data;
 
 @Data
 public class Config {
+    private boolean tweakedLigthmap;
+    private boolean twinklingStars;
+    private boolean nebulas;
+
+    private final NebulaConfig nebulaConfig;
+
     public Config(boolean tweakedLigthmap, boolean twinklingStars, boolean nebulas, String nebulaType, float nebulaStrength, float nebulaNoiseAmount, float nebulaNoiseScale, int baseColourAmount, boolean renderDuringDay) {
         this.tweakedLigthmap = tweakedLigthmap;
         this.twinklingStars = twinklingStars;
@@ -11,12 +17,6 @@ public class Config {
 
         this.nebulaConfig = new NebulaConfig(nebulaType, nebulaStrength, nebulaNoiseAmount, nebulaNoiseScale, baseColourAmount, renderDuringDay);
     }
-
-    private boolean tweakedLigthmap;
-    private boolean twinklingStars;
-    private boolean nebulas;
-
-    private final NebulaConfig nebulaConfig;
 
     @Data
     public static final class NebulaConfig {
