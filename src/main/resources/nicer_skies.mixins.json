@@ -5,10 +5,12 @@
   "compatibilityLevel": "JAVA_17",
   "mixins": [],
   "client": [
+    "ClientLevelMixin",
+    "LevelRendererAccessor",
+    "LevelRendererInvoker",
     "MinecraftMixin",
-    "MixinLightTexutre",
-    "MixinStarRendering",
-    "ClientLevelMixin"
+    "LightTextureMixin",
+    "LevelRendererMixin"
   ],
   "server": [],
   "injectors": {
