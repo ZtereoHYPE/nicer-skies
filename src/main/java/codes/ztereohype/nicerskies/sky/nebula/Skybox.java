@@ -16,7 +16,7 @@ import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.renderer.texture.DynamicTexture;
 import net.minecraft.util.Mth;
-import org.joml.Matrix4f;
+import com.mojang.math.Matrix4f;
 
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;

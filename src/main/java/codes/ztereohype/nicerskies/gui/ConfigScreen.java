@@ -148,7 +148,7 @@ public class ConfigScreen extends Screen {
             this.clearWidgets();
             this.init();
             invalidated = true;
-        }, null) {
+        }) {
             @Override
             public void render(@NotNull PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
                 this.active = !isDefaultNebulaSettings();
@@ -160,7 +160,7 @@ public class ConfigScreen extends Screen {
         addRenderableWidget(new Button(this.width / 2 + 4, this.height - 28, 150, 20, Component.literal("Apply"), (button) -> {
             regenerateSky();
             invalidated = false;
-        }, null) {
+        }) {
             @Override
             public void render(@NotNull PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
                 this.active = invalidated;
@@ -169,10 +169,7 @@ public class ConfigScreen extends Screen {
         });
 
         // Back
-        addRenderableWidget(Button.builder(Component.literal("Back"), (button) -> this.onClose())
-                                  .pos(this.width / 2 - 154, this.height - 28)
-                                  .size(150, 20)
-                                  .build());
+        addRenderableWidget(new Button(this.width / 2 - 154, this.height - 28, 150, 20, Component.literal("Back"), (button) -> this.onClose()));
         super.init();
     }
 
