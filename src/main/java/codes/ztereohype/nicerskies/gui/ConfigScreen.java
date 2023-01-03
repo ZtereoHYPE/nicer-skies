@@ -77,6 +77,7 @@ public class ConfigScreen extends Screen {
             public void onPress() {
                 super.onPress();
                 cm.setRenderDuringDay(!cm.getRenderDuringDay());
+                invalidated = true;
             }
         });
 
