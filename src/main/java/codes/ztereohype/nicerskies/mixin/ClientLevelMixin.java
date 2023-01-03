@@ -16,7 +16,6 @@ import java.util.function.Supplier;
 
 @Mixin(ClientLevel.class)
 public class ClientLevelMixin implements IClientLevelAccessor {
-
     @Unique
     private long hashedSeed;
 
