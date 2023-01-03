@@ -17,7 +17,7 @@ public class StarSkyboxPainter extends SkyboxPainter {
     }
 
     @Override
-    int getColour(float x, float y, float z) {
+    int getTexelColour(float x, float y, float z) {
         float[] projCoords = this.projectOnSphere(x, y, z);
         x = projCoords[0];
         y = projCoords[1];

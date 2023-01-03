@@ -19,29 +19,25 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 
 @Mixin(LevelRenderer.class)
-public abstract class MixinStarRendering {
+public abstract class LevelRendererMixin {
     @Shadow private VertexBuffer starBuffer;
     @Shadow private int ticks;
     @Shadow private ClientLevel level;
 
     @Inject(at = @At("HEAD"), method = "createStars", cancellable = true)
     private void generateStars(CallbackInfo ci) {
+        if (!NicerSkies.config.getTwinklingStars()) return;
+
         starBuffer = new VertexBuffer();
-
-        BufferBuilder builder = Tesselator.getInstance().getBuilder();
-        builder.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_COLOR);
-
-        starBuffer.bind();
-        starBuffer.upload(builder.end());
-
         ci.cancel();
     }
 
     @Inject(at = @At("HEAD"), method = "tick")
     private void tickStars(CallbackInfo ci) {
-        if (!NicerSkies.config.getTwinklingStars() && NicerSkies.skyManager.isInitialized()) return;
+        if (!NicerSkies.config.getTwinklingStars()) return;
         if (this.level.getStarBrightness(0) < 0.0F) return;
-        NicerSkies.skyManager.tick(ticks, starBuffer);
+
+        NicerSkies.skyManager.tick(ticks);
     }
 
     @ModifyArg(
@@ -50,6 +46,8 @@ public abstract class MixinStarRendering {
             index = 2
     )
     private ShaderInstance injectStarColour(ShaderInstance shaderInstance) {
+        if (!NicerSkies.config.getTwinklingStars()) return shaderInstance;
+
         return GameRenderer.getPositionColorShader();
     }
 
@@ -59,7 +57,8 @@ public abstract class MixinStarRendering {
             locals = LocalCapture.CAPTURE_FAILHARD
     )
     private void drawSkybox(PoseStack poseStack, Matrix4f matrix4f, float f, Camera camera, boolean bl, Runnable runnable, CallbackInfo ci, FogType fogType, Vec3 vec3, float g, float h, float i, BufferBuilder bufferBuilder, ShaderInstance shaderInstance, float[] fs, float j, Matrix4f matrix4f3, float l, int s, int t, int n, float u, float p, float q, float r) {
-        if (!NicerSkies.config.getNebulas() || !NicerSkies.skyManager.isInitialized()) return;
+        if (!NicerSkies.config.getNebulas() || NicerSkies.skyManager.getSkybox() == null) return;
+
         NicerSkies.skyManager.getSkybox().render(poseStack, matrix4f);
     }
 }
