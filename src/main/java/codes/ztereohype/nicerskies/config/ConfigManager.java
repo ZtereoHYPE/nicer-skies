@@ -2,13 +2,11 @@ package codes.ztereohype.nicerskies.config;
 
 import codes.ztereohype.nicerskies.NicerSkies;
 import com.google.gson.Gson;
-import net.fabricmc.loader.impl.util.log.LogHandler;
 
 import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.logging.LogManager;
 
 public class ConfigManager {
     public static final Config DEFAULT_CONFIG = new Config(false, true, true, NebulaType.RAINBOW.getTypeString(), 1f, 0.5f, 1f, 128, false);
@@ -142,16 +140,17 @@ public class ConfigManager {
         return gson.fromJson(gson.toJson(config), Config.class);
     }
 
-    public boolean nebulaConfigEquals(Config config) {
-        return this.config.getNebulaConfig().equals(config.getNebulaConfig());
-    }
-
     public void resetNebulaSettings() {
         config.getNebulaConfig().setNebulaType(DEFAULT_CONFIG.getNebulaConfig().getNebulaType());
         config.getNebulaConfig().setNebulaStrength(DEFAULT_CONFIG.getNebulaConfig().getNebulaStrength());
         config.getNebulaConfig().setNebulaNoiseAmount(DEFAULT_CONFIG.getNebulaConfig().getNebulaNoiseAmount());
         config.getNebulaConfig().setNebulaNoiseScale(DEFAULT_CONFIG.getNebulaConfig().getNebulaNoiseScale());
         config.getNebulaConfig().setBaseColourAmount(DEFAULT_CONFIG.getNebulaConfig().getBaseColourAmount());
+
         save(file);
+    }
+
+    public boolean nebulaConfigEquals(Config config) {
+        return this.config.getNebulaConfig().equals(config.getNebulaConfig());
     }
 }

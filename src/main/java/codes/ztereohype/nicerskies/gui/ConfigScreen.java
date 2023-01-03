@@ -11,7 +11,11 @@ import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.Checkbox;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.FormattedText;
+import net.minecraft.network.chat.Style;
 import org.jetbrains.annotations.NotNull;
+
+import java.util.List;
 
 public class ConfigScreen extends Screen {
     private final Screen lastScreen;
@@ -31,6 +35,7 @@ public class ConfigScreen extends Screen {
             public void onPress() {
                 super.onPress();
                 cm.setNebulas(!cm.getNebulas());
+                invalidated = true;
             }
         });
 
@@ -39,6 +44,7 @@ public class ConfigScreen extends Screen {
             public void onPress() {
                 super.onPress();
                 cm.setTwinklingStars(!cm.getTwinklingStars());
+                invalidated = true;
             }
         });
 
@@ -48,6 +54,7 @@ public class ConfigScreen extends Screen {
                 super.onPress();
                 cm.setLightmapTweaked(!cm.getLightmapTweaked());
                 Minecraft.getInstance().gameRenderer.lightTexture().tick();
+                invalidated = true;
             }
         });
 
@@ -86,6 +93,7 @@ public class ConfigScreen extends Screen {
             }
         });
 
+        // Nebula Amount
         float noiseAmount = cm.getNebulaNoiseAmount();
         addRenderableWidget(new AbstractSliderButton(this.width / 2 + (this.width / 2 - 150) / 2, 108, 150, 20, Component.literal("Nebula Amount: " + (int) (noiseAmount * 100) + "%"), noiseAmount) {
             @Override
@@ -100,6 +108,7 @@ public class ConfigScreen extends Screen {
             }
         });
 
+        // Background Strength
         int baseColourAmount = cm.getNebulaBaseColourAmount();
         addRenderableWidget(new AbstractSliderButton(this.width / 2 + (this.width / 2 - 150) / 2, 132, 150, 20, Component.literal("Background Strength: " + baseColourAmount), baseColourAmount / 255f) {
             @Override
@@ -114,6 +123,7 @@ public class ConfigScreen extends Screen {
             }
         });
 
+        // Nebula Scale
         float nebulaNoiseScale = cm.getNebulaNoiseScale();
         addRenderableWidget(new AbstractSliderButton(this.width / 2 + (this.width / 2 - 150) / 2, 156, 150, 20, Component.literal("Nebula Scale: " + nebulaNoiseScale), Math.round((nebulaNoiseScale - 0.5f) / 1.5f * 100) / 100f) {
             @Override
@@ -132,25 +142,13 @@ public class ConfigScreen extends Screen {
             }
         });
 
-        //reload nebula button
-        addRenderableWidget(new Button(this.width / 2 + (this.width / 2 - 150) / 2, 180, 74, 20, Component.literal("Apply"), (button) -> {
-            NicerSkies.skyManager.generateSky(NebulaSeedManager.getSeed());
-            invalidated = false;
-        }) {
-            @Override
-            public void render(@NotNull PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
-                this.active = invalidated && NebulaSeedManager.canGetSeed();
-                super.render(poseStack, mouseX, mouseY, partialTick);
-            }
-        });
-
-        //reset to default
-        addRenderableWidget(new Button(this.width / 2 + (this.width / 2 - 150) / 2 + 76, 180, 74, 20, Component.literal("Reset"), (button) -> {
+        // Reset
+        addRenderableWidget(new Button(this.width / 2 + (this.width / 2 - 150) / 2, 184, 150, 20, Component.literal("Reset"), (button) -> {
             cm.resetNebulaSettings();
             this.clearWidgets();
             this.init();
             invalidated = true;
-        }) {
+        }, null) {
             @Override
             public void render(@NotNull PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
                 this.active = !isDefaultNebulaSettings();
@@ -158,8 +156,23 @@ public class ConfigScreen extends Screen {
             }
         });
 
-        addRenderableWidget(new Button(this.width / 2 - 100, this.height - 30, 200, 20, Component.literal("Back"), (button) -> this.onClose()));
+        // Apply
+        addRenderableWidget(new Button(this.width / 2 + 4, this.height - 28, 150, 20, Component.literal("Apply"), (button) -> {
+            regenerateSky();
+            invalidated = false;
+        }, null) {
+            @Override
+            public void render(@NotNull PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
+                this.active = invalidated;
+                super.render(poseStack, mouseX, mouseY, partialTick);
+            }
+        });
 
+        // Back
+        addRenderableWidget(Button.builder(Component.literal("Back"), (button) -> this.onClose())
+                                  .pos(this.width / 2 - 154, this.height - 28)
+                                  .size(150, 20)
+                                  .build());
         super.init();
     }
 
@@ -171,17 +184,37 @@ public class ConfigScreen extends Screen {
         drawCenteredString(poseStack, this.font, this.title, this.width / 2, 10, 16777215);
         drawCenteredString(poseStack, this.font, "Toggle Features", this.width / 4, 36, 16777215);
         drawCenteredString(poseStack, this.font, "Nebula Settings", 3 * this.width / 4, 36, 16777215);
+
+        drawWrappedString(poseStack,  "§lNote:§r \n\nDisable \"Twinkle Stars\" for compatibility with other mods.\n(eg. Custom Stars)", 20, 150, this.width/2 - 40, 0xFFFF00);
     }
 
     @Override
     public void onClose() {
-        if (invalidated && NebulaSeedManager.canGetSeed()) {
-            NicerSkies.skyManager.generateSky(NebulaSeedManager.getSeed());
+        if (invalidated && NebulaSeedManager.canGenerateSky()) {
+            regenerateSky();
         }
         minecraft.setScreen(lastScreen);
     }
 
+    private void regenerateSky() {
+        if (NebulaSeedManager.canGenerateSky()) {
+            NicerSkies.skyManager.generateSky(NebulaSeedManager.getSeed(), NicerSkies.config.getTwinklingStars(), NicerSkies.config.getNebulas());
+        }
+        invalidated = false;
+    }
+
     private boolean isDefaultNebulaSettings() {
         return cm.nebulaConfigEquals(ConfigManager.DEFAULT_CONFIG);
+    }
+
+    private void drawWrappedString(PoseStack poseStack, String string, int x, int y, int wrapWidth, int color) {
+        Minecraft mc = Minecraft.getInstance();
+        List<FormattedText> lines = mc.font.getSplitter().splitLines(Component.literal(string), wrapWidth, Style.EMPTY);
+
+        int amount = lines.size();
+        for (int i = 0; i < amount; i++) {
+            FormattedText renderable = lines.get(i);
+            font.draw(poseStack, renderable.getString(), x, (float)(y + i * 9), color);
+        }
     }
 }
