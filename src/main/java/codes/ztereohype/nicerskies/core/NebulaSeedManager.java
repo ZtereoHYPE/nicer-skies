@@ -5,15 +5,13 @@ import net.minecraft.client.Minecraft;
 
 public class NebulaSeedManager {
     public static long getSeed() {
-
-        // Use hashed seed. This is available in
         if (Minecraft.getInstance().level != null) {
             return ((IClientLevelAccessor) Minecraft.getInstance().level).nicerSkies_getHashedSeed();
         }
-        return 0;
+        return 321L; // handpicked decent default ;)
     }
 
-    public static boolean canGetSeed() {
+    public static boolean canGenerateSky() {
         return Minecraft.getInstance().hasSingleplayerServer() || Minecraft.getInstance().getCurrentServer() != null;
     }
 }
