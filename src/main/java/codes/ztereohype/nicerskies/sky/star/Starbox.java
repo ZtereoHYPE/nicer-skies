@@ -11,22 +11,18 @@ public class Starbox {
     private static final BufferBuilder STAR_BUFFER_BUILDER = Tesselator.getInstance().getBuilder();
 
     private final int stars = 1500;
-    private Gradient starGradient;
 
-    private ArrayList<Star> starList = new ArrayList<>();
+    private final ArrayList<Star> starList = new ArrayList<>();
+    private final VertexBuffer starBuffer;
 
-    public Starbox(RandomSource randomSource, Gradient starGradient) {
-        this.generate(randomSource, starGradient);
+    public Starbox(RandomSource randomSource, Gradient starGradient, VertexBuffer starBuffer) {
+        this.starBuffer = starBuffer;
+        this.generateStars(randomSource, starGradient);
     }
 
-    public void generate(RandomSource randomSource, Gradient starGradient) {
+    private void generateStars(RandomSource randomSource, Gradient starGradient) {
         starList.clear();
-        this.starGradient = starGradient;
-        generateStars(randomSource);
-    }
 
-    // not good practice: decrementing iteration variable
-    private void generateStars(RandomSource randomSource) {
         ImprovedNoise noise = new ImprovedNoise(randomSource);
 
         for (int i = 0; i < this.stars; ++i) {
@@ -49,7 +45,7 @@ public class Starbox {
         }
     }
 
-    public void updateStars(int ticks, VertexBuffer starBuffer) {
+    public void updateStars(int ticks) {
         STAR_BUFFER_BUILDER.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_COLOR);
 
         for (Star star : starList) {

@@ -60,31 +60,31 @@ public class Star {
         currentRadius = Mth.lerp(Mth.sin(ticks * resizeSpeed), minRadius, maxRadius);
     }
 
-    //return 4*3 coords for 4 vertices
-//    public void setVertices(BufferBuilder bufferBuilder) {
-//        float cosRot = Mth.cos(currentAngle);
-//        float sinRot = Mth.sin(currentAngle);
-//
-//        for (int v = 0; v < 4; ++v) {
-//            // shift the vector to the 4 corners:
-//            // vec 0, 1 --> -rad;  vec 2, 3 --> +rad
-//            float xShift = ((v & 2) - 1) * currentRadius;
-//            // vec 1, 2 --> +rad;  vec 3, 0 --> -rad
-//            float yShift = (((v + 1) & 2) - 1) * currentRadius;
-//
-//            float unprojectedVerticalOffset = xShift * cosRot - yShift * sinRot;
-//            float unprojectedHorizontalOffset = yShift * cosRot + xShift * sinRot;
-//            float latitudeCorrectedUnprojectedVerticalOffset = -unprojectedVerticalOffset * latitudeCos; // max negative +2pi, max positive -2pi
-//
-//            float yOffset = unprojectedVerticalOffset * latitudeSin; // at ±pi should be max, squished at poles
-//            float xOffset = latitudeCorrectedUnprojectedVerticalOffset * longitudeSin - unprojectedHorizontalOffset * longitudeCos;
-//            float zOffset = unprojectedHorizontalOffset * longitudeSin + latitudeCorrectedUnprojectedVerticalOffset * longitudeCos;
-//
-//            bufferBuilder.vertex(xCoord + xOffset, yCoord + yOffset, zCoord + zOffset)
-//                         .color(r, g, b, 255)
-//                         .endVertex();
-//        }
-//    }
+    // Code left for readability
+    /* public void setVertices(BufferBuilder bufferBuilder) {
+        float cosRot = Mth.cos(currentAngle);
+        float sinRot = Mth.sin(currentAngle);
+
+        for (int v = 0; v < 4; ++v) {
+            // shift the vector to the 4 corners:
+            // vec 0, 1 --> -rad;  vec 2, 3 --> +rad
+            float xShift = ((v & 2) - 1) * currentRadius;
+            // vec 1, 2 --> +rad;  vec 3, 0 --> -rad
+            float yShift = (((v + 1) & 2) - 1) * currentRadius;
+
+            float unprojectedVerticalOffset = xShift * cosRot - yShift * sinRot;
+            float unprojectedHorizontalOffset = yShift * cosRot + xShift * sinRot;
+            float latitudeCorrectedUnprojectedVerticalOffset = -unprojectedVerticalOffset * latitudeCos; // max negative +2pi, max positive -2pi
+
+            float yOffset = unprojectedVerticalOffset * latitudeSin; // at ±pi should be max, squished at poles
+            float xOffset = latitudeCorrectedUnprojectedVerticalOffset * longitudeSin - unprojectedHorizontalOffset * longitudeCos;
+            float zOffset = unprojectedHorizontalOffset * longitudeSin + latitudeCorrectedUnprojectedVerticalOffset * longitudeCos;
+
+            bufferBuilder.vertex(xCoord + xOffset, yCoord + yOffset, zCoord + zOffset)
+                         .color(r, g, b, 255)
+                         .endVertex();
+        }
+    } */
 
     public void setVertices(BufferBuilder bufferBuilder) {
         float horizontalVertexDistance = currentRadius * Mth.cos(currentAngle);
