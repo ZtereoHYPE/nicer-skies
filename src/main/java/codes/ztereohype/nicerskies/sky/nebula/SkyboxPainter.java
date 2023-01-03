@@ -10,7 +10,7 @@ public abstract class SkyboxPainter {
         this.noise = noise;
     }
 
-    abstract int getColour(float x, float y, float z);
+    abstract int getTexelColour(float x, float y, float z);
 
     public float[] projectOnSphere(float x, float y, float z) {
         float invDistance = Mth.fastInvSqrt(x * x + y * y + z * z);

@@ -22,7 +22,7 @@ public class NebulaSkyboxPainter extends SkyboxPainter {
     }
 
     @Override
-    int getColour(float x, float y, float z) {
+    int getTexelColour(float x, float y, float z) {
         // Get projection
         float[] projCoords = this.projectOnSphere(x, y, z);
         x = projCoords[0];
@@ -38,10 +38,7 @@ public class NebulaSkyboxPainter extends SkyboxPainter {
         // Value of noise at coord, 0..1
         double noiseValue = Mth.clamp(noise.getValue(x * scalingFactor, y * scalingFactor, z * scalingFactor) + 0.5, 0, 1);
 
-        // Value to be subtracted from noise at coord, 0..1
-        double subtractionValue = Mth.clamp(noise.getOctaveNoise(1)
-                                                 .noise(x * scalingFactor, y * scalingFactor, z * scalingFactor) + 0.5, 0D, 1D);
-
+        // Get the derivatives of the first (largest) octave of noise to shift the colour around with.
         double[] ds = new double[3];
         noise.getOctaveNoise(0).noiseWithDerivative(x * scalingFactor, y * scalingFactor, z * scalingFactor, ds);
 
@@ -58,15 +55,17 @@ public class NebulaSkyboxPainter extends SkyboxPainter {
             nebulaFactor = 0;
         }
 
+        // Get the colour of the nebula and the amount of background colour to show at the current factor.
         int[] nebula = nebulaGradient.getAt(nebulaFactor);
         double bgFactor = Mth.clamp(Math.log10(-nebulaFactor + 1) + 1, 0, 1);
 
-        // todo: try and reduce brownish colours by reducing the green channel smoothly [failed attempt]
+        // Merge everything:
+        // colour = nebulaFactor * [colour of nebula in that pixel] - [noise derivative in that pixel] * nebulaFactor + background colour * bgFactor
+        int r = Mth.clamp((int) (nebulaFactor * nebula[0] - ds[0] * nebulaFactor * 128 + baseR * bgFactor), 0, 255);
+        int g = Mth.clamp((int) (nebulaFactor * nebula[1] - ds[1] * nebulaFactor * 64  + baseG * bgFactor), 0, 255);
+        int b = Mth.clamp((int) (nebulaFactor * nebula[2] - ds[2] * nebulaFactor * 128 + baseB * bgFactor), 0, 255);
 
-        int r = Mth.clamp((int) ((nebulaFactor * nebula[0]) + baseR * bgFactor) - (int) (ds[0] * nebulaFactor * 128), 0, 255);
-        int g = Mth.clamp((int) ((nebulaFactor * nebula[1]) + baseG * bgFactor) - (int) (ds[1] * nebulaFactor * 64 * subtractionValue), 0, 255);
-        int b = Mth.clamp((int) ((nebulaFactor * nebula[2]) + baseB * bgFactor) - (int) (ds[2] * nebulaFactor * 128), 0, 255);
-
+        // Get the alpha depending on the background factor
         int alpha = Mth.clamp((int) ((1 - bgFactor) * 255), 50, 255);
 
         return FastColor.ARGB32.color(alpha, b, g, r);

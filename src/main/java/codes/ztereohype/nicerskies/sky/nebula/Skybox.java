@@ -3,7 +3,12 @@ package codes.ztereohype.nicerskies.sky.nebula;
 import codes.ztereohype.nicerskies.NicerSkies;
 import com.mojang.blaze3d.platform.NativeImage;
 import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.*;
+import com.mojang.blaze3d.vertex.BufferBuilder;
+import com.mojang.blaze3d.vertex.DefaultVertexFormat;
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.blaze3d.vertex.Tesselator;
+import com.mojang.blaze3d.vertex.VertexBuffer;
+import com.mojang.blaze3d.vertex.VertexFormat;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import net.minecraft.client.Minecraft;
@@ -21,7 +26,7 @@ import java.util.function.BiFunction;
 
 
 public class Skybox {
-    public static final int RESOLUTION = 512;
+    public static final int RESOLUTION = 768;
 
     private final DynamicTexture skyTexture = new DynamicTexture(RESOLUTION * 4, RESOLUTION * 4, false);
 
@@ -79,7 +84,7 @@ public class Skybox {
                     float y = location.getYFunc().apply(texX, texY);
                     float z = location.getZFunc().apply(texX, texY);
 
-                    skyNativeTex.setPixelRGBA(location.getXLocation(texX), location.getYLocation(texY), painter.getColour(x, y, z));
+                    skyNativeTex.setPixelRGBA(location.getXLocation(texX), location.getYLocation(texY), painter.getTexelColour(x, y, z));
                 }
             }
 
@@ -94,7 +99,7 @@ public class Skybox {
             NEG_ONE((texX, texY) -> -1F);
 
             @Getter
-            private BiFunction<Integer, Integer, Float> map;
+            private final BiFunction<Integer, Integer, Float> map;
         }
 
         @AllArgsConstructor
