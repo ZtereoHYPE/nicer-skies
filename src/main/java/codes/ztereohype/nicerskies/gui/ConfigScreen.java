@@ -39,7 +39,7 @@ public class ConfigScreen extends Screen {
             }
         });
 
-        addRenderableWidget(new Checkbox(20, 84, 20, 20, Component.literal("Twinlke Stars"), cm.getTwinklingStars()) {
+        addRenderableWidget(new Checkbox(20, 84, 20, 20, Component.literal("Twinkle Stars"), cm.getTwinklingStars()) {
             @Override
             public void onPress() {
                 super.onPress();
