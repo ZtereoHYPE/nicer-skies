@@ -3,6 +3,7 @@ package codes.ztereohype.nicerskies.sky.star;
 import com.mojang.blaze3d.vertex.BufferBuilder;
 import lombok.Getter;
 import net.minecraft.util.Mth;
+import org.joml.Math;
 
 public class Star {
     private final float xCoord;
@@ -33,7 +34,7 @@ public class Star {
         this.g = color[1];
         this.b = color[2];
 
-        float invsqrtDistance = Mth.fastInvSqrt(randX * randX + randY * randY + randZ * randZ);
+        float invsqrtDistance = 1 / Math.sqrt(randX * randX + randY * randY + randZ * randZ);
         this.xCoord = randX * invsqrtDistance * 100.0F;
         this.yCoord = randY * invsqrtDistance * 100.0F;
         this.zCoord = randZ * invsqrtDistance * 100.0F;
