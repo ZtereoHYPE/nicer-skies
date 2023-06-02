@@ -6,6 +6,7 @@ import codes.ztereohype.nicerskies.core.NebulaSeedManager;
 import codes.ztereohype.nicerskies.gui.widget.Separator;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractSliderButton;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.Checkbox;
@@ -151,9 +152,9 @@ public class ConfigScreen extends Screen {
             invalidated = true;
         }, null) {
             @Override
-            public void render(@NotNull PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
+            public void render(GuiGraphics g, int mouseX, int mouseY, float partialTick) {
                 this.active = !isDefaultNebulaSettings();
-                super.render(poseStack, mouseX, mouseY, partialTick);
+                super.render(g, mouseX, mouseY, partialTick);
             }
         });
 
@@ -163,9 +164,9 @@ public class ConfigScreen extends Screen {
             invalidated = false;
         }, null) {
             @Override
-            public void render(@NotNull PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
+            public void render(GuiGraphics g, int mouseX, int mouseY, float partialTick) {
                 this.active = invalidated;
-                super.render(poseStack, mouseX, mouseY, partialTick);
+                super.render(g, mouseX, mouseY, partialTick);
             }
         });
 
@@ -178,15 +179,15 @@ public class ConfigScreen extends Screen {
     }
 
     @Override
-    public void render(@NotNull PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
-        this.renderBackground(poseStack);
-        super.render(poseStack, mouseX, mouseY, partialTick);
+    public void render(GuiGraphics g, int mouseX, int mouseY, float partialTick) {
+        this.renderBackground(g);
+        super.render(g, mouseX, mouseY, partialTick);
 
-        drawCenteredString(poseStack, this.font, this.title, this.width / 2, 10, 16777215);
-        drawCenteredString(poseStack, this.font, "Toggle Features", this.width / 4, 36, 16777215);
-        drawCenteredString(poseStack, this.font, "Nebula Settings", 3 * this.width / 4, 36, 16777215);
+        g.drawCenteredString(this.font, this.title, this.width / 2, 10, 16777215);
+        g.drawCenteredString(this.font, "Toggle Features", this.width / 4, 36, 16777215);
+        g.drawCenteredString(this.font, "Nebula Settings", 3 * this.width / 4, 36, 16777215);
 
-        drawWrappedString(poseStack,  "§lNote:§r \n\nDisable \"Twinkle Stars\" for compatibility with other mods.\n(eg. Custom Stars)", 20, 150, this.width/2 - 40, 0xFFFF00);
+        drawWrappedString(g,  "§lNote:§r \n\nDisable \"Twinkle Stars\" for compatibility with other mods.\n(eg. Custom Stars)", 20, 150, this.width/2 - 40, 0xFFFF00);
     }
 
     @Override
@@ -208,14 +209,14 @@ public class ConfigScreen extends Screen {
         return cm.nebulaConfigEquals(ConfigManager.DEFAULT_CONFIG);
     }
 
-    private void drawWrappedString(PoseStack poseStack, String string, int x, int y, int wrapWidth, int color) {
+    private void drawWrappedString(GuiGraphics g, String string, int x, int y, int wrapWidth, int color) {
         Minecraft mc = Minecraft.getInstance();
         List<FormattedText> lines = mc.font.getSplitter().splitLines(Component.literal(string), wrapWidth, Style.EMPTY);
 
         int amount = lines.size();
         for (int i = 0; i < amount; i++) {
             FormattedText renderable = lines.get(i);
-            font.draw(poseStack, renderable.getString(), x, (float)(y + i * 9), color);
+            g.drawString(font, renderable.getString(), x, y + i * 9, color);
         }
     }
 }

@@ -32,7 +32,7 @@ public class Skybox {
 
     private final ExecutorService skyExecutor = Executors.newCachedThreadPool();
 
-    private final @Getter VertexBuffer skyboxBuffer = new VertexBuffer();
+    private final @Getter VertexBuffer skyboxBuffer = new VertexBuffer(VertexBuffer.Usage.STATIC);
 
     public Skybox(SkyboxPainter painter) {
         generateVertices();

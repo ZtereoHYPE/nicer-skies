@@ -33,7 +33,7 @@ public class Star {
         this.g = color[1];
         this.b = color[2];
 
-        float invsqrtDistance = Mth.fastInvSqrt(randX * randX + randY * randY + randZ * randZ);
+        float invsqrtDistance = (float) Mth.fastInvSqrt(randX * randX + randY * randY + randZ * randZ);
         this.xCoord = randX * invsqrtDistance * 100.0F;
         this.yCoord = randY * invsqrtDistance * 100.0F;
         this.zCoord = randZ * invsqrtDistance * 100.0F;

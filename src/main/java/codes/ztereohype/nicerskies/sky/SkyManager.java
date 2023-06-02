@@ -40,8 +40,8 @@ public class SkyManager {
 
         if (starsEnabled) {
             LevelRendererAccessor levelRenderer = (LevelRendererAccessor) Minecraft.getInstance().levelRenderer;
-            starbox = new Starbox(randomSource, starGradient, levelRenderer.getStarBuffer());
-            tick(levelRenderer.getTicks());
+            starbox = new Starbox(randomSource, starGradient, levelRenderer.nicerSkies_getStarBuffer());
+            tick(levelRenderer.nicerSkies_getTicks());
         } else {
 
             ((LevelRendererInvoker)Minecraft.getInstance().levelRenderer).nicerSkies_generateSky();

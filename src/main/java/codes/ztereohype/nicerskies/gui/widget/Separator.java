@@ -1,11 +1,11 @@
 package codes.ztereohype.nicerskies.gui.widget;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import net.minecraft.client.gui.GuiComponent;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Renderable;
 import org.jetbrains.annotations.NotNull;
 
-public class Separator extends GuiComponent implements Renderable {
+public class Separator implements Renderable {
     private final int x;
     private final int y;
     private final int height;
@@ -17,7 +17,7 @@ public class Separator extends GuiComponent implements Renderable {
     }
 
     @Override
-    public void render(@NotNull PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
-        fill(poseStack, x, y, x + 1, y + height, 0xFFFFFFFF);
+    public void render(GuiGraphics graphics, int mouseX, int mouseY, float partialTick) {
+        graphics.fill(x, y, x + 1, y + height, 0xFFFFFFFF);
     }
 }

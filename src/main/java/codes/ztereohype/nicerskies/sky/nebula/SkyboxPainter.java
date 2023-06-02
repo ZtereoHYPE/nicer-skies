@@ -13,7 +13,7 @@ public abstract class SkyboxPainter {
     abstract int getTexelColour(float x, float y, float z);
 
     public float[] projectOnSphere(float x, float y, float z) {
-        float invDistance = Mth.fastInvSqrt(x * x + y * y + z * z);
+        float invDistance = (float) Mth.fastInvSqrt(x * x + y * y + z * z);
 
         //divide by distance to get projection on sphere (shorten the vector)
         x *= invDistance;

@@ -8,8 +8,8 @@ import org.spongepowered.asm.mixin.gen.Accessor;
 @Mixin(LevelRenderer.class)
 public interface LevelRendererAccessor {
     @Accessor("starBuffer")
-    VertexBuffer getStarBuffer();
+    VertexBuffer nicerSkies_getStarBuffer();
 
     @Accessor("ticks")
-    int getTicks();
+    int nicerSkies_getTicks();
 }
