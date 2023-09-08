@@ -1,0 +1,24 @@
+{
+  "nicer_skies.menu.settings": "Optionen für Nicer Skies",
+
+  "nicer_skies.menu.subtitle.feature_toggles": "Eigenschaften ein-/ausschalten",
+  "nicer_skies.menu.subtitle.nebula_settings": "Nebel Einstellungen",
+
+  "nicer_skies.menu.compatibility_warning": "§lAchtung:§r \n\nUm Kompabilität mit anderen mods (wie z.B. Custom Stars) herzustellen, muss \"Twinkle Stars\" deaktiviert werden",
+
+  "nicer_skies.option.render_nebulas": "Nebel Rendern",
+  "nicer_skies.option.twinkle_stars": "Funkelnde Sterne",
+  "nicer_skies.option.custom_lightmap": "Licht Farben anpassen",
+
+  "nicer_skies.option.render_during_day": "Nebel auch am Tag",
+  "nicer_skies.option.nebula_transparency": "Nebel-Intensität: %d",
+  "nicer_skies.option.nebula_amount": "Nebel-Deckung: %d",
+  "nicer_skies.option.background_strength": "Hintergrund-Deckung: %d",
+  "nicer_skies.option.nebula_scale": "Nebel-Größe: %dx",
+
+  "nicer_skies.menu.back": "Zurück",
+  "nicer_skies.menu.reset": "Zurücksetzen",
+  "nicer_skies.menu.apply": "Anwenden"
+
+
+}
