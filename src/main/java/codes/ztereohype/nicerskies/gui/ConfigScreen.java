@@ -4,7 +4,6 @@ import codes.ztereohype.nicerskies.NicerSkies;
 import codes.ztereohype.nicerskies.config.ConfigManager;
 import codes.ztereohype.nicerskies.core.NebulaSeedManager;
 import codes.ztereohype.nicerskies.gui.widget.Separator;
-import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractSliderButton;
@@ -14,7 +13,6 @@ import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.FormattedText;
 import net.minecraft.network.chat.Style;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
@@ -25,13 +23,13 @@ public class ConfigScreen extends Screen {
     private boolean invalidated = false;
 
     protected ConfigScreen(Screen lastScreen) {
-        super(Component.literal("Nicer Skies Config"));
+        super(Component.translatable("nicer_skies.menu.settings"));
         this.lastScreen = lastScreen;
     }
 
     @Override
     public void init() {
-        addRenderableWidget(new Checkbox(20, 60, 20, 20, Component.literal("Render nebulas"), cm.getNebulas()) {
+        addRenderableWidget(new Checkbox(20, 60, 20, 20, Component.translatable("nicer_skies.option.render_nebulas"), cm.getNebulas()) {
             @Override
             public void onPress() {
                 super.onPress();
@@ -40,7 +38,7 @@ public class ConfigScreen extends Screen {
             }
         });
 
-        addRenderableWidget(new Checkbox(20, 84, 20, 20, Component.literal("Twinkle Stars"), cm.getTwinklingStars()) {
+        addRenderableWidget(new Checkbox(20, 84, 20, 20, Component.translatable("nicer_skies.option.twinkle_stars"), cm.getTwinklingStars()) {
             @Override
             public void onPress() {
                 super.onPress();
@@ -49,7 +47,7 @@ public class ConfigScreen extends Screen {
             }
         });
 
-        addRenderableWidget(new Checkbox(20, 108, 20, 20, Component.literal("Custom Lightmap"), cm.getLightmapTweaked()) {
+        addRenderableWidget(new Checkbox(20, 108, 20, 20, Component.translatable("nicer_skies.option.custom_lightmap"), cm.getLightmapTweaked()) {
             @Override
             public void onPress() {
                 super.onPress();
@@ -83,10 +81,10 @@ public class ConfigScreen extends Screen {
         });
 
         float strength = cm.getNebulaStrength();
-        addRenderableWidget(new AbstractSliderButton(this.width / 2 + (this.width / 2 - 150) / 2, 84, 150, 20, Component.literal("Nebula Strength: " + (int) (strength * 100) + "%"), strength) {
+        addRenderableWidget(new AbstractSliderButton(this.width / 2 + (this.width / 2 - 150) / 2, 84, 150, 20, Component.translatable("nicer_skies.option.nebula_transparency", (int) (strength * 100) + "%"), strength) {
             @Override
             protected void updateMessage() {
-                this.setMessage(Component.literal("Nebula Strength: " + (int) (this.value * 100) + "%"));
+                this.setMessage(Component.translatable("nicer_skies.option.nebula_transparency", (int) (this.value * 100) + "%"));
             }
 
             @Override
@@ -97,11 +95,11 @@ public class ConfigScreen extends Screen {
 
         // Nebula Amount
         float noiseAmount = cm.getNebulaNoiseAmount();
-        addRenderableWidget(new AbstractSliderButton(this.width / 2 + (this.width / 2 - 150) / 2, 108, 150, 20, Component.literal("Nebula Amount: " + (int) (noiseAmount * 100) + "%"), noiseAmount) {
+        addRenderableWidget(new AbstractSliderButton(this.width / 2 + (this.width / 2 - 150) / 2, 108, 150, 20, Component.translatable("nicer_skies.option.nebula_amount", (int) (noiseAmount * 100) + "%"), noiseAmount) {
             @Override
             protected void updateMessage() {
                 invalidated = true;
-                this.setMessage(Component.literal("Nebula Amount: " + (int) (this.value * 100) + "%"));
+                this.setMessage(Component.translatable("nicer_skies.option.nebula_amount",  (int) (this.value * 100) + "%"));
             }
 
             @Override
@@ -112,11 +110,11 @@ public class ConfigScreen extends Screen {
 
         // Background Strength
         int baseColourAmount = cm.getNebulaBaseColourAmount();
-        addRenderableWidget(new AbstractSliderButton(this.width / 2 + (this.width / 2 - 150) / 2, 132, 150, 20, Component.literal("Background Strength: " + baseColourAmount), baseColourAmount / 255f) {
+        addRenderableWidget(new AbstractSliderButton(this.width / 2 + (this.width / 2 - 150) / 2, 132, 150, 20, Component.translatable("nicer_skies.option.background_strength", baseColourAmount), baseColourAmount / 255f) {
             @Override
             protected void updateMessage() {
                 invalidated = true;
-                this.setMessage(Component.literal("Background Strength: " + (int) (this.value * 255)));
+                this.setMessage(Component.translatable("nicer_skies.option.background_strength", (int) (this.value * 255)));
             }
 
             @Override
@@ -127,11 +125,11 @@ public class ConfigScreen extends Screen {
 
         // Nebula Scale
         float nebulaNoiseScale = cm.getNebulaNoiseScale();
-        addRenderableWidget(new AbstractSliderButton(this.width / 2 + (this.width / 2 - 150) / 2, 156, 150, 20, Component.literal("Nebula Scale: " + nebulaNoiseScale), Math.round((nebulaNoiseScale - 0.5f) / 1.5f * 100) / 100f) {
+        addRenderableWidget(new AbstractSliderButton(this.width / 2 + (this.width / 2 - 150) / 2, 156, 150, 20, Component.translatable("nicer_skies.option.nebula_scale", nebulaNoiseScale), Math.round(1f / (nebulaNoiseScale * 1.5f + 0.5f) * 100) / 100f) {
             @Override
             protected void updateMessage() {
                 invalidated = true;
-                this.setMessage(Component.literal("Nebula Scale: " + (getNebulaNoiseScale())));
+                this.setMessage(Component.translatable("nicer_skies.option.nebula_scale", getNebulaNoiseScale()));
             }
 
             @Override
@@ -140,12 +138,12 @@ public class ConfigScreen extends Screen {
             }
 
             private float getNebulaNoiseScale() {
-                return (float) Math.round((this.value * 1.5f + 0.5f) * 100) / 100f;
+                return (float) Math.round(1f / (this.value * 1.5f + 0.5f) * 100) / 100f;
             }
         });
 
         // Reset
-        addRenderableWidget(new Button(this.width / 2 + (this.width / 2 - 150) / 2, 184, 150, 20, Component.literal("Reset"), (button) -> {
+        addRenderableWidget(new Button(this.width / 2 + (this.width / 2 - 150) / 2, 184, 150, 20, Component.translatable("nicer_skies.menu.reset"), (button) -> {
             cm.resetNebulaSettings();
             this.clearWidgets();
             this.init();
@@ -159,7 +157,7 @@ public class ConfigScreen extends Screen {
         });
 
         // Apply
-        addRenderableWidget(new Button(this.width / 2 + 4, this.height - 28, 150, 20, Component.literal("Apply"), (button) -> {
+        addRenderableWidget(new Button(this.width / 2 + 4, this.height - 28, 150, 20, Component.translatable("nicer_skies.menu.apply"), (button) -> {
             regenerateSky();
             invalidated = false;
         }, null) {
@@ -171,7 +169,7 @@ public class ConfigScreen extends Screen {
         });
 
         // Back
-        addRenderableWidget(Button.builder(Component.literal("Back"), (button) -> this.onClose())
+        addRenderableWidget(Button.builder(Component.translatable("nicer_skies.menu.back"), (button) -> this.onClose())
                                   .pos(this.width / 2 - 154, this.height - 28)
                                   .size(150, 20)
                                   .build());
@@ -184,10 +182,10 @@ public class ConfigScreen extends Screen {
         super.render(g, mouseX, mouseY, partialTick);
 
         g.drawCenteredString(this.font, this.title, this.width / 2, 10, 16777215);
-        g.drawCenteredString(this.font, "Toggle Features", this.width / 4, 36, 16777215);
-        g.drawCenteredString(this.font, "Nebula Settings", 3 * this.width / 4, 36, 16777215);
+        g.drawCenteredString(this.font, Component.translatable("nicer_skies.menu.subtitle.feature_toggles"), this.width / 4, 36, 16777215);
+        g.drawCenteredString(this.font, Component.translatable("nicer_skies.menu.subtitle.nebula_settings"), 3 * this.width / 4, 36, 16777215);
 
-        drawWrappedString(g,  "§lNote:§r \n\nDisable \"Twinkle Stars\" for compatibility with other mods.\n(eg. Custom Stars)", 20, 150, this.width/2 - 40, 0xFFFF00);
+        drawWrappedComponent(g, Component.translatable("nicer_skies.menu.compatibility_warning"), 20, 150, this.width / 2 - 40, 0xFFFF00);
     }
 
     @Override
@@ -209,9 +207,9 @@ public class ConfigScreen extends Screen {
         return cm.nebulaConfigEquals(ConfigManager.DEFAULT_CONFIG);
     }
 
-    private void drawWrappedString(GuiGraphics g, String string, int x, int y, int wrapWidth, int color) {
+    private void drawWrappedComponent(GuiGraphics g, FormattedText component, int x, int y, int wrapWidth, int color) {
         Minecraft mc = Minecraft.getInstance();
-        List<FormattedText> lines = mc.font.getSplitter().splitLines(Component.literal(string), wrapWidth, Style.EMPTY);
+        List<FormattedText> lines = mc.font.getSplitter().splitLines(component, wrapWidth, Style.EMPTY);
 
         int amount = lines.size();
         for (int i = 0; i < amount; i++) {
