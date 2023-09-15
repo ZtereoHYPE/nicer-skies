@@ -1,7 +1,11 @@
 package codes.ztereohype.nicerskies.mixin;
 
 import codes.ztereohype.nicerskies.NicerSkies;
-import com.mojang.blaze3d.vertex.*;
+import codes.ztereohype.nicerskies.config.Config;
+import codes.ztereohype.nicerskies.sky.SkyManager;
+import com.mojang.blaze3d.vertex.BufferBuilder;
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.blaze3d.vertex.VertexBuffer;
 import net.minecraft.client.Camera;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.renderer.GameRenderer;
@@ -20,13 +24,17 @@ import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 
 @Mixin(value = LevelRenderer.class, priority = 999)
 public abstract class LevelRendererMixin {
-    @Shadow private VertexBuffer starBuffer;
-    @Shadow private int ticks;
-    @Shadow private ClientLevel level;
+    @Shadow
+    private VertexBuffer starBuffer;
+    @Shadow
+    private int ticks;
+    @Shadow
+    private ClientLevel level;
 
     @Inject(at = @At("HEAD"), method = "createStars", cancellable = true)
     private void generateStars(CallbackInfo ci) {
-        if (!NicerSkies.config.getTwinklingStars()) return;
+        Config config = NicerSkies.getInstance().getConfig();
+        if (!config.areTwinlkingStarsEnabled()) return;
 
         starBuffer = new VertexBuffer(VertexBuffer.Usage.DYNAMIC);
         ci.cancel();
@@ -34,10 +42,13 @@ public abstract class LevelRendererMixin {
 
     @Inject(at = @At("HEAD"), method = "tick")
     private void tickStars(CallbackInfo ci) {
-        if (!NicerSkies.config.getTwinklingStars()) return;
+        Config config = NicerSkies.getInstance().getConfig();
+        SkyManager skyManager = NicerSkies.getInstance().getSkyManager();
+
+        if (!config.areTwinlkingStarsEnabled()) return;
         if (this.level.getStarBrightness(0) < 0.0F) return;
 
-        NicerSkies.skyManager.tick(ticks);
+        skyManager.tick(ticks);
     }
 
     @ModifyArg(
@@ -46,7 +57,9 @@ public abstract class LevelRendererMixin {
             index = 2
     )
     private ShaderInstance injectStarColour(ShaderInstance shaderInstance) {
-        if (!NicerSkies.config.getTwinklingStars()) return shaderInstance;
+        Config config = NicerSkies.getInstance().getConfig();
+
+        if (!config.areTwinlkingStarsEnabled()) return shaderInstance;
 
         return GameRenderer.getPositionColorShader();
     }
@@ -57,8 +70,11 @@ public abstract class LevelRendererMixin {
             locals = LocalCapture.CAPTURE_FAILHARD
     )
     private void drawSkybox(PoseStack poseStack, Matrix4f matrix4f, float f, Camera camera, boolean bl, Runnable runnable, CallbackInfo ci, FogType fogType, Vec3 vec3, float g, float h, float i, BufferBuilder bufferBuilder, ShaderInstance shaderInstance, float[] fs, float j, Matrix4f matrix4f3, float l, int s, int t, int n, float u, float p, float q, float r) {
-        if (!NicerSkies.config.getNebulas() || NicerSkies.skyManager.getSkybox() == null) return;
+        Config config = NicerSkies.getInstance().getConfig();
+        SkyManager skyManager = NicerSkies.getInstance().getSkyManager();
 
-        NicerSkies.skyManager.getSkybox().render(poseStack, matrix4f);
+        if (!config.areNebulasEnabled() || skyManager.getSkybox() == null) return;
+
+        skyManager.getSkybox().render(poseStack, matrix4f);
     }
 }
