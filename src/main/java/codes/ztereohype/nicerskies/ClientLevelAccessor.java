@@ -1,5 +1,5 @@
 package codes.ztereohype.nicerskies;
 
-public interface IClientLevelAccessor {
+public interface ClientLevelAccessor {
     long nicerSkies_getHashedSeed();
 }
