@@ -1,18 +1,22 @@
 package codes.ztereohype.nicerskies.sky.star;
 
 import codes.ztereohype.nicerskies.core.Gradient;
-import com.mojang.blaze3d.vertex.*;
+import com.mojang.blaze3d.vertex.BufferBuilder;
+import com.mojang.blaze3d.vertex.DefaultVertexFormat;
+import com.mojang.blaze3d.vertex.Tesselator;
+import com.mojang.blaze3d.vertex.VertexBuffer;
+import com.mojang.blaze3d.vertex.VertexFormat;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.levelgen.synth.ImprovedNoise;
 
 import java.util.ArrayList;
+import java.util.List;
+
 
 public class Starbox {
     private static final BufferBuilder STAR_BUFFER_BUILDER = Tesselator.getInstance().getBuilder();
 
-    private final int stars = 1500;
-
-    private final ArrayList<Star> starList = new ArrayList<>();
+    private final List<Star> starList = new ArrayList<>();
     private final VertexBuffer starBuffer;
 
     public Starbox(RandomSource randomSource, Gradient starGradient, VertexBuffer starBuffer) {
@@ -25,7 +29,8 @@ public class Starbox {
 
         ImprovedNoise noise = new ImprovedNoise(randomSource);
 
-        for (int i = 0; i < this.stars; ++i) {
+        int stars = 1500;
+        for (int i = 0; i < stars; ++i) {
             float randX = randomSource.nextFloat() * 2.0F - 1.0F;
             float randY = randomSource.nextFloat() * 2.0F - 1.0F;
             float randZ = randomSource.nextFloat() * 2.0F - 1.0F;
@@ -46,6 +51,7 @@ public class Starbox {
     }
 
     public void updateStars(int ticks) {
+        // todo: make a fast path for when sodium is installed (vertexbufferwriter), or just make our own.
         STAR_BUFFER_BUILDER.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_COLOR);
 
         for (Star star : starList) {
