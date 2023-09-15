@@ -12,6 +12,6 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public class MinecraftMixin {
     @Inject(at = @At("TAIL"), method = "setLevel")
     private void onWorldLoad(CallbackInfo ci) {
-        NicerSkies.skyManager.generateSky(NebulaSeedManager.getSeed(), NicerSkies.config.getTwinklingStars(), NicerSkies.config.getNebulas());
+        NicerSkies.getInstance().getSkyManager().generateSky(NebulaSeedManager.getSeed());
     }
 }

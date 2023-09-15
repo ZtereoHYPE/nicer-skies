@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "id": "nicer-skies",
-  "version": "1.2.1",
+  "version": "1.3.0",
   "name": "Nicer Skies",
   "description": "This is a mod that improves the minecraft skies a little whilst keeping the behaviours vanilla and compatible.",
   "authors": [
@@ -14,7 +14,7 @@
   "icon": "assets/nicer_skies/icon.png",
   "environment": "client",
   "entrypoints": {
-    "main": [
+    "client": [
       "codes.ztereohype.nicerskies.NicerSkies"
     ],
     "modmenu": [

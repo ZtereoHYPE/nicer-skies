@@ -1,6 +1,7 @@
 package codes.ztereohype.nicerskies.sky.nebula;
 
 import codes.ztereohype.nicerskies.NicerSkies;
+import codes.ztereohype.nicerskies.config.Config;
 import com.mojang.blaze3d.platform.NativeImage;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.BufferBuilder;
@@ -91,6 +92,7 @@ public class Skybox {
             latch.countDown();
         }
 
+        @Getter
         @AllArgsConstructor
         private enum CoordMap {
             X((texX, texY) -> (texX / (float) RESOLUTION) * 2 - 1),
@@ -98,7 +100,6 @@ public class Skybox {
             ONE((texX, texY) -> 1F),
             NEG_ONE((texX, texY) -> -1F);
 
-            @Getter
             private final BiFunction<Integer, Integer, Float> map;
         }
 
@@ -149,11 +150,6 @@ public class Skybox {
         skyboxBuilder.vertex(80F, -80F, 80F).uv(0.75f, 0.75f).endVertex();
         skyboxBuilder.vertex(80F, -80F, -80F).uv(0.75f, 0.5f).endVertex();
 
-//        skyboxBuilder.vertex(-1F, -1F, -1F).uv(0f, 0f).endVertex();
-//        skyboxBuilder.vertex(-1F, -1F, 1F).uv(0f, 1f).endVertex();
-//        skyboxBuilder.vertex(1F, -1F, 1F).uv(1f, 1f).endVertex();
-//        skyboxBuilder.vertex(1F, -1F, -1F).uv(1f, 0f).endVertex();
-
         // top face
         skyboxBuilder.vertex(-80F, 80F, -80F).uv(0.5f, 0f).endVertex();
         skyboxBuilder.vertex(80F, 80F, -80F).uv(0.75f, 0f).endVertex();
@@ -177,14 +173,17 @@ public class Skybox {
     }
 
     private float getSkyboxBrightness(ClientLevel level) {
-        float config = NicerSkies.config.getNebulaStrength();
+        Config config = NicerSkies.getInstance().getConfig();
+
+        float strength = config.getNebulaStrength();
+        boolean renderDuringDay = config.getRenderDuringDay();
 
         float timeOfDay = level.getTimeOfDay(0);
         float nightness = 1F - (Mth.cos(timeOfDay * (float) (Math.PI * 2)) * 4.0F + 0.5F);
-        nightness = Mth.clamp(nightness, (NicerSkies.config.getRenderDuringDay() ? 1f : 0f), 1.0F);
+        nightness = Mth.clamp(nightness, (renderDuringDay ? 1f : 0f), 1.0F);
 
         float rain = level.getRainLevel(0);
 
-        return nightness * (1f - rain) * config;
+        return nightness * (1f - rain) * strength;
     }
 }
