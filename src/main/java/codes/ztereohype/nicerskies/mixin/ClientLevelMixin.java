@@ -1,6 +1,6 @@
 package codes.ztereohype.nicerskies.mixin;
 
-import codes.ztereohype.nicerskies.IClientLevelAccessor;
+import codes.ztereohype.nicerskies.ClientLevelAccessor;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.multiplayer.ClientPacketListener;
 import net.minecraft.client.renderer.LevelRenderer;
@@ -15,7 +15,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import java.util.function.Supplier;
 
 @Mixin(ClientLevel.class)
-public class ClientLevelMixin implements IClientLevelAccessor {
+public class ClientLevelMixin implements ClientLevelAccessor {
     @Unique
     private long hashedSeed;
 
