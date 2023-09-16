@@ -16,6 +16,14 @@
   "nicer_skies.option.background_strength": "Visibilità sfondo: %d",
   "nicer_skies.option.nebula_scale": "Dimensione nebule: %dx",
 
+  "nicer_skies.option.custom_lightmap.tooltip": "Modifica il colore della luce scaldandola un po' e rendendo le notti più scure e blu.",
+
+  "nicer_skies.option.nebula_scale.tooltip": "Determina la dimensione delle nebule. Valori più alti renderanno le nebule più piccole, e viceversa.",
+  "nicer_skies.option.nebula_transparency.tooltip": "Determina la trasparenza delle nebule. Valori più alti renderanno le nebule più visibili.",
+  "nicer_skies.option.nebula_amount.tooltip": "Determina quanto del cielo è coperto dalle nebule. Valori più bassi creeranno poche, piccole e rare nebule.",
+  "nicer_skies.option.background_strength.tooltip": "Determina l'intensità dello sfondo arcobaleno. Valori più alti renderanno lo sfondo più luminoso",
+  "nicer_skies.option.render_during_day.tooltip": "Determina se le nebule sono renderizzate durante il giorno. Se disabilitato, le nebule saranno renderizzate solo di notte.",
+
   "nicer_skies.menu.back": "Indietro",
   "nicer_skies.menu.reset": "Ripristina",
   "nicer_skies.menu.apply": "Applica"

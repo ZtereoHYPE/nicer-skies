@@ -4,16 +4,20 @@ import codes.ztereohype.nicerskies.NicerSkies;
 import codes.ztereohype.nicerskies.config.Config;
 import codes.ztereohype.nicerskies.core.NebulaSeedManager;
 import codes.ztereohype.nicerskies.gui.widget.Separator;
+import codes.ztereohype.nicerskies.gui.widget.TooltippedCheckbox;
+import codes.ztereohype.nicerskies.gui.widget.TooltippedSliderButton;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractSliderButton;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.Checkbox;
+import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.FormattedText;
 import net.minecraft.network.chat.Style;
 
+import javax.tools.Tool;
 import java.util.List;
 import java.util.function.Supplier;
 
@@ -21,7 +25,7 @@ import java.util.function.Supplier;
 public class ConfigScreen extends Screen {
     private final Screen lastScreen;
     private final Config config;
-    private final Config.ConfigData newConfig;
+    private Config.ConfigData newConfig;
 
     private boolean invalidated = false;
 
@@ -30,7 +34,13 @@ public class ConfigScreen extends Screen {
         this.lastScreen = lastScreen;
 
         this.config = NicerSkies.getInstance().getConfig();
+
+        wipeConfig();
+    }
+
+    private void wipeConfig() {
         this.newConfig = config.getConfigData().toBuilder().build();
+        this.newConfig.setNebulaConfig(config.getConfigData().getNebulaConfig().toBuilder().build());
     }
 
     @Override
@@ -50,101 +60,76 @@ public class ConfigScreen extends Screen {
         float nebulaNoiseScale = newConfig.getNebulaConfig().getNebulaNoiseScale();
 
         int Y = 60;
-        addRenderableWidget(new Checkbox(20, Y, 20, 20, Component.translatable("nicer_skies.option.render_nebulas"), renderNebulas) {
-            @Override
-            public void onPress() {
-                super.onPress();
-                newConfig.setRenderNebulas(this.selected());
-                invalidated = true;
-            }
-        });
 
-        addRenderableWidget(new Checkbox(20, (Y += btnDst), 20, 20, Component.translatable("nicer_skies.option.twinkle_stars"), twinkleStars) {
-            @Override
-            public void onPress() {
-                super.onPress();
-                newConfig.setTwinklingStars(this.selected());
-                invalidated = true;
-            }
-        });
+        addRenderableWidget(new TooltippedCheckbox(20, Y, 20, 20, Component.translatable("nicer_skies.option.render_nebulas"), renderNebulas, (selected) -> {
+            newConfig.setLightmapTweaked(selected);
+            Minecraft.getInstance().gameRenderer.lightTexture().tick();
+            invalidated = true;
+        }, null));
 
-        addRenderableWidget(new Checkbox(20, (Y += btnDst), 20, 20, Component.translatable("nicer_skies.option.custom_lightmap"), lightmapTweaked) {
-            @Override
-            public void onPress() {
-                super.onPress();
-                newConfig.setLightmapTweaked(this.selected());
-                Minecraft.getInstance().gameRenderer.lightTexture().tick();
-                invalidated = true;
-            }
-        });
+        addRenderableWidget(new TooltippedCheckbox(20, (Y += btnDst), 20, 20, Component.translatable("nicer_skies.option.twinkle_stars"), twinkleStars, (selected) -> {
+            newConfig.setTwinklingStars(selected);
+            invalidated = true;
+        }, null));
+
+        addRenderableWidget(new TooltippedCheckbox(20, (Y += btnDst), 20, 20, Component.translatable("nicer_skies.option.custom_lightmap"), lightmapTweaked, (selected) -> {
+            newConfig.setLightmapTweaked(selected);
+            Minecraft.getInstance().gameRenderer.lightTexture().tick();
+            invalidated = true;
+        }, Tooltip.create(Component.translatable("nicer_skies.option.custom_lightmap.tooltip"))));
 
         addRenderableOnly(new Separator(this.width / 2, 30, this.height - 70));
         Y = 60;
 
-        addRenderableWidget(new Checkbox(nebulaOptMargin, Y, 20, 20, Component.literal("Render During Day"), renderDuringDay) {
-            @Override
-            public void onPress() {
-                super.onPress();
-                newConfig.getNebulaConfig().setRenderDuringDay(this.selected());
-                invalidated = true;
-            }
-        });
+        // Render During Day
+        addRenderableWidget(new TooltippedCheckbox(nebulaOptMargin, Y, 20, 20, Component.translatable("nicer_skies.option.render_during_day"), renderDuringDay, (selected) -> {
+            newConfig.getNebulaConfig().setRenderDuringDay(selected);
+            invalidated = true;
+        }, Tooltip.create(Component.translatable("nicer_skies.option.render_during_day.tooltip"))));
 
-        addRenderableWidget(new AbstractSliderButton(nebulaOptMargin, (Y += btnDst), 150, 20, Component.translatable("nicer_skies.option.nebula_transparency", (int) (nebulaStrength * 100) + "%"), nebulaStrength) {
-            @Override
-            protected void updateMessage() {
-                this.setMessage(Component.translatable("nicer_skies.option.nebula_transparency", (int) (this.value * 100) + "%"));
-            }
-
-            @Override
-            protected void applyValue() {
-                newConfig.getNebulaConfig().setNebulaStrength((float) this.value);
-                invalidated = true;
-            }
-        });
+        // Nebula Strength
+        addRenderableWidget(new TooltippedSliderButton(nebulaOptMargin, (Y += btnDst), 150, 20, Component.translatable("nicer_skies.option.nebula_transparency",
+                (int) (nebulaStrength *
+                        100) +
+                        "%"), nebulaStrength, value -> Component.translatable("nicer_skies.option.nebula_transparency",
+                (int) (value *
+                        100) +
+                        "%"), value -> {
+            newConfig.getNebulaConfig().setNebulaStrength(value.floatValue());
+            invalidated = true;
+        }, Tooltip.create(Component.translatable("nicer_skies.option.nebula_transparency.tooltip"))));
 
         // Nebula Amount
-        addRenderableWidget(new AbstractSliderButton(nebulaOptMargin, (Y += btnDst), 150, 20, Component.translatable("nicer_skies.option.nebula_amount", (int) (nebulaNoiseAmount * 100) + "%"), nebulaNoiseAmount) {
-            @Override
-            protected void updateMessage() {
-                this.setMessage(Component.translatable("nicer_skies.option.nebula_amount",  (int) (this.value * 100) + "%"));
-            }
-
-            @Override
-            protected void applyValue() {
-                newConfig.getNebulaConfig().setNebulaNoiseAmount((float) this.value);
-                invalidated = true;
-            }
-        });
+        addRenderableWidget(new TooltippedSliderButton(nebulaOptMargin, (Y += btnDst), 150, 20, Component.translatable("nicer_skies.option.nebula_amount",
+                (int) (nebulaNoiseAmount *
+                        100) +
+                        "%"), nebulaNoiseAmount, value -> Component.translatable("nicer_skies.option.nebula_amount",
+                (int) (value *
+                        100) +
+                        "%"), value -> {
+            newConfig.getNebulaConfig().setNebulaNoiseAmount(value.floatValue());
+            invalidated = true;
+        }, Tooltip.create(Component.translatable("nicer_skies.option.nebula_amount.tooltip"))));
 
         // Background Strength
-        addRenderableWidget(new AbstractSliderButton(nebulaOptMargin, (Y += btnDst), 150, 20, Component.translatable("nicer_skies.option.background_strength", nebulaBaseColourAmount), nebulaBaseColourAmount / 255f) {
-            @Override
-            protected void updateMessage() {
-                this.setMessage(Component.translatable("nicer_skies.option.background_strength", (int) (this.value * 255)));
-            }
-
-            @Override
-            protected void applyValue() {
-                newConfig.getNebulaConfig().setBaseColourAmount((int) (this.value * 255));
-                invalidated = true;
-            }
-        });
+        addRenderableWidget(new TooltippedSliderButton(nebulaOptMargin, Y += btnDst, 150, 20,
+                Component.translatable("nicer_skies.option.background_strength", nebulaBaseColourAmount),
+                nebulaBaseColourAmount / 255f,
+                value -> Component.translatable("nicer_skies.option.background_strength", (int) (value * 255)),
+                value -> {
+            newConfig.getNebulaConfig().setBaseColourAmount((int) (value * 255));
+            invalidated = true;
+        }, Tooltip.create(Component.translatable("nicer_skies.option.background_strength.tooltip"))));
 
 
         // Nebula Scale
-        addRenderableWidget(new AbstractSliderButton(nebulaOptMargin, (Y += btnDst), 150, 20, Component.translatable("nicer_skies.option.nebula_scale", nebulaNoiseScale), mapValueToScale(nebulaNoiseScale)) {
-            @Override
-            protected void updateMessage() {
-                this.setMessage(Component.translatable("nicer_skies.option.nebula_scale", mapScaleToValue((float) this.value)));
-            }
-
-            @Override
-            protected void applyValue() {
-                newConfig.getNebulaConfig().setNebulaNoiseScale(mapScaleToValue((float) this.value));
-                invalidated = true;
-            }
-        });
+        addRenderableWidget(new TooltippedSliderButton(nebulaOptMargin, Y += btnDst, 150, 20,
+                Component.translatable("nicer_skies.option.nebula_scale", nebulaNoiseScale),
+                mapValueToScale(nebulaNoiseScale), value -> Component.translatable("nicer_skies.option.nebula_scale", mapScaleToValue(value)),
+                value -> {
+            newConfig.getNebulaConfig().setNebulaNoiseScale(mapScaleToValue(value));
+            invalidated = true;
+        }, Tooltip.create(Component.translatable("nicer_skies.option.nebula_scale.tooltip"))));
 
         // Reset
         addRenderableWidget(new Button(nebulaOptMargin, (Y += btnDst), 150, 20, Component.translatable("nicer_skies.menu.reset"), (button) -> {
@@ -160,7 +145,9 @@ public class ConfigScreen extends Screen {
         });
 
         // Apply
-        addRenderableWidget(new Button(this.width / 2 + 4, this.height - 28, 150, 20, Component.translatable("nicer_skies.menu.apply"), (button) -> {
+        addRenderableWidget(new Button(
+                this.width / 2 + 4,
+                this.height - 28, 150, 20, Component.translatable("nicer_skies.menu.apply"), (button) -> {
             config.updateConfig(newConfig);
             regenerateSky();
             invalidated = false;
@@ -174,9 +161,9 @@ public class ConfigScreen extends Screen {
 
         // Back
         addRenderableWidget(Button.builder(Component.translatable("nicer_skies.menu.back"), (button) -> this.onClose())
-                                  .pos(this.width / 2 - 154, this.height - 28)
-                                  .size(150, 20)
-                                  .build());
+                .pos(this.width / 2 - 154, this.height - 28)
+                .size(150, 20)
+                .build());
         super.init();
     }
 
@@ -186,14 +173,18 @@ public class ConfigScreen extends Screen {
         super.render(g, mouseX, mouseY, partialTick);
 
         g.drawCenteredString(this.font, this.title, this.width / 2, 10, 16777215);
-        g.drawCenteredString(this.font, Component.translatable("nicer_skies.menu.subtitle.feature_toggles"), this.width / 4, 36, 16777215);
-        g.drawCenteredString(this.font, Component.translatable("nicer_skies.menu.subtitle.nebula_settings"), 3 * this.width / 4, 36, 16777215);
+        g.drawCenteredString(this.font, Component.translatable("nicer_skies.menu.subtitle.feature_toggles"),
+                this.width / 4, 36, 16777215);
+        g.drawCenteredString(this.font, Component.translatable("nicer_skies.menu.subtitle.nebula_settings"),
+                3 * this.width / 4, 36, 16777215);
 
-        drawWrappedComponent(g, Component.translatable("nicer_skies.menu.compatibility_warning"), 20, 150, this.width / 2 - 40, 0xFFFF00);
+        drawWrappedComponent(g, Component.translatable("nicer_skies.menu.compatibility_warning"), 20, 150,
+                this.width / 2 - 40, 0xFFFF00);
     }
 
     @Override
     public void onClose() {
+        wipeConfig();
         minecraft.setScreen(lastScreen);
     }
 
@@ -219,12 +210,12 @@ public class ConfigScreen extends Screen {
         }
     }
 
-    private float mapScaleToValue(float value) {
+    private float mapScaleToValue(double value) {
         return (float) Math.round(1f / (value * 1.5f + 0.5f) * 100) / 100f;
     }
 
     // inverse of above
-    private float mapValueToScale(float value) {
-        return ((1f / value) - 0.5f) / 1.5f;
+    private float mapValueToScale(double value) {
+        return (float) ((1f / value) - 0.5f) / 1.5f;
     }
 }
