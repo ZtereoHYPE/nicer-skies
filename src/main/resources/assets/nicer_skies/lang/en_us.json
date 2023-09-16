@@ -16,9 +16,15 @@
   "nicer_skies.option.background_strength": "Background Strength: %d",
   "nicer_skies.option.nebula_scale": "Nebula Scale: %dx",
 
+  "nicer_skies.option.custom_lightmap.tooltip": "Tweak the light color with slightly warmer block lights and darker, bluer nights.",
+
+  "nicer_skies.option.nebula_scale.tooltip": "Determines the size of the nebulas. Higher values will make nebulas appear smaller, and vice-versa.",
+  "nicer_skies.option.nebula_transparency.tooltip": "Determines the transparency of the nebulas. Higher values will make nebulas appear more visible.",
+  "nicer_skies.option.nebula_amount.tooltip": "Determines how much of the sky is covered by nebulas. Lower values will create few, small, sparse nebulas.",
+  "nicer_skies.option.background_strength.tooltip": "Determines the strength of the rainbow background. Higher values will make the background appear brighter.",
+  "nicer_skies.option.render_during_day.tooltip": "Determines whether nebulas are rendered during the day. If disabled, nebulas will only be rendered at night, fading in and out.",
+
   "nicer_skies.menu.back": "Back",
   "nicer_skies.menu.reset": "Reset",
   "nicer_skies.menu.apply": "Apply"
-
-
 }
