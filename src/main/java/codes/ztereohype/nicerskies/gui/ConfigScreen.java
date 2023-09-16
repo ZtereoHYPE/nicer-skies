@@ -62,8 +62,7 @@ public class ConfigScreen extends Screen {
         int Y = 60;
 
         addRenderableWidget(new TooltippedCheckbox(20, Y, 20, 20, Component.translatable("nicer_skies.option.render_nebulas"), renderNebulas, (selected) -> {
-            newConfig.setLightmapTweaked(selected);
-            Minecraft.getInstance().gameRenderer.lightTexture().tick();
+            newConfig.setRenderNebulas(selected);
             invalidated = true;
         }, null));
 
