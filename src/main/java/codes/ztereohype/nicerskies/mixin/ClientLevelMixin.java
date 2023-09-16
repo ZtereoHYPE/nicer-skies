@@ -15,7 +15,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import java.util.function.Supplier;
 
 @Mixin(ClientLevel.class)
-public class ClientLevelMixin implements ClientLevelAccessor {
+public abstract class ClientLevelMixin implements ClientLevelAccessor {
     @Unique
     private long hashedSeed;
 
