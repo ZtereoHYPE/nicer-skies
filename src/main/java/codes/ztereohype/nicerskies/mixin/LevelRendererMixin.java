@@ -1,6 +1,8 @@
 package codes.ztereohype.nicerskies.mixin;
 
 import codes.ztereohype.nicerskies.NicerSkies;
+import codes.ztereohype.nicerskies.config.Config;
+import codes.ztereohype.nicerskies.sky.SkyManager;
 import com.mojang.blaze3d.vertex.*;
 import com.mojang.math.Matrix4f;
 import net.minecraft.client.Camera;

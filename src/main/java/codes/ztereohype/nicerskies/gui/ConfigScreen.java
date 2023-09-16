@@ -6,16 +6,17 @@ import codes.ztereohype.nicerskies.core.NebulaSeedManager;
 import codes.ztereohype.nicerskies.gui.widget.Separator;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.components.AbstractSliderButton;
-import net.minecraft.client.gui.components.Button;
-import net.minecraft.client.gui.components.Checkbox;
+import net.minecraft.client.gui.components.*;
+import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.FormattedText;
 import net.minecraft.network.chat.Style;
+import net.minecraft.util.FormattedCharSequence;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.function.Supplier;
 
 
@@ -186,11 +187,23 @@ public class ConfigScreen extends Screen {
         drawCenteredString(poseStack, this.font, Component.translatable("nicer_skies.menu.subtitle.nebula_settings"), 3 * this.width / 4, 36, 16777215);
 
         drawWrappedComponent(poseStack, Component.translatable("nicer_skies.menu.compatibility_warning"), 20, 150, this.width / 2 - 40, 0xFFFF00);
+
+        this.attemptRenderTooltip(poseStack, mouseX, mouseY);
     }
 
     @Override
     public void onClose() {
         minecraft.setScreen(lastScreen);
+    }
+
+    private void attemptRenderTooltip(PoseStack poseStack, int mouseX, int mouseY) {
+        GuiEventListener hovered = this.getFocused();
+        if (hovered instanceof TooltipAccessor) {
+            List<FormattedCharSequence> list = ((TooltipAccessor) hovered).getTooltip();
+            if (!list.isEmpty()) {
+                this.renderTooltip(poseStack, list, mouseX, mouseY);
+            }
+        }
     }
 
     private void regenerateSky() {
