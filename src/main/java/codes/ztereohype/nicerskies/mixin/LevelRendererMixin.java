@@ -7,6 +7,7 @@ import com.mojang.blaze3d.vertex.BufferBuilder;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexBuffer;
 import net.minecraft.client.Camera;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.renderer.LevelRenderer;
@@ -30,6 +31,9 @@ public abstract class LevelRendererMixin {
     private int ticks;
     @Shadow
     private ClientLevel level;
+
+    @Shadow
+    private Minecraft minecraft;
 
     @Inject(at = @At("HEAD"), method = "createStars", cancellable = true)
     private void generateStars(CallbackInfo ci) {
@@ -72,6 +76,8 @@ public abstract class LevelRendererMixin {
     private void drawSkybox(PoseStack poseStack, Matrix4f matrix4f, float f, Camera camera, boolean bl, Runnable runnable, CallbackInfo ci, FogType fogType, Vec3 vec3, float g, float h, float i, BufferBuilder bufferBuilder, ShaderInstance shaderInstance, float[] fs, float j, Matrix4f matrix4f3, float l, int s, int t, int n, float u, float p, float q, float r) {
         Config config = NicerSkies.getInstance().getConfig();
         SkyManager skyManager = NicerSkies.getInstance().getSkyManager();
+
+        if (!config.renderInOtherDimensions() && minecraft.level.dimension() != ClientLevel.OVERWORLD) return;
 
         if (!config.areNebulasEnabled() || skyManager.getSkybox() == null) return;
 

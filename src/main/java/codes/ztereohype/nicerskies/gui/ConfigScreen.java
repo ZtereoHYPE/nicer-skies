@@ -8,16 +8,13 @@ import codes.ztereohype.nicerskies.gui.widget.TooltippedCheckbox;
 import codes.ztereohype.nicerskies.gui.widget.TooltippedSliderButton;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.gui.components.AbstractSliderButton;
 import net.minecraft.client.gui.components.Button;
-import net.minecraft.client.gui.components.Checkbox;
 import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.FormattedText;
 import net.minecraft.network.chat.Style;
 
-import javax.tools.Tool;
 import java.util.List;
 import java.util.function.Supplier;
 
@@ -50,6 +47,7 @@ public class ConfigScreen extends Screen {
 
         // initial values
         boolean renderNebulas = newConfig.isRenderNebulas();
+        boolean dimensionalNebulas = newConfig.isNebulasInOtherDimensions();
         boolean twinkleStars = newConfig.isTwinklingStars();
         boolean lightmapTweaked = newConfig.isLightmapTweaked();
 
@@ -65,6 +63,17 @@ public class ConfigScreen extends Screen {
             newConfig.setRenderNebulas(selected);
             invalidated = true;
         }, null));
+
+        addRenderableWidget(new TooltippedCheckbox(40, (Y += btnDst), 20, 20, Component.translatable("nicer_skies.option.dimensional_nebulas"), dimensionalNebulas, (selected) -> {
+            newConfig.setNebulasInOtherDimensions(selected);
+            invalidated = true;
+        }, null) {
+            @Override
+            public void render(GuiGraphics g, int mouseX, int mouseY, float partialTick) {
+                this.active = newConfig.isRenderNebulas();
+                super.render(g, mouseX, mouseY, partialTick);
+            }
+        });
 
         addRenderableWidget(new TooltippedCheckbox(20, (Y += btnDst), 20, 20, Component.translatable("nicer_skies.option.twinkle_stars"), twinkleStars, (selected) -> {
             newConfig.setTwinklingStars(selected);
@@ -177,8 +186,8 @@ public class ConfigScreen extends Screen {
         g.drawCenteredString(this.font, Component.translatable("nicer_skies.menu.subtitle.nebula_settings"),
                 3 * this.width / 4, 36, 16777215);
 
-        drawWrappedComponent(g, Component.translatable("nicer_skies.menu.compatibility_warning"), 20, 150,
-                this.width / 2 - 40, 0xFFFF00);
+        drawWrappedComponent(g, Component.translatable("nicer_skies.menu.compatibility_warning"), 20, 160,
+                this.width / 2 - 40);
     }
 
     @Override
@@ -198,14 +207,14 @@ public class ConfigScreen extends Screen {
         return newConfig.getNebulaConfig().equals(Config.DEFAULT_CONFIG.getNebulaConfig());
     }
 
-    private void drawWrappedComponent(GuiGraphics g, FormattedText component, int x, int y, int wrapWidth, int color) {
+    private void drawWrappedComponent(GuiGraphics g, FormattedText component, int x, int y, int wrapWidth) {
         Minecraft mc = Minecraft.getInstance();
         List<FormattedText> lines = mc.font.getSplitter().splitLines(component, wrapWidth, Style.EMPTY);
 
         int amount = lines.size();
         for (int i = 0; i < amount; i++) {
             FormattedText renderable = lines.get(i);
-            g.drawString(font, renderable.getString(), x, y + i * 9, color);
+            g.drawString(font, renderable.getString(), x, y + i * 9, 0xFFFFFFFF);
         }
     }
 
