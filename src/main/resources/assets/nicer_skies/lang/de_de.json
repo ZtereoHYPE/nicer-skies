@@ -10,11 +10,19 @@
   "nicer_skies.option.twinkle_stars": "Funkelnde Sterne",
   "nicer_skies.option.custom_lightmap": "Licht Farben anpassen",
 
-  "nicer_skies.option.render_during_day": "Nebel auch am Tag",
+  "nicer_skies.option.render_during_day": "Nebel am Tag",
   "nicer_skies.option.nebula_transparency": "Nebel-Intensität: %d",
   "nicer_skies.option.nebula_amount": "Nebel-Deckung: %d",
   "nicer_skies.option.background_strength": "Hintergrund-Deckung: %d",
   "nicer_skies.option.nebula_scale": "Nebel-Größe: %dx",
+
+  "nicer_skies.option.custom_lightmap.tooltip": "Verändere die Lichttöne zu etwas wärmeren Blockfarben und kälteren, blaueren Nächten",
+
+  "nicer_skies.option.nebula_scale.tooltip": "Bestimmt die Größe des Nebels. Größere Werte verringern die Nebeldichte und umgekehrt.",
+  "nicer_skies.option.nebula_transparency.tooltip": "Bestimmt die Transparenz des Nebels. Größere Werte machen den Nebel besser Sichtbar.",
+  "nicer_skies.option.nebula_amount.tooltip": "Bestimmt wie viel des Himmels mit Nebel verdeckt ist. Je kleiner der Wert, desto weniger, undichterer Nebel.",
+  "nicer_skies.option.background_strength.tooltip": "Bestimmt die Transparenz des Regenbogenhintergrunds. Größere Werte machen den Hintergrund sichtbarer und umgekehrt.",
+  "nicer_skies.option.render_during_day.tooltip": "Bestimmt ob es am Tag Nebel geben soll. Wenn deaktiviert, ist Nebel nur nachts zu sehen. Dieser verblasst dann zu Morgen und erscheint langsam am Abend wieder.",
 
   "nicer_skies.menu.back": "Zurück",
   "nicer_skies.menu.reset": "Zurücksetzen",
