@@ -14,14 +14,15 @@ import java.io.IOException;
 
 public class Config {
     public static final ConfigData DEFAULT_CONFIG = new ConfigData(false,
-                                                                   true,
-                                                                   true,
-                                                                   NebulaType.RAINBOW.getTypeString(),
-                                                                   1f,
-                                                                   0.5f,
-                                                                   1f,
-                                                                   128,
-                                                                   false);
+            true,
+            true,
+            1f,
+            0.5f,
+            1f,
+            128,
+            false,
+            false
+    );
 
     private static final Gson gson = new Gson();
     private final File file;
@@ -93,6 +94,10 @@ public class Config {
         return configData.getNebulaConfig().isRenderDuringDay();
     }
 
+    public boolean renderInOtherDimensions() {
+        return configData.isNebulasInOtherDimensions();
+    }
+
     public void updateConfig(ConfigData configData) {
         this.configData = configData.toBuilder().build();
         this.configData.setNebulaConfig(configData.getNebulaConfig().toBuilder().build());
@@ -110,7 +115,7 @@ public class Config {
 
     @Data
     @AllArgsConstructor
-    @Builder(toBuilder=true)
+    @Builder(toBuilder = true)
     public final static class ConfigData {
         private boolean lightmapTweaked;
         private boolean twinklingStars;
@@ -119,19 +124,19 @@ public class Config {
 
         private NebulaConfigData nebulaConfig;
 
-        private ConfigData(boolean tweakedLigthmap, boolean twinklingStars, boolean nebulas, String nebulaType, float nebulaStrength, float nebulaNoiseAmount, float nebulaNoiseScale, int baseColourAmount, boolean renderDuringDay) {
+        private ConfigData(boolean tweakedLigthmap, boolean twinklingStars, boolean nebulas, float nebulaStrength, float nebulaNoiseAmount, float nebulaNoiseScale, int baseColourAmount, boolean renderDuringDay, boolean renderInOtherDimensions) {
             this.lightmapTweaked = tweakedLigthmap;
             this.twinklingStars = twinklingStars;
             this.renderNebulas = nebulas;
+            this.nebulasInOtherDimensions = renderInOtherDimensions;
 
-            this.nebulaConfig = new NebulaConfigData(nebulaType, nebulaStrength, nebulaNoiseAmount, nebulaNoiseScale, baseColourAmount, renderDuringDay);
+            this.nebulaConfig = new NebulaConfigData(nebulaStrength, nebulaNoiseAmount, nebulaNoiseScale, baseColourAmount, renderDuringDay);
         }
 
         @Data
         @AllArgsConstructor
-        @Builder(toBuilder=true)
+        @Builder(toBuilder = true)
         public static final class NebulaConfigData {
-            private String nebulaType;
             private float nebulaStrength;
             private float nebulaNoiseAmount;
             private float nebulaNoiseScale;

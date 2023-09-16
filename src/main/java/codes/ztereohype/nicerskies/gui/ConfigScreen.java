@@ -48,6 +48,7 @@ public class ConfigScreen extends Screen {
 
         // initial values
         boolean renderNebulas = newConfig.isRenderNebulas();
+        boolean dimensionalNebulas = newConfig.isNebulasInOtherDimensions();
         boolean twinkleStars = newConfig.isTwinklingStars();
         boolean lightmapTweaked = newConfig.isLightmapTweaked();
 
@@ -63,6 +64,17 @@ public class ConfigScreen extends Screen {
             newConfig.setRenderNebulas(selected);
             invalidated = true;
         }, null));
+
+        addRenderableWidget(new TooltippedCheckbox(40, (Y += btnDst), 20, 20, Component.translatable("nicer_skies.option.dimensional_nebulas"), dimensionalNebulas, (selected) -> {
+            newConfig.setNebulasInOtherDimensions(selected);
+            invalidated = true;
+        }, null) {
+            @Override
+            public void render(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
+                this.active = newConfig.isRenderNebulas();
+                super.render(poseStack, mouseX, mouseY, partialTick);
+            }
+        });
 
         addRenderableWidget(new TooltippedCheckbox(20, (Y += btnDst), 20, 20, Component.translatable("nicer_skies.option.twinkle_stars"), twinkleStars, (selected) -> {
             newConfig.setTwinklingStars(selected);
@@ -174,6 +186,7 @@ public class ConfigScreen extends Screen {
 
     @Override
     public void onClose() {
+        wipeConfig();
         minecraft.setScreen(lastScreen);
     }
 
