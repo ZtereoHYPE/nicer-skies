@@ -179,7 +179,7 @@ public class ConfigScreen extends Screen {
         drawCenteredString(poseStack, this.font, Component.translatable("nicer_skies.menu.subtitle.feature_toggles"), this.width / 4, 36, 16777215);
         drawCenteredString(poseStack, this.font, Component.translatable("nicer_skies.menu.subtitle.nebula_settings"), 3 * this.width / 4, 36, 16777215);
 
-        drawWrappedComponent(poseStack, Component.translatable("nicer_skies.menu.compatibility_warning"), 20, 150, this.width / 2 - 40, 0xFFFF00);
+        drawWrappedComponent(poseStack, Component.translatable("nicer_skies.menu.compatibility_warning"), 20, 160, this.width / 2 - 40);
 
         this.attemptRenderTooltip(poseStack, mouseX, mouseY);
     }
@@ -191,11 +191,14 @@ public class ConfigScreen extends Screen {
     }
 
     private void attemptRenderTooltip(PoseStack poseStack, int mouseX, int mouseY) {
-        GuiEventListener hovered = this.getFocused();
-        if (hovered instanceof TooltipAccessor) {
-            List<FormattedCharSequence> list = ((TooltipAccessor) hovered).getTooltip();
-            if (!list.isEmpty()) {
-                this.renderTooltip(poseStack, list, mouseX, mouseY);
+        for (GuiEventListener listener : this.children()) {
+            if (listener instanceof TooltipAccessor) {
+                if (listener.isMouseOver(mouseX, mouseY)) {
+                    List<FormattedCharSequence> list = ((TooltipAccessor) listener).getTooltip();
+                    if (!list.isEmpty()) {
+                        this.renderTooltip(poseStack, list, mouseX, mouseY);
+                    }
+                }
             }
         }
     }
@@ -211,14 +214,14 @@ public class ConfigScreen extends Screen {
         return newConfig.getNebulaConfig().equals(Config.DEFAULT_CONFIG.getNebulaConfig());
     }
 
-    private void drawWrappedComponent(PoseStack poseStack, FormattedText component, int x, int y, int wrapWidth, int color) {
+    private void drawWrappedComponent(PoseStack poseStack, FormattedText component, int x, int y, int wrapWidth) {
         Minecraft mc = Minecraft.getInstance();
         List<FormattedText> lines = mc.font.getSplitter().splitLines(component, wrapWidth, Style.EMPTY);
 
         int amount = lines.size();
         for (int i = 0; i < amount; i++) {
             FormattedText renderable = lines.get(i);
-            font.draw(poseStack, renderable.getString(), x, (float)(y + i * 9), color);
+            font.draw(poseStack, renderable.getString(), x, (float)(y + i * 9), 0xFFFFFFFF);
         }
     }
 

@@ -6,6 +6,7 @@ import net.minecraft.client.gui.components.TooltipAccessor;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.FormattedCharSequence;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
 
@@ -30,7 +31,22 @@ public class TooltippedCheckbox extends Checkbox implements TooltipAccessor {
     @Override
     public List<FormattedCharSequence> getTooltip() {
         if (tooltip == null) return List.of();
-        return List.of(FormattedCharSequence.forward(tooltip.getString(), tooltip.getStyle()));
+        String tooltipText = tooltip.getString();
+
+        // horrible
+        String[] words = tooltipText.split(" +");
+        List<String> lines = new ArrayList<>();
+        String line = "";
+        for (String word : words) {
+            if (line.length() + word.length() > 30) {
+                lines.add(line);
+                line = "";
+            }
+            line += word + " ";
+        }
+        lines.add(line);
+
+        return lines.stream().map((str)-> FormattedCharSequence.forward(str, tooltip.getStyle())).toList();
     }
 
     @Override
