@@ -3,12 +3,10 @@ package codes.ztereohype.nicerskies.gui.widget;
 import net.minecraft.client.gui.components.AbstractSliderButton;
 import net.minecraft.client.gui.components.TooltipAccessor;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.Style;
 import net.minecraft.util.FormattedCharSequence;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
-import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
@@ -24,7 +22,6 @@ public class TooltippedSliderButton extends AbstractSliderButton implements Tool
         this.sliderMoved = sliderMoved;
         this.sliderReleased = sliderReleased;
         this.tooltip = tooltip;
-//        this.setTooltip(tooltip);
     }
 
     @Override
@@ -39,6 +36,7 @@ public class TooltippedSliderButton extends AbstractSliderButton implements Tool
 
     @Override
     public @NotNull List<FormattedCharSequence> getTooltip() {
+        if (tooltip == null) return List.of();
         return List.of(FormattedCharSequence.forward(tooltip.getString(), tooltip.getStyle()));
     }
 }

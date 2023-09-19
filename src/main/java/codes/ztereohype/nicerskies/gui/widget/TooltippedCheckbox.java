@@ -29,6 +29,7 @@ public class TooltippedCheckbox extends Checkbox implements TooltipAccessor {
 
     @Override
     public List<FormattedCharSequence> getTooltip() {
+        if (tooltip == null) return List.of();
         return List.of(FormattedCharSequence.forward(tooltip.getString(), tooltip.getStyle()));
     }
 
