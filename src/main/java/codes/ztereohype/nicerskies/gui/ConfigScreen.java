@@ -155,6 +155,7 @@ public class ConfigScreen extends Screen {
 
         // Apply
         addRenderableWidget(new Button(this.width / 2 + 4, this.height - 28, 150, 20, Component.translatable("nicer_skies.menu.apply"), (button) -> {
+            config.updateConfig(newConfig);
             regenerateSky();
             invalidated = false;
         }) {
