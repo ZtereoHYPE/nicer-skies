@@ -177,7 +177,7 @@ public class ConfigScreen extends Screen {
 
     @Override
     public void render(GuiGraphics g, int mouseX, int mouseY, float partialTick) {
-        this.renderBackground(g);
+        this.renderBackground(g, 0, 0, 0); // what even...
         super.render(g, mouseX, mouseY, partialTick);
 
         g.drawCenteredString(this.font, this.title, this.width / 2, 10, 16777215);
