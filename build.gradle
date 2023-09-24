@@ -28,12 +28,12 @@ dependencies {
 
 	// apis
 	modImplementation "com.terraformersmc:modmenu:${project.modmenu_version}"
-
-	// devenv mods
 	modRuntimeOnly include(fabricApi.module("fabric-command-api-v2", project.fabric_version))
 	modRuntimeOnly include(fabricApi.module("fabric-lifecycle-events-v1", project.fabric_version))
+
+	// devenv mods
 	modRuntimeOnly("com.terraformersmc:modmenu:${project.modmenu_version}") { transitive = false }
-	modRuntimeOnly(include(fabricApi.module("fabric-screen-api-v1", project.fabric_version)))
+	modRuntimeOnly fabricApi.module("fabric-screen-api-v1", project.fabric_version)
 
 	// libraries
 	compileOnly 'org.projectlombok:lombok:1.18.24'
