@@ -1,11 +1,8 @@
 plugins {
-	id 'fabric-loom' version '1.0-SNAPSHOT'
-	id 'io.github.juuxel.loom-quiltflower' version '1.8.0'	// to use genSourcesWithQuiltflower
+	id 'fabric-loom' version '1.3-SNAPSHOT'
+	id 'io.github.juuxel.loom-vineflower' version '1.11.0' // to use genSourcesWithVineflower
 	id "me.champeau.jmh" version "0.6.6"
 }
-
-sourceCompatibility = JavaVersion.VERSION_17
-targetCompatibility = JavaVersion.VERSION_17
 
 archivesBaseName = project.archives_base_name
 version = project.mod_version + "+" + project.minecraft_version
@@ -27,18 +24,12 @@ dependencies {
 	// essentials & mappings
 	minecraft "com.mojang:minecraft:${project.minecraft_version}"
 	modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
-
-	mappings loom.layered {
-		it.officialMojangMappings()
-//		it.parchment("org.parchmentmc.data:parchment-1.19.2:2022.08.10@zip") // https://ldtteam.jfrog.io/ui/native/parchmentmc-public/org/parchmentmc/data/parchment-1.18.1/BLEEDING-SNAPSHOT
-	}
+	mappings loom.officialMojangMappings()
 
 	// apis
 	modImplementation "com.terraformersmc:modmenu:${project.modmenu_version}"
 
 	// devenv mods
-//	modRuntimeOnly "maven.modrinth:lithium:${project.lithium_version}"
-//	modRuntimeOnly "maven.modrinth:spark:${project.spark_version}"
 	modRuntimeOnly include(fabricApi.module("fabric-command-api-v2", project.fabric_version))
 	modRuntimeOnly include(fabricApi.module("fabric-lifecycle-events-v1", project.fabric_version))
 	modRuntimeOnly("com.terraformersmc:modmenu:${project.modmenu_version}") { transitive = false }
@@ -55,18 +46,19 @@ dependencies {
 }
 
 processResources {
-	inputs.property "version", project.version
+	inputs.property "version", version // if version changes this task will be called again
 
 	filesMatching("fabric.mod.json") {
-		expand "version": project.version
+		expand "version": version
 	}
 }
 
-tasks.withType(JavaCompile).configureEach { it.options.release = 17 }
-java { withSourcesJar() }
+java {
+	withSourcesJar()
+}
 
 jar {
 	from("LICENSE") {
-		rename { "${it}_${project.archivesBaseName}"}
+		rename { "${it}_${archivesBaseName}"}
 	}
 }
