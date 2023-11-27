@@ -8,9 +8,9 @@
     "ClientLevelMixin",
     "LevelRendererAccessor",
     "LevelRendererInvoker",
-    "MinecraftMixin",
+    "LevelRendererMixin",
     "LightTextureMixin",
-    "LevelRendererMixin"
+    "MinecraftMixin"
   ],
   "server": [],
   "injectors": {

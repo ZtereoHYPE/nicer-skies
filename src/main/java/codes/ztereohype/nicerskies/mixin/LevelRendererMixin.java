@@ -23,6 +23,7 @@ import org.spongepowered.asm.mixin.injection.ModifyArg;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 
+
 @Mixin(value = LevelRenderer.class, priority = 999)
 public abstract class LevelRendererMixin {
     @Shadow

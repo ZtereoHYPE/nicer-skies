@@ -43,15 +43,14 @@ public class Skybox {
     @SuppressWarnings("ConstantConditions")
     public void render(PoseStack poseStack, Matrix4f projectionMatrix) {
         RenderSystem.setShader(GameRenderer::getPositionTexShader);
-        RenderSystem.setShaderTexture(0, skyTexture.getId());
+        RenderSystem.setShaderTexture(0, this.skyTexture.getId());
 
         float alpha = getSkyboxBrightness(Minecraft.getInstance().level);
 
         RenderSystem.setShaderColor(alpha, alpha, alpha, 1F);
 
         this.skyboxBuffer.bind();
-        this.skyboxBuffer.drawWithShader(poseStack.last()
-                                                  .pose(), projectionMatrix, GameRenderer.getPositionTexShader());
+        this.skyboxBuffer.drawWithShader(poseStack.last().pose(), projectionMatrix, GameRenderer.getPositionTexShader());
     }
 
     public void paint(SkyboxPainter painter) {
@@ -65,7 +64,7 @@ public class Skybox {
         try {
             latch.await(10, TimeUnit.SECONDS);
         } catch (InterruptedException e) {
-            throw new RuntimeException(e);
+            throw new RuntimeException("Failed to paint skybox", e);
         }
 
         this.skyTexture.upload();
@@ -105,12 +104,12 @@ public class Skybox {
 
         @AllArgsConstructor
         public enum TextureLocation {
-            TOP(CoordMap.X.getMap(), CoordMap.ONE.getMap(), CoordMap.Y.getMap(), 2, 0),
-            BOTTOM(CoordMap.X.getMap(), CoordMap.NEG_ONE.getMap(), CoordMap.Y.getMap(), 2, 2),
-            POS_Z(CoordMap.X.getMap(), CoordMap.Y.getMap(), CoordMap.ONE.getMap(), 1, 1),
-            NEG_Z(CoordMap.X.getMap(), CoordMap.Y.getMap(), CoordMap.NEG_ONE.getMap(), 3, 1),
-            POS_X(CoordMap.ONE.getMap(), CoordMap.Y.getMap(), CoordMap.X.getMap(), 2, 1),
-            NEG_X(CoordMap.NEG_ONE.getMap(), CoordMap.Y.getMap(), CoordMap.X.getMap(), 0, 1);
+            TOP(CoordMap.X.getMap(),        CoordMap.ONE.getMap(),      CoordMap.Y.getMap(),        2,  0),
+            BOTTOM(CoordMap.X.getMap(),     CoordMap.NEG_ONE.getMap(),  CoordMap.Y.getMap(),        2,  2),
+            POS_Z(CoordMap.X.getMap(),      CoordMap.Y.getMap(),        CoordMap.ONE.getMap(),      1,  1),
+            NEG_Z(CoordMap.X.getMap(),      CoordMap.Y.getMap(),        CoordMap.NEG_ONE.getMap(),  3,  1),
+            POS_X(CoordMap.ONE.getMap(),    CoordMap.Y.getMap(),        CoordMap.X.getMap(),        2,  1),
+            NEG_X(CoordMap.NEG_ONE.getMap(), CoordMap.Y.getMap(),       CoordMap.X.getMap(),        0,  1);
 
             private final @Getter BiFunction<Integer, Integer, Float> xFunc;
             private final @Getter BiFunction<Integer, Integer, Float> yFunc;
