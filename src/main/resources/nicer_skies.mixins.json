@@ -1,7 +1,7 @@
 {
   "required": true,
   "minVersion": "0.8",
-  "package": "codes.ztereohype.nicerskies.mixin",
+  "package": "dev.ztereohype.nicerskies.mixin",
   "compatibilityLevel": "JAVA_17",
   "mixins": [],
   "client": [

@@ -15,18 +15,19 @@
   "environment": "client",
   "entrypoints": {
     "client": [
-      "codes.ztereohype.nicerskies.NicerSkies"
+      "dev.ztereohype.nicerskies.NicerSkies"
     ],
     "modmenu": [
-      "codes.ztereohype.nicerskies.gui.ModMenuSettingsApi"
+      "dev.ztereohype.nicerskies.gui.ModMenuSettingsApi"
     ]
   },
   "mixins": [
     "nicer_skies.mixins.json"
   ],
+  "accessWidener" : "nicer_skies.accesswidener",
   "depends": {
     "fabricloader": ">=0.14.6",
-    "minecraft": ["1.20.2"],
+    "minecraft": ["1.20.3","1.20.4"],
     "java": ">=17"
   }
 }

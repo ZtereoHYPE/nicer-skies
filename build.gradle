@@ -8,6 +8,10 @@ archivesBaseName = project.archives_base_name
 version = project.mod_version + "+" + project.minecraft_version
 group = project.maven_group
 
+loom {
+	accessWidenerPath = file("src/main/resources/nicer_skies.accesswidener")
+}
+
 repositories {
 	mavenCentral()
 	maven { url "https://maven.parchmentmc.org" }		// parchment mappings
