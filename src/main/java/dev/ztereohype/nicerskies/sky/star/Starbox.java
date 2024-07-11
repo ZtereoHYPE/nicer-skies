@@ -14,7 +14,7 @@ import java.util.List;
 
 
 public class Starbox {
-    private static final BufferBuilder STAR_BUFFER_BUILDER = Tesselator.getInstance().getBuilder();
+    private static final Tesselator STAR_TESSELATOR = Tesselator.getInstance();
 
     private final List<Star> starList = new ArrayList<>();
     private final VertexBuffer starBuffer;
@@ -52,15 +52,15 @@ public class Starbox {
 
     public void updateStars(int ticks) {
         // todo: make a fast path for when sodium is installed (vertexbufferwriter), or just make our own.
-        STAR_BUFFER_BUILDER.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_COLOR);
+        BufferBuilder bufferBuilder = STAR_TESSELATOR.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_COLOR);
 
         for (Star star : starList) {
             star.tick(ticks);
-            star.setVertices(STAR_BUFFER_BUILDER);
+            star.setVertices(bufferBuilder);
         }
 
         starBuffer.bind();
-        starBuffer.upload(STAR_BUFFER_BUILDER.end());
+        starBuffer.upload(bufferBuilder.build());
     }
 }
 

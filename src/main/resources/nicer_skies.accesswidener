@@ -1,2 +1,2 @@
 accessWidener v2 named
-accessible method net/minecraft/client/gui/components/Checkbox <init> (IILnet/minecraft/network/chat/Component;Lnet/minecraft/client/gui/Font;ZLnet/minecraft/client/gui/components/Checkbox$OnValueChange;)V
+accessible method net/minecraft/client/gui/components/Checkbox <init> (IIILnet/minecraft/network/chat/Component;Lnet/minecraft/client/gui/Font;ZLnet/minecraft/client/gui/components/Checkbox$OnValueChange;)V

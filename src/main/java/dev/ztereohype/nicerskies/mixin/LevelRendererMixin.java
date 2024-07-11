@@ -1,5 +1,6 @@
 package dev.ztereohype.nicerskies.mixin;
 
+import com.mojang.blaze3d.vertex.Tesselator;
 import dev.ztereohype.nicerskies.NicerSkies;
 import dev.ztereohype.nicerskies.config.Config;
 import dev.ztereohype.nicerskies.sky.SkyManager;
@@ -15,6 +16,7 @@ import net.minecraft.client.renderer.ShaderInstance;
 import net.minecraft.world.level.material.FogType;
 import net.minecraft.world.phys.Vec3;
 import org.joml.Matrix4f;
+import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
@@ -33,6 +35,7 @@ public abstract class LevelRendererMixin {
     @Shadow
     private ClientLevel level;
 
+    @Final
     @Shadow
     private Minecraft minecraft;
 
@@ -74,7 +77,7 @@ public abstract class LevelRendererMixin {
             at = @At(value = "INVOKE", target = "Lnet/minecraft/client/multiplayer/ClientLevel;getStarBrightness(F)F", shift = At.Shift.BEFORE),
             locals = LocalCapture.CAPTURE_FAILHARD
     )
-    private void drawSkybox(PoseStack poseStack, Matrix4f matrix4f, float f, Camera camera, boolean bl, Runnable runnable, CallbackInfo ci, FogType fogType, Vec3 vec3, float g, float h, float i, BufferBuilder bufferBuilder, ShaderInstance shaderInstance, float[] fs, float j, Matrix4f matrix4f3, float l, int s, int t, int n, float u, float p, float q, float r) {
+    private void drawSkybox(Matrix4f matrix4f, Matrix4f matrix4f2, float f, Camera camera, boolean bl, Runnable runnable, CallbackInfo ci, FogType fogType, PoseStack poseStack, Vec3 vec3, float g, float h, float i, Tesselator tesselator, ShaderInstance shaderInstance, float[] fs, float j, Matrix4f matrix4f4, float l, BufferBuilder bufferBuilder2, int s, int t, int n, float u, float p, float q, float r) {
         Config config = NicerSkies.getInstance().getConfig();
         SkyManager skyManager = NicerSkies.getInstance().getSkyManager();
 
@@ -82,6 +85,6 @@ public abstract class LevelRendererMixin {
 
         if (!config.areNebulasEnabled() || skyManager.getSkybox() == null) return;
 
-        skyManager.getSkybox().render(poseStack, matrix4f);
+        skyManager.getSkybox().render(poseStack, matrix4f2);
     }
 }

@@ -11,7 +11,7 @@ import java.util.function.Consumer;
 
 public class TooltippedCheckbox extends Checkbox {
     public TooltippedCheckbox(int i, int j, Component component, Font font, boolean bl, Checkbox.OnValueChange onValueChange, Tooltip tooltip) {
-        super(i, j, component, font, bl, onValueChange);
+        super(i, j, 128, component, font, bl, onValueChange);
         this.setTooltip(tooltip);
     }
 

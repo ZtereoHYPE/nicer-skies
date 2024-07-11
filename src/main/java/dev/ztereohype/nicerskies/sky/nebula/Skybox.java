@@ -128,47 +128,48 @@ public class Skybox {
     }
 
     private void generateVertices() {
-        BufferBuilder skyboxBuilder = Tesselator.getInstance().getBuilder();
-        skyboxBuilder.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
+        BufferBuilder skyboxBuilder = Tesselator
+                .getInstance()
+                .begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
 
         // +z face
-        skyboxBuilder.vertex(-80F, -80F, 80F).uv(0.25f, 0.25f).endVertex();
-        skyboxBuilder.vertex(-80F, 80F, 80F).uv(0.25f, 0.5f).endVertex();
-        skyboxBuilder.vertex(80F, 80F, 80F).uv(0.5f, 0.5f).endVertex();
-        skyboxBuilder.vertex(80F, -80F, 80F).uv(0.5f, 0.25f).endVertex();
+        skyboxBuilder.addVertex(-80f, -80f, 80f).setUv(0.25f, 0.25f);
+        skyboxBuilder.addVertex(-80f, 80f, 80f).setUv(0.25f, 0.5f);
+        skyboxBuilder.addVertex(80f, 80f, 80f).setUv(0.5f, 0.5f);
+        skyboxBuilder.addVertex(80f, -80f, 80f).setUv(0.5f, 0.25f);
 
         // -z face
-        skyboxBuilder.vertex(-80F, -80F, -80F).uv(0.75f, 0.25f).endVertex();
-        skyboxBuilder.vertex(80F, -80F, -80F).uv(1f, 0.25f).endVertex();
-        skyboxBuilder.vertex(80F, 80F, -80F).uv(1f, 0.5f).endVertex();
-        skyboxBuilder.vertex(-80F, 80F, -80F).uv(0.75f, 0.5f).endVertex();
+        skyboxBuilder.addVertex(-80f, -80f, -80f).setUv(0.75f, 0.25f);
+        skyboxBuilder.addVertex(80f, -80f, -80f).setUv(1f, 0.25f);
+        skyboxBuilder.addVertex(80f, 80f, -80f).setUv(1f, 0.5f);
+        skyboxBuilder.addVertex(-80f, 80f, -80f).setUv(0.75f, 0.5f);
 
         // bottom face
-        skyboxBuilder.vertex(-80F, -80F, -80F).uv(0.5f, 0.5f).endVertex();
-        skyboxBuilder.vertex(-80F, -80F, 80F).uv(0.5f, 0.75f).endVertex();
-        skyboxBuilder.vertex(80F, -80F, 80F).uv(0.75f, 0.75f).endVertex();
-        skyboxBuilder.vertex(80F, -80F, -80F).uv(0.75f, 0.5f).endVertex();
+        skyboxBuilder.addVertex(-80f, -80f, -80f).setUv(0.5f, 0.5f);
+        skyboxBuilder.addVertex(-80f, -80f, 80f).setUv(0.5f, 0.75f);
+        skyboxBuilder.addVertex(80f, -80f, 80f).setUv(0.75f, 0.75f);
+        skyboxBuilder.addVertex(80f, -80f, -80f).setUv(0.75f, 0.5f);
 
         // top face
-        skyboxBuilder.vertex(-80F, 80F, -80F).uv(0.5f, 0f).endVertex();
-        skyboxBuilder.vertex(80F, 80F, -80F).uv(0.75f, 0f).endVertex();
-        skyboxBuilder.vertex(80F, 80F, 80F).uv(0.75f, 0.25f).endVertex();
-        skyboxBuilder.vertex(-80F, 80F, 80F).uv(0.5f, 0.25f).endVertex();
+        skyboxBuilder.addVertex(-80f, 80f, -80f).setUv(0.5f, 0f);
+        skyboxBuilder.addVertex(80f, 80f, -80f).setUv(0.75f, 0f);
+        skyboxBuilder.addVertex(80f, 80f, 80f).setUv(0.75f, 0.25f);
+        skyboxBuilder.addVertex(-80f, 80f, 80f).setUv(0.5f, 0.25f);
 
         // +x face
-        skyboxBuilder.vertex(80F, -80F, -80F).uv(0.5f, 0.25f).endVertex();
-        skyboxBuilder.vertex(80F, -80F, 80F).uv(0.75f, 0.25f).endVertex();
-        skyboxBuilder.vertex(80F, 80F, 80F).uv(0.75f, 0.5f).endVertex();
-        skyboxBuilder.vertex(80F, 80F, -80F).uv(0.5f, 0.5f).endVertex();
+        skyboxBuilder.addVertex(80f, -80f, -80f).setUv(0.5f, 0.25f);
+        skyboxBuilder.addVertex(80f, -80f, 80f).setUv(0.75f, 0.25f);
+        skyboxBuilder.addVertex(80f, 80f, 80f).setUv(0.75f, 0.5f);
+        skyboxBuilder.addVertex(80f, 80f, -80f).setUv(0.5f, 0.5f);
 
         // -x face
-        skyboxBuilder.vertex(-80F, -80F, -80F).uv(0f, 0.25f).endVertex();
-        skyboxBuilder.vertex(-80F, 80F, -80F).uv(0f, 0.5f).endVertex();
-        skyboxBuilder.vertex(-80F, 80F, 80F).uv(0.25f, 0.5f).endVertex();
-        skyboxBuilder.vertex(-80F, -80F, 80F).uv(0.25f, 0.25f).endVertex();
+        skyboxBuilder.addVertex(-80f, -80f, -80f).setUv(0f, 0.25f);
+        skyboxBuilder.addVertex(-80f, 80f, -80f).setUv(0f, 0.5f);
+        skyboxBuilder.addVertex(-80f, 80f, 80f).setUv(0.25f, 0.5f);
+        skyboxBuilder.addVertex(-80f, -80f, 80f).setUv(0.25f, 0.25f);
 
         skyboxBuffer.bind();
-        skyboxBuffer.upload(skyboxBuilder.end());
+        skyboxBuffer.upload(skyboxBuilder.build());
     }
 
     private float getSkyboxBrightness(ClientLevel level) {
