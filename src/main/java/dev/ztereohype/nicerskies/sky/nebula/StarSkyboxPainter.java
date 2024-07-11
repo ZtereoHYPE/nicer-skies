@@ -9,10 +9,11 @@ public class StarSkyboxPainter extends SkyboxPainter {
     private static final float SCALING_FACTOR = 1.5f;
     private static final float BASE_NOISE_AMOUNT = 0.45f; // the amount of base noise to keep
 
+    private final PerlinNoise noise;
     private final Gradient starryGradient;
 
     public StarSkyboxPainter(PerlinNoise noise, Gradient starryGradient) {
-        super(noise);
+        this.noise = noise;
         this.starryGradient = starryGradient;
     }
 

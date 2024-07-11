@@ -6,6 +6,7 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.level.levelgen.synth.PerlinNoise;
 
 public class NebulaSkyboxPainter extends SkyboxPainter {
+    private final PerlinNoise noise;
     private final float scalingFactor;
     private final float noiseAmount; // the amount of base noise to keep
     private final int baseColourStrength;
@@ -13,7 +14,7 @@ public class NebulaSkyboxPainter extends SkyboxPainter {
     private final Gradient nebulaGradient;
 
     public NebulaSkyboxPainter(PerlinNoise noise, Gradient nebulaGradient, float scalingFactor, float noiseAmount, int baseColourStrength) {
-        super(noise);
+        this.noise = noise;
         this.nebulaGradient = nebulaGradient;
 
         this.scalingFactor = scalingFactor;
