@@ -1,0 +1,31 @@
+{
+  "nicer_skies.menu.settings": "Nicer Skies 設定",
+
+  "nicer_skies.menu.subtitle.feature_toggles": "機能の切り替え",
+  "nicer_skies.menu.subtitle.nebula_settings": "星雲の設定",
+
+  "nicer_skies.menu.compatibility_warning": "§l§e注意:§r \n他のModとの互換性のために「瞬く星」を無効にしてください。\n(例: Custom Stars)",
+
+  "nicer_skies.option.render_nebulas": "星雲を描画",
+  "nicer_skies.option.dimensional_nebulas": "カスタムディメンションで表示",
+  "nicer_skies.option.twinkle_stars": "瞬く星",
+  "nicer_skies.option.custom_lightmap": "光の色を調整",
+
+  "nicer_skies.option.render_during_day": "昼間も描画する",
+  "nicer_skies.option.nebula_transparency": "星雲の透明度: %d",
+  "nicer_skies.option.nebula_amount": "星雲の広がり: %d",
+  "nicer_skies.option.background_strength": "背景の明るさ: %d",
+  "nicer_skies.option.nebula_scale": "星雲のスケール: %dx",
+
+  "nicer_skies.option.custom_lightmap.tooltip": "ブロックの光を少し暖色寄りにし、夜を暗く青みがかった色に調整します。",
+
+  "nicer_skies.option.nebula_scale.tooltip": "星雲の大きさを決定します。値を大きくすると星雲は小さく見え、値を小さくすると大きく見えます。",
+  "nicer_skies.option.nebula_transparency.tooltip": "星雲の透明度を決定します。値を大きくすると星雲がよりはっきり見えるようになります。",
+  "nicer_skies.option.nebula_amount.tooltip": "空をどれくらい星雲で覆うかを決定します。値が小さいほど、小さくまばらな星雲になります。",
+  "nicer_skies.option.background_strength.tooltip": "虹色の背景の強さを決定します。値を大きくすると背景がより明るく表示されます。",
+  "nicer_skies.option.render_during_day.tooltip": "昼間にも星雲を描画するかどうかを決定します。無効にすると、星雲は夜にのみ描画され、フェードイン・フェードアウトします。",
+
+  "nicer_skies.menu.back": "戻る",
+  "nicer_skies.menu.reset": "リセット",
+  "nicer_skies.menu.apply": "適用"
+}
