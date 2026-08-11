@@ -15,11 +15,6 @@ import net.minecraft.client.gui.components.StringWidget;
 import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.FormattedText;
-import net.minecraft.network.chat.Style;
-import net.minecraft.util.ARGB;
-
-import java.util.List;
 
 
 public class ConfigScreen extends Screen {
@@ -174,7 +169,7 @@ public class ConfigScreen extends Screen {
     @Override
     public void onClose() {
         wipeConfig();
-        minecraft.setScreen(lastScreen);
+        minecraft.gui.setScreen(lastScreen);
     }
 
     private void wipeConfig() {

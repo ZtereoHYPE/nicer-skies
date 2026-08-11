@@ -28,6 +28,8 @@ public class NicerSkiesRenderer {
     private @Getter Starbox starbox;
     private Skybox skybox;
 
+    private int ticks = 42;
+
     private final Gradient starGradient = new Gradient() {{
         add(0.0f, 255, 179, 97);
         add(0.2f, 255, 249, 253);
@@ -45,6 +47,10 @@ public class NicerSkiesRenderer {
     public void buildBuffers() {
         this.starbox = new Starbox();
         this.skybox = new Skybox();
+    }
+
+    public boolean hasBuiltBuffers() {
+        return this.starbox != null && this.skybox != null;
     }
 
     public void generateSky(long seed) {
@@ -67,9 +73,10 @@ public class NicerSkiesRenderer {
         }
     }
 
-    public void tick(int ticks) {
+    public void tick() {
+        ticks++;
         if (starbox != null) {
-            this.starbox.updateStars(ticks + 42);
+            this.starbox.updateStars(ticks);
         }
     }
 }

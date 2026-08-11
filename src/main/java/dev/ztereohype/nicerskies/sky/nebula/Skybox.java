@@ -1,43 +1,38 @@
 package dev.ztereohype.nicerskies.sky.nebula;
 
+import com.mojang.blaze3d.PrimitiveTopology;
 import com.mojang.blaze3d.buffers.GpuBuffer;
 import com.mojang.blaze3d.buffers.GpuBufferSlice;
 import com.mojang.blaze3d.pipeline.BlendFunction;
 import com.mojang.blaze3d.pipeline.ColorTargetState;
-import com.mojang.blaze3d.pipeline.DepthStencilState;
 import com.mojang.blaze3d.pipeline.RenderPipeline;
-import com.mojang.blaze3d.platform.CompareOp;
-import com.mojang.blaze3d.shaders.UniformType;
+import com.mojang.blaze3d.pipeline.RenderTarget;
 import com.mojang.blaze3d.systems.RenderPass;
 import com.mojang.blaze3d.textures.AddressMode;
 import com.mojang.blaze3d.textures.FilterMode;
 import com.mojang.blaze3d.textures.GpuSampler;
 import com.mojang.blaze3d.textures.GpuTextureView;
+import com.mojang.blaze3d.vertex.ByteBufferBuilder;
 import com.mojang.blaze3d.vertex.MeshData;
-import com.mojang.math.Axis;
 import dev.ztereohype.nicerskies.NicerSkies;
-import dev.ztereohype.nicerskies.config.Config;
 import com.mojang.blaze3d.platform.NativeImage;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.BufferBuilder;
 import com.mojang.blaze3d.vertex.DefaultVertexFormat;
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.blaze3d.vertex.Tesselator;
-import com.mojang.blaze3d.vertex.VertexFormat;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.BindGroupLayouts;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.client.renderer.texture.DynamicTexture;
 import net.minecraft.resources.Identifier;
-import net.minecraft.util.Mth;
 import org.joml.Matrix4f;
 import org.joml.Matrix4fStack;
 import org.joml.Vector3f;
 import org.joml.Vector4f;
 
+import java.util.Optional;
 import java.util.OptionalDouble;
-import java.util.OptionalInt;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -50,14 +45,14 @@ public class Skybox {
 
     private static final RenderPipeline SKYBOX_PIPELINE = RenderPipelines.register(
             RenderPipeline.builder()
-                          .withUniform("DynamicTransforms",UniformType.UNIFORM_BUFFER)
-                          .withUniform("Projection", UniformType.UNIFORM_BUFFER)
+                          .withBindGroupLayout(BindGroupLayouts.MATRICES_PROJECTION)
+                          .withBindGroupLayout(BindGroupLayouts.SAMPLER0)
                           .withLocation(Identifier.fromNamespaceAndPath(NicerSkies.MOD_ID, "pipeline/twinkling_stars"))
                           .withVertexShader("core/position_tex")
                           .withFragmentShader("core/position_tex")
-                          .withSampler("Sampler0")
                           .withColorTargetState(new ColorTargetState(BlendFunction.OVERLAY))
-                          .withVertexFormat(DefaultVertexFormat.POSITION_TEX, VertexFormat.Mode.QUADS)
+                          .withVertexBinding(0, DefaultVertexFormat.POSITION_TEX)
+                          .withPrimitiveTopology(PrimitiveTopology.QUADS)
                           .build()
     );
 
@@ -65,14 +60,10 @@ public class Skybox {
     private final ExecutorService skyExecutor = Executors.newCachedThreadPool();
     private final GpuSampler skyboxSampler;
     private final @Getter GpuBuffer skyboxBuffer;
-    RenderSystem.AutoStorageIndexBuffer indexBuffer = RenderSystem.getSequentialBuffer(VertexFormat.Mode.QUADS);
+    RenderSystem.AutoStorageIndexBuffer indexBuffer = RenderSystem.getSequentialBuffer(PrimitiveTopology.QUADS);
 
     public Skybox() {
-        try (MeshData skyboxData = generateVertices().build()) {
-            this.skyboxBuffer = RenderSystem
-                    .getDevice()
-                    .createBuffer(() -> "Nicer Skies Skybox", GpuBuffer.USAGE_VERTEX, skyboxData.vertexBuffer());
-        }
+        skyboxBuffer = generateVertices();
 
         skyboxSampler = RenderSystem.getDevice().createSampler(
                 AddressMode.CLAMP_TO_EDGE, AddressMode.CLAMP_TO_EDGE,
@@ -82,12 +73,9 @@ public class Skybox {
     }
 
     @SuppressWarnings("ConstantConditions")
-    public void render(PoseStack poseStack, float brightness) {
+    public void render(final RenderTarget renderTarget, PoseStack poseStack, float brightness) {
         // uniform values
-        Matrix4fStack viewModelMatrix = RenderSystem.getModelViewStack();
-        viewModelMatrix.pushMatrix();
-        viewModelMatrix.mul(poseStack.last().pose());
-
+        Matrix4f viewModelMatrix = RenderSystem.getModelViewMatrixCopy().mul(poseStack.last().pose());
         float alpha = NicerSkies.getInstance().getConfig().getNebulaStrength();
         if (!NicerSkies.getInstance().getConfig().getRenderDuringDay()) {
             alpha *= brightness;
@@ -97,23 +85,21 @@ public class Skybox {
                 .writeTransform(viewModelMatrix, new Vector4f(alpha, alpha, alpha, alpha), new Vector3f(), new Matrix4f());
 
         // resources
-        GpuTextureView color = Minecraft.getInstance().getMainRenderTarget().getColorTextureView();
-        GpuTextureView depth = Minecraft.getInstance().getMainRenderTarget().getDepthTextureView();
+        GpuTextureView color = renderTarget.getColorTextureView();
+        GpuTextureView depth = renderTarget.getDepthTextureView();
 
         // render
         try (RenderPass renderPass = RenderSystem.getDevice()
                                                  .createCommandEncoder()
-                                                 .createRenderPass(() -> "Nicer Skies Skybox", color, OptionalInt.empty(), depth, OptionalDouble.empty())) {
+                                                 .createRenderPass(() -> "Nicer Skies Skybox", color, Optional.empty(), depth, OptionalDouble.empty())) {
             renderPass.setPipeline(Skybox.SKYBOX_PIPELINE);
             RenderSystem.bindDefaultUniforms(renderPass);
             renderPass.setUniform("DynamicTransforms", dynamicTransforms);
             renderPass.bindTexture("Sampler0", this.skyTexture.getTextureView(), this.skyboxSampler);
-            renderPass.setVertexBuffer(0, this.skyboxBuffer);
+            renderPass.setVertexBuffer(0, this.skyboxBuffer.slice());
             renderPass.setIndexBuffer(this.indexBuffer.getBuffer(24), this.indexBuffer.type());
-            renderPass.drawIndexed(0, 0, 36, 1);
+            renderPass.drawIndexed(36, 1, 0, 0, 0);
         }
-
-        viewModelMatrix.popMatrix();
     }
 
     public void paint(SkyboxPainter painter) {
@@ -190,47 +176,51 @@ public class Skybox {
         }
     }
 
-    private static BufferBuilder generateVertices() {
-        BufferBuilder skyboxBuilder = Tesselator
-                .getInstance()
-                .begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
+    private GpuBuffer generateVertices() {
+        try (ByteBufferBuilder byteBufferBuilder = ByteBufferBuilder.exactlySized(24 * DefaultVertexFormat.POSITION_TEX.getVertexSize())) {
+            BufferBuilder skyboxBuilder = new BufferBuilder(byteBufferBuilder, PrimitiveTopology.QUADS, DefaultVertexFormat.POSITION_TEX);
 
-        // +z face
-        skyboxBuilder.addVertex(-60f, -60f, 60f).setUv(0.25f, 0.25f);
-        skyboxBuilder.addVertex(-60f, 60f, 60f).setUv(0.25f, 0.5f);
-        skyboxBuilder.addVertex(60f, 60f, 60f).setUv(0.5f, 0.5f);
-        skyboxBuilder.addVertex(60f, -60f, 60f).setUv(0.5f, 0.25f);
+            // +z face
+            skyboxBuilder.addVertex(-60f, -60f, 60f).setUv(0.25f, 0.25f);
+            skyboxBuilder.addVertex(-60f, 60f, 60f).setUv(0.25f, 0.5f);
+            skyboxBuilder.addVertex(60f, 60f, 60f).setUv(0.5f, 0.5f);
+            skyboxBuilder.addVertex(60f, -60f, 60f).setUv(0.5f, 0.25f);
 
-        // -z face
-        skyboxBuilder.addVertex(-60f, -60f, -60f).setUv(0.75f, 0.25f);
-        skyboxBuilder.addVertex(60f, -60f, -60f).setUv(1f, 0.25f);
-        skyboxBuilder.addVertex(60f, 60f, -60f).setUv(1f, 0.5f);
-        skyboxBuilder.addVertex(-60f, 60f, -60f).setUv(0.75f, 0.5f);
+            // -z face
+            skyboxBuilder.addVertex(-60f, -60f, -60f).setUv(0.75f, 0.25f);
+            skyboxBuilder.addVertex(60f, -60f, -60f).setUv(1f, 0.25f);
+            skyboxBuilder.addVertex(60f, 60f, -60f).setUv(1f, 0.5f);
+            skyboxBuilder.addVertex(-60f, 60f, -60f).setUv(0.75f, 0.5f);
 
-        // bottom face
-        skyboxBuilder.addVertex(-60f, -60f, -60f).setUv(0.5f, 0.5f);
-        skyboxBuilder.addVertex(-60f, -60f, 60f).setUv(0.5f, 0.75f);
-        skyboxBuilder.addVertex(60f, -60f, 60f).setUv(0.75f, 0.75f);
-        skyboxBuilder.addVertex(60f, -60f, -60f).setUv(0.75f, 0.5f);
+            // bottom face
+            skyboxBuilder.addVertex(-60f, -60f, -60f).setUv(0.5f, 0.5f);
+            skyboxBuilder.addVertex(-60f, -60f, 60f).setUv(0.5f, 0.75f);
+            skyboxBuilder.addVertex(60f, -60f, 60f).setUv(0.75f, 0.75f);
+            skyboxBuilder.addVertex(60f, -60f, -60f).setUv(0.75f, 0.5f);
 
-        // top face
-        skyboxBuilder.addVertex(-60f, 60f, -60f).setUv(0.5f, 0f);
-        skyboxBuilder.addVertex(60f, 60f, -60f).setUv(0.75f, 0f);
-        skyboxBuilder.addVertex(60f, 60f, 60f).setUv(0.75f, 0.25f);
-        skyboxBuilder.addVertex(-60f, 60f, 60f).setUv(0.5f, 0.25f);
+            // top face
+            skyboxBuilder.addVertex(-60f, 60f, -60f).setUv(0.5f, 0f);
+            skyboxBuilder.addVertex(60f, 60f, -60f).setUv(0.75f, 0f);
+            skyboxBuilder.addVertex(60f, 60f, 60f).setUv(0.75f, 0.25f);
+            skyboxBuilder.addVertex(-60f, 60f, 60f).setUv(0.5f, 0.25f);
 
-        // +x face
-        skyboxBuilder.addVertex(60f, -60f, -60f).setUv(0.5f, 0.25f);
-        skyboxBuilder.addVertex(60f, -60f, 60f).setUv(0.75f, 0.25f);
-        skyboxBuilder.addVertex(60f, 60f, 60f).setUv(0.75f, 0.5f);
-        skyboxBuilder.addVertex(60f, 60f, -60f).setUv(0.5f, 0.5f);
+            // +x face
+            skyboxBuilder.addVertex(60f, -60f, -60f).setUv(0.5f, 0.25f);
+            skyboxBuilder.addVertex(60f, -60f, 60f).setUv(0.75f, 0.25f);
+            skyboxBuilder.addVertex(60f, 60f, 60f).setUv(0.75f, 0.5f);
+            skyboxBuilder.addVertex(60f, 60f, -60f).setUv(0.5f, 0.5f);
 
-        // -x face
-        skyboxBuilder.addVertex(-60f, -60f, -60f).setUv(0f, 0.25f);
-        skyboxBuilder.addVertex(-60f, 60f, -60f).setUv(0f, 0.5f);
-        skyboxBuilder.addVertex(-60f, 60f, 60f).setUv(0.25f, 0.5f);
-        skyboxBuilder.addVertex(-60f, -60f, 60f).setUv(0.25f, 0.25f);
+            // -x face
+            skyboxBuilder.addVertex(-60f, -60f, -60f).setUv(0f, 0.25f);
+            skyboxBuilder.addVertex(-60f, 60f, -60f).setUv(0f, 0.5f);
+            skyboxBuilder.addVertex(-60f, 60f, 60f).setUv(0.25f, 0.5f);
+            skyboxBuilder.addVertex(-60f, -60f, 60f).setUv(0.25f, 0.25f);
 
-        return skyboxBuilder;
+            try (MeshData skyboxData = skyboxBuilder.build()) {
+                return RenderSystem
+                        .getDevice()
+                        .createBuffer(() -> "Nicer Skies Skybox", GpuBuffer.USAGE_VERTEX, skyboxData.vertexBuffer());
+            }
+        }
     }
 }

@@ -1,10 +1,12 @@
 package dev.ztereohype.nicerskies.sky.star;
 
+import com.mojang.blaze3d.PrimitiveTopology;
 import com.mojang.blaze3d.buffers.GpuBuffer;
 import com.mojang.blaze3d.buffers.GpuBufferSlice;
 import com.mojang.blaze3d.pipeline.BlendFunction;
 import com.mojang.blaze3d.pipeline.ColorTargetState;
 import com.mojang.blaze3d.pipeline.RenderPipeline;
+import com.mojang.blaze3d.pipeline.RenderTarget;
 import com.mojang.blaze3d.shaders.UniformType;
 import com.mojang.blaze3d.systems.RenderPass;
 import com.mojang.blaze3d.systems.RenderSystem;
@@ -16,9 +18,8 @@ import dev.ztereohype.nicerskies.NicerSkies;
 import dev.ztereohype.nicerskies.core.Gradient;
 import com.mojang.blaze3d.vertex.BufferBuilder;
 import com.mojang.blaze3d.vertex.DefaultVertexFormat;
-import com.mojang.blaze3d.vertex.VertexFormat;
 import lombok.Getter;
-import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.BindGroupLayouts;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.resources.Identifier;
 import net.minecraft.util.ARGB;
@@ -31,22 +32,20 @@ import org.joml.Matrix4fStack;
 import org.joml.Vector3f;
 import org.joml.Vector4f;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Optional;
 import java.util.OptionalDouble;
-import java.util.OptionalInt;
 
 
 public class Starbox {
     public static final RenderPipeline STAR_PIPELINE = RenderPipelines.register(
             RenderPipeline.builder()
-                          .withUniform("DynamicTransforms", UniformType.UNIFORM_BUFFER)
-                          .withUniform("Projection", UniformType.UNIFORM_BUFFER)
+                          .withBindGroupLayout(BindGroupLayouts.MATRICES_PROJECTION)
                           .withLocation(Identifier.fromNamespaceAndPath(NicerSkies.MOD_ID, "pipeline/twinkling_stars"))
                           .withVertexShader("core/position_color")
                           .withFragmentShader("core/position_color")
                           .withColorTargetState(new ColorTargetState(BlendFunction.OVERLAY))
-                          .withVertexFormat(DefaultVertexFormat.POSITION_COLOR, VertexFormat.Mode.QUADS)
+                          .withVertexBinding(0, DefaultVertexFormat.POSITION_COLOR)
+                          .withPrimitiveTopology(PrimitiveTopology.QUADS)
                           .build()
     );
 
@@ -55,7 +54,7 @@ public class Starbox {
 
     private final Star[] starList = new Star[STAR_COUNT];
     private final @Getter GpuBuffer starBuffer;
-    RenderSystem.AutoStorageIndexBuffer indexBuffer = RenderSystem.getSequentialBuffer(VertexFormat.Mode.QUADS);
+    RenderSystem.AutoStorageIndexBuffer indexBuffer = RenderSystem.getSequentialBuffer(PrimitiveTopology.QUADS);
 
     private @Getter int starIndexCount = 0;
 
@@ -93,7 +92,7 @@ public class Starbox {
 
     public void updateStars(int ticks) {
         try (ByteBufferBuilder byteBufferBuilder = ByteBufferBuilder.exactlySized(STARBOX_SIZE)) {
-            BufferBuilder bufferBuilder = new BufferBuilder(byteBufferBuilder, VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_COLOR);
+            BufferBuilder bufferBuilder = new BufferBuilder(byteBufferBuilder, PrimitiveTopology.QUADS, DefaultVertexFormat.POSITION_COLOR);
 
             ProfilerFiller profilerFiller = Profiler.get();
             profilerFiller.push("tick stars");
@@ -118,7 +117,7 @@ public class Starbox {
         }
     }
 
-    public void render(PoseStack poseStack, float brightness) {
+    public void render(final RenderTarget renderTarget, PoseStack poseStack, float brightness) {
         // uniform values
         Matrix4fStack viewModelMatrix = RenderSystem.getModelViewStack();
         viewModelMatrix.pushMatrix();
@@ -128,19 +127,19 @@ public class Starbox {
                 .writeTransform(viewModelMatrix, new Vector4f(brightness, brightness, brightness, brightness), new Vector3f(), new Matrix4f());
 
         // resources
-        GpuTextureView color = Minecraft.getInstance().getMainRenderTarget().getColorTextureView();
-        GpuTextureView depth = Minecraft.getInstance().getMainRenderTarget().getDepthTextureView();
+        GpuTextureView color = renderTarget.getColorTextureView();
+        GpuTextureView depth = renderTarget.getDepthTextureView();
 
         // render pass
         try (RenderPass renderPass = RenderSystem.getDevice()
                                                  .createCommandEncoder()
-                                                 .createRenderPass(() -> "Nicer Skies Stars", color, OptionalInt.empty(), depth, OptionalDouble.empty())) {
+                                                 .createRenderPass(() -> "Nicer Skies Stars", color, Optional.empty(), depth, OptionalDouble.empty())) {
             renderPass.setPipeline(STAR_PIPELINE);
             RenderSystem.bindDefaultUniforms(renderPass);
             renderPass.setUniform("DynamicTransforms", gpuBufferSlice);
-            renderPass.setVertexBuffer(0, this.starBuffer);
+            renderPass.setVertexBuffer(0, this.starBuffer.slice());
             renderPass.setIndexBuffer(indexBuffer.getBuffer(this.starIndexCount), indexBuffer.type());
-            renderPass.drawIndexed(0, 0, this.starIndexCount, 1);
+            renderPass.drawIndexed(this.starIndexCount, 1, 0, 0, 0);
         }
 
         viewModelMatrix.popMatrix();
