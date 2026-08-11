@@ -1,10 +1,10 @@
 {
-  "nicer_skies.menu.settings": "Optionen für Nicer Skies",
+  "nicer_skies.menu.settings": "§lOptionen für Nicer Skies",
 
-  "nicer_skies.menu.subtitle.feature_toggles": "Eigenschaften ein-/ausschalten",
-  "nicer_skies.menu.subtitle.nebula_settings": "Nebel Einstellungen",
+  "nicer_skies.menu.subtitle.feature_toggles": "§lEigenschaften ein-/ausschalten",
+  "nicer_skies.menu.subtitle.nebula_settings": "§lNebel Einstellungen",
 
-  "nicer_skies.menu.compatibility_warning": "§l§e§nAchtung:§r \nUm Kompabilität mit anderen mods (wie z.B. Custom Stars) herzustellen, muss \"Twinkle Stars\" deaktiviert werden",
+  "nicer_skies.menu.compatibility_warning": "§e§lAchtung:§r \nUm Kompabilität mit anderen mods (wie z.B. Custom Stars) herzustellen, muss \"Twinkle Stars\" deaktiviert werden",
 
   "nicer_skies.option.render_nebulas": "Nebel Rendern",
   "nicer_skies.option.dimensional_nebulas": "In anderen Dimensionen",

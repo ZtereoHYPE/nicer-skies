@@ -1,90 +1,37 @@
 package dev.ztereohype.nicerskies.mixin;
 
-import com.mojang.blaze3d.vertex.Tesselator;
+import com.mojang.blaze3d.buffers.GpuBufferSlice;
 import dev.ztereohype.nicerskies.NicerSkies;
 import dev.ztereohype.nicerskies.config.Config;
-import dev.ztereohype.nicerskies.sky.SkyManager;
-import com.mojang.blaze3d.vertex.BufferBuilder;
-import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.blaze3d.vertex.VertexBuffer;
-import net.minecraft.client.Camera;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.multiplayer.ClientLevel;
-import net.minecraft.client.renderer.GameRenderer;
+import dev.ztereohype.nicerskies.sky.NicerSkiesRenderer;
 import net.minecraft.client.renderer.LevelRenderer;
-import net.minecraft.client.renderer.ShaderInstance;
-import net.minecraft.world.level.material.FogType;
-import net.minecraft.world.phys.Vec3;
-import org.joml.Matrix4f;
-import org.spongepowered.asm.mixin.Final;
+import net.minecraft.client.renderer.SkyRenderer;
+import net.minecraft.client.renderer.state.SkyRenderState;
+import net.minecraft.util.profiling.Profiler;
+import net.minecraft.util.profiling.ProfilerFiller;
+import net.minecraft.world.level.dimension.DimensionType;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.ModifyArg;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 
 
 @Mixin(value = LevelRenderer.class, priority = 999)
 public abstract class LevelRendererMixin {
     @Shadow
-    private VertexBuffer starBuffer;
-    @Shadow
     private int ticks;
-    @Shadow
-    private ClientLevel level;
-
-    @Final
-    @Shadow
-    private Minecraft minecraft;
-
-    @Inject(at = @At("HEAD"), method = "createStars", cancellable = true)
-    private void generateStars(CallbackInfo ci) {
-        Config config = NicerSkies.getInstance().getConfig();
-        if (!config.areTwinlkingStarsEnabled()) return;
-
-        starBuffer = new VertexBuffer(VertexBuffer.Usage.DYNAMIC);
-        ci.cancel();
-    }
 
     @Inject(at = @At("HEAD"), method = "tick")
-    private void tickStars(CallbackInfo ci) {
+    private void nicerSkies_tickStars(CallbackInfo ci) {
         Config config = NicerSkies.getInstance().getConfig();
-        SkyManager skyManager = NicerSkies.getInstance().getSkyManager();
+        NicerSkiesRenderer nicerSkiesRenderer = NicerSkies.getInstance().getRenderer();
 
         if (!config.areTwinlkingStarsEnabled()) return;
-        if (this.level.getStarBrightness(0) < 0.0F) return;
 
-        skyManager.tick(ticks);
-    }
-
-    @ModifyArg(
-            method = "renderSky",
-            at = @At(value = "INVOKE", target = "Lcom/mojang/blaze3d/vertex/VertexBuffer;drawWithShader(Lorg/joml/Matrix4f;Lorg/joml/Matrix4f;Lnet/minecraft/client/renderer/ShaderInstance;)V", ordinal = 1),
-            index = 2
-    )
-    private ShaderInstance injectStarColour(ShaderInstance shaderInstance) {
-        Config config = NicerSkies.getInstance().getConfig();
-
-        if (!config.areTwinlkingStarsEnabled()) return shaderInstance;
-
-        return GameRenderer.getPositionColorShader();
-    }
-
-    @Inject(
-            method = "renderSky",
-            at = @At(value = "INVOKE", target = "Lnet/minecraft/client/multiplayer/ClientLevel;getStarBrightness(F)F", shift = At.Shift.BEFORE),
-            locals = LocalCapture.CAPTURE_FAILHARD
-    )
-    private void drawSkybox(Matrix4f matrix4f, Matrix4f matrix4f2, float f, Camera camera, boolean bl, Runnable runnable, CallbackInfo ci, FogType fogType, PoseStack poseStack, Vec3 vec3, float g, float h, float i, Tesselator tesselator, ShaderInstance shaderInstance, float[] fs, float j, Matrix4f matrix4f4, float l, BufferBuilder bufferBuilder2, int s, int t, int n, float u, float p, float q, float r) {
-        Config config = NicerSkies.getInstance().getConfig();
-        SkyManager skyManager = NicerSkies.getInstance().getSkyManager();
-
-        if (!config.renderInOtherDimensions() && minecraft.level.dimension() != ClientLevel.OVERWORLD) return;
-
-        if (!config.areNebulasEnabled() || skyManager.getSkybox() == null) return;
-
-        skyManager.getSkybox().render(poseStack, matrix4f2);
+        ProfilerFiller profilerFiller = Profiler.get();
+        profilerFiller.push("Nicer Skies");
+        nicerSkiesRenderer.tick(ticks);
+        profilerFiller.pop();
     }
 }

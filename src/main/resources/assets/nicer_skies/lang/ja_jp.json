@@ -1,10 +1,10 @@
 {
-  "nicer_skies.menu.settings": "Nicer Skies 設定",
+  "nicer_skies.menu.settings": "§lNicer Skies 設定",
 
-  "nicer_skies.menu.subtitle.feature_toggles": "機能の切り替え",
-  "nicer_skies.menu.subtitle.nebula_settings": "星雲の設定",
+  "nicer_skies.menu.subtitle.feature_toggles": "§l機能の切り替え",
+  "nicer_skies.menu.subtitle.nebula_settings": "§l星雲の設定",
 
-  "nicer_skies.menu.compatibility_warning": "§l§e注意:§r \n他のModとの互換性のために「瞬く星」を無効にしてください。\n(例: Custom Stars)",
+  "nicer_skies.menu.compatibility_warning": "§e§l注意:§r \n他のModとの互換性のために「瞬く星」を無効にしてください。\n(例: Custom Stars)",
 
   "nicer_skies.option.render_nebulas": "星雲を描画",
   "nicer_skies.option.dimensional_nebulas": "カスタムディメンションで表示",

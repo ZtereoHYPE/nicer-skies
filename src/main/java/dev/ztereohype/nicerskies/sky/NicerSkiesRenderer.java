@@ -1,23 +1,31 @@
 package dev.ztereohype.nicerskies.sky;
 
+import com.mojang.blaze3d.pipeline.BlendFunction;
+import com.mojang.blaze3d.pipeline.RenderPipeline;
+import com.mojang.blaze3d.shaders.UniformType;
+import com.mojang.blaze3d.vertex.DefaultVertexFormat;
+import com.mojang.blaze3d.vertex.VertexFormat;
 import dev.ztereohype.nicerskies.NicerSkies;
 import dev.ztereohype.nicerskies.config.Config;
 import dev.ztereohype.nicerskies.core.Gradient;
-import dev.ztereohype.nicerskies.mixin.LevelRendererAccessor;
-import dev.ztereohype.nicerskies.mixin.LevelRendererInvoker;
+import dev.ztereohype.nicerskies.core.HashedSeedManager;
+import dev.ztereohype.nicerskies.sky.nebula.DebugSkyboxPainter;
 import dev.ztereohype.nicerskies.sky.nebula.NebulaSkyboxPainter;
 import dev.ztereohype.nicerskies.sky.nebula.Skybox;
+import dev.ztereohype.nicerskies.sky.nebula.SkyboxPainter;
 import dev.ztereohype.nicerskies.sky.star.Starbox;
 import lombok.Getter;
-import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.RenderPipelines;
+import net.minecraft.resources.Identifier;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.levelgen.synth.PerlinNoise;
 
 import java.util.stream.IntStream;
 
+
 @Getter
-public class SkyManager {
-    private Starbox starbox;
+public class NicerSkiesRenderer {
+    private @Getter Starbox starbox;
     private Skybox skybox;
 
     private final Gradient starGradient = new Gradient() {{
@@ -34,29 +42,34 @@ public class SkyManager {
         add(1.0f, 253, 194, 220);
     }};
 
-    public void generateSky(long seed) {
-        Config cm = NicerSkies.getInstance().getConfig();
+    public void buildBuffers() {
+        this.starbox = new Starbox();
+        this.skybox = new Skybox();
+    }
 
+    public void generateSky(long seed) {
         RandomSource randomSource = RandomSource.create(seed);
+
+        Config cm = NicerSkies.getInstance().getConfig();
 
         if (cm.areNebulasEnabled()) {
             PerlinNoise perlinNoise = PerlinNoise.create(randomSource.fork(), IntStream.of(1, 2, 3, 4, 5, 6, 7));
-            NebulaSkyboxPainter painter = new NebulaSkyboxPainter(perlinNoise, nebulaGradient, cm.getNebulaNoiseScale(), cm.getNebulaNoiseAmount(), cm.getNebulaBaseColourAmount());
-            this.skybox = new Skybox(painter);
+            float noiseScale = cm.getNebulaNoiseScale();
+            float noiseAmount = cm.getNebulaNoiseAmount();
+            int bgStrength = cm.getNebulaBaseColourAmount();
+
+            SkyboxPainter painter = new NebulaSkyboxPainter(perlinNoise, nebulaGradient, noiseScale, noiseAmount, bgStrength);
+            this.skybox.paint(painter);
         }
 
         if (cm.areTwinlkingStarsEnabled()) {
-            LevelRendererAccessor levelRenderer = (LevelRendererAccessor) Minecraft.getInstance().levelRenderer;
-            starbox = new Starbox(randomSource, starGradient, levelRenderer.nicerSkies_getStarBuffer());
-            tick(levelRenderer.nicerSkies_getTicks());
-        } else {
-            ((LevelRendererInvoker)Minecraft.getInstance().levelRenderer).nicerSkies_generateSky();
+            this.starbox.generateStars(randomSource, starGradient);
         }
     }
 
     public void tick(int ticks) {
         if (starbox != null) {
-            this.starbox.updateStars(ticks);
+            this.starbox.updateStars(ticks + 42);
         }
     }
 }

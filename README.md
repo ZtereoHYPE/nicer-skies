@@ -10,12 +10,6 @@ Stars will twinkle and be of slightly different colours
 This mod renders a seed/server-dependent skybox that is 100% generated in runtime with cool shader-like nebulas.
 
 
-![2022-11-07_15 12 41](https://user-images.githubusercontent.com/57519662/207486041-0547425d-da33-47eb-8e37-ca3e94ea9f2d.png)
-## Lightmap changes
-The lightmap has been a little tweaked to my personal preference to be a little more vibrant and dark, but it's 100% sure that these changes will be optional in the final product.
-
-
-
 ![lightmap](https://user-images.githubusercontent.com/57519662/195578328-053f5d84-a9db-4e44-a4a7-4ecc4f25af37.gif)
 
 ## Shaders

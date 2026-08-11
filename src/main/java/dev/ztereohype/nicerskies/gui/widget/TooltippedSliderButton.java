@@ -22,11 +22,11 @@ public class TooltippedSliderButton extends AbstractSliderButton {
 
     @Override
     protected void updateMessage() {
-        this.setMessage(sliderMoved.apply(Double.valueOf(value)));
+        this.setMessage(sliderMoved.apply(value));
     }
 
     @Override
     protected void applyValue() {
-        sliderReleased.accept(Double.valueOf(value));
+        sliderReleased.accept(value);
     }
 }

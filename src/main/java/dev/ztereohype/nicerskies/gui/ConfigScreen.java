@@ -2,7 +2,7 @@ package dev.ztereohype.nicerskies.gui;
 
 import dev.ztereohype.nicerskies.NicerSkies;
 import dev.ztereohype.nicerskies.config.Config;
-import dev.ztereohype.nicerskies.core.NebulaSeedManager;
+import dev.ztereohype.nicerskies.core.HashedSeedManager;
 import dev.ztereohype.nicerskies.gui.widget.Separator;
 import dev.ztereohype.nicerskies.gui.widget.TooltippedCheckbox;
 import dev.ztereohype.nicerskies.gui.widget.TooltippedSliderButton;
@@ -15,9 +15,9 @@ import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.FormattedText;
 import net.minecraft.network.chat.Style;
+import net.minecraft.util.ARGB;
 
 import java.util.List;
-import java.util.function.Supplier;
 
 
 public class ConfigScreen extends Screen {
@@ -27,7 +27,6 @@ public class ConfigScreen extends Screen {
 
     private boolean invalidated = false;
 
-    private TooltippedCheckbox dimensionalNebulasBtn;
     private Button resetBtn;
     private Button applyBtn;
 
@@ -48,9 +47,7 @@ public class ConfigScreen extends Screen {
 
         // initial values
         boolean renderNebulas = newConfig.isRenderNebulas();
-        boolean dimensionalNebulas = newConfig.isNebulasInOtherDimensions();
         boolean twinkleStars = newConfig.isTwinklingStars();
-        boolean lightmapTweaked = newConfig.isLightmapTweaked();
 
         boolean renderDuringDay = newConfig.getNebulaConfig().isRenderDuringDay();
         float nebulaStrength = newConfig.getNebulaConfig().getNebulaStrength();
@@ -65,22 +62,10 @@ public class ConfigScreen extends Screen {
             invalidated = true;
         }, null));
 
-        this.dimensionalNebulasBtn = new TooltippedCheckbox(40, (Y += btnDst), Component.translatable("nicer_skies.option.dimensional_nebulas"), f, dimensionalNebulas, (cb, selected) -> {
-            newConfig.setNebulasInOtherDimensions(selected);
-            invalidated = true;
-        }, null);
-        addRenderableWidget(this.dimensionalNebulasBtn);
-
         addRenderableWidget(new TooltippedCheckbox(20, (Y += btnDst), Component.translatable("nicer_skies.option.twinkle_stars"), f, twinkleStars, (cb, selected) -> {
             newConfig.setTwinklingStars(selected);
             invalidated = true;
         }, null));
-
-        addRenderableWidget(new TooltippedCheckbox(20, (Y += btnDst), Component.translatable("nicer_skies.option.custom_lightmap"), f, lightmapTweaked, (cb, selected) -> {
-            newConfig.setLightmapTweaked(selected);
-            Minecraft.getInstance().gameRenderer.lightTexture().tick();
-            invalidated = true;
-        }, Tooltip.create(Component.translatable("nicer_skies.option.custom_lightmap.tooltip"))));
 
         addRenderableOnly(new Separator(this.width / 2, 30, this.height - 70));
         Y = 60;
@@ -163,18 +148,16 @@ public class ConfigScreen extends Screen {
 
     @Override
     public void render(GuiGraphics g, int mouseX, int mouseY, float partialTick) {
-        this.dimensionalNebulasBtn.active = this.newConfig.isRenderNebulas();
         this.resetBtn.active = !isDefaultNebulaSettings();
         this.applyBtn.active = this.invalidated;
 
-        this.renderBackground(g, 0, 0, 0);
         super.render(g, mouseX, mouseY, partialTick);
 
-        g.drawCenteredString(this.font, this.title, this.width / 2, 10, 16777215);
+        g.drawCenteredString(this.font, this.title, this.width / 2, 10, ARGB.white(255));
         g.drawCenteredString(this.font, Component.translatable("nicer_skies.menu.subtitle.feature_toggles"),
-                this.width / 4, 36, 16777215);
+                this.width / 4, 36, ARGB.white(255));
         g.drawCenteredString(this.font, Component.translatable("nicer_skies.menu.subtitle.nebula_settings"),
-                3 * this.width / 4, 36, 16777215);
+                3 * this.width / 4, 36, ARGB.white(255));
 
         drawWrappedComponent(g, Component.translatable("nicer_skies.menu.compatibility_warning"), 20, 160,
                 this.width / 2 - 40);
@@ -192,8 +175,9 @@ public class ConfigScreen extends Screen {
     }
 
     private void regenerateSky() {
-        if (NebulaSeedManager.canGenerateSky()) {
-            NicerSkies.getInstance().getSkyManager().generateSky(NebulaSeedManager.getSeed());
+        if (HashedSeedManager.canGenerateSky()) {
+            long seed = HashedSeedManager.getSeed();
+            NicerSkies.getInstance().getRenderer().generateSky(seed);
         }
         invalidated = false;
     }

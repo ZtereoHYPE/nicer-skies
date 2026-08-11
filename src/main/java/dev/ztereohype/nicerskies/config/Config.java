@@ -13,14 +13,13 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public class Config {
-    public static final ConfigData DEFAULT_CONFIG = new ConfigData(false,
+    public static final ConfigData DEFAULT_CONFIG = new ConfigData(
             true,
             true,
             1f,
             0.5f,
             1f,
             128,
-            false,
             false
     );
 
@@ -48,8 +47,7 @@ public class Config {
                 }
             }
         } catch (IOException e) {
-            NicerSkies.LOGGER.warning("Failed to read config file, falling back to default config.");
-            e.printStackTrace();
+            NicerSkies.LOGGER.warn("Failed to read config file, falling back to default config.");
             config = DEFAULT_CONFIG.toBuilder().build();
         }
 
@@ -60,10 +58,6 @@ public class Config {
         this.configData = configData;
         this.file = file;
         save(file);
-    }
-
-    public boolean getLightmapTweaked() {
-        return configData.isLightmapTweaked();
     }
 
     public boolean areTwinlkingStarsEnabled() {
@@ -94,10 +88,6 @@ public class Config {
         return configData.getNebulaConfig().isRenderDuringDay();
     }
 
-    public boolean renderInOtherDimensions() {
-        return configData.isNebulasInOtherDimensions();
-    }
-
     public void updateConfig(ConfigData configData) {
         this.configData = configData.toBuilder().build();
         this.configData.setNebulaConfig(configData.getNebulaConfig().toBuilder().build());
@@ -108,8 +98,7 @@ public class Config {
         try (FileWriter writer = new FileWriter(file)) {
             writer.write(gson.toJson(configData));
         } catch (IOException e) {
-            e.printStackTrace();
-            NicerSkies.LOGGER.warning("Failed to save config file!");
+            NicerSkies.LOGGER.warn("Failed to save config file!");
         }
     }
 
@@ -117,18 +106,14 @@ public class Config {
     @AllArgsConstructor
     @Builder(toBuilder = true)
     public final static class ConfigData {
-        private boolean lightmapTweaked;
         private boolean twinklingStars;
         private boolean renderNebulas;
-        private boolean nebulasInOtherDimensions;
 
         private NebulaConfigData nebulaConfig;
 
-        private ConfigData(boolean tweakedLigthmap, boolean twinklingStars, boolean nebulas, float nebulaStrength, float nebulaNoiseAmount, float nebulaNoiseScale, int baseColourAmount, boolean renderDuringDay, boolean renderInOtherDimensions) {
-            this.lightmapTweaked = tweakedLigthmap;
+        private ConfigData(boolean twinklingStars, boolean nebulas, float nebulaStrength, float nebulaNoiseAmount, float nebulaNoiseScale, int baseColourAmount, boolean renderDuringDay) {
             this.twinklingStars = twinklingStars;
             this.renderNebulas = nebulas;
-            this.nebulasInOtherDimensions = renderInOtherDimensions;
 
             this.nebulaConfig = new NebulaConfigData(nebulaStrength, nebulaNoiseAmount, nebulaNoiseScale, baseColourAmount, renderDuringDay);
         }

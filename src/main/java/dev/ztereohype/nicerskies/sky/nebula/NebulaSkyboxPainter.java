@@ -1,7 +1,7 @@
 package dev.ztereohype.nicerskies.sky.nebula;
 
 import dev.ztereohype.nicerskies.core.Gradient;
-import net.minecraft.util.FastColor;
+import net.minecraft.util.ARGB;
 import net.minecraft.util.Mth;
 import net.minecraft.world.level.levelgen.synth.PerlinNoise;
 
@@ -69,6 +69,6 @@ public class NebulaSkyboxPainter extends SkyboxPainter {
         // Get the alpha depending on the background factor
         int alpha = Mth.clamp((int) ((1 - bgFactor) * 255), 50, 255);
 
-        return FastColor.ARGB32.color(alpha, b, g, r);
+        return ARGB.color(alpha, b, g, r);
     }
 }

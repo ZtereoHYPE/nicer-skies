@@ -1,10 +1,10 @@
 {
-  "nicer_skies.menu.settings": "Impostazioni di Nicer Skies",
+  "nicer_skies.menu.settings": "§lImpostazioni di Nicer Skies",
 
-  "nicer_skies.menu.subtitle.feature_toggles": "Attiva features",
-  "nicer_skies.menu.subtitle.nebula_settings": "Impostazioni nebule",
+  "nicer_skies.menu.subtitle.feature_toggles": "§lAttiva features",
+  "nicer_skies.menu.subtitle.nebula_settings": "§lImpostazioni nebule",
 
-  "nicer_skies.menu.compatibility_warning": "§l§e§nNota:§r \nDisattiva \"Stelle Scintillanti\" per essere compatibile con altre mod. (e.g. Custom Stars)",
+  "nicer_skies.menu.compatibility_warning": "§e§lNota:§r \nDisattiva \"Stelle Scintillanti\" per essere compatibile con altre mod. (e.g. Custom Stars)",
 
   "nicer_skies.option.render_nebulas": "Renderizza nebule",
   "nicer_skies.option.dimensional_nebulas": "In dimensioni custom",

@@ -1,22 +1,23 @@
 package dev.ztereohype.nicerskies;
 
 import dev.ztereohype.nicerskies.config.Config;
-import dev.ztereohype.nicerskies.sky.SkyManager;
+import dev.ztereohype.nicerskies.sky.NicerSkiesRenderer;
 import lombok.Getter;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.loader.api.FabricLoader;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.File;
-import java.util.logging.LogManager;
-import java.util.logging.Logger;
 
 @Getter
 public class NicerSkies implements ClientModInitializer {
-    public static final Logger LOGGER = LogManager.getLogManager().getLogger("nicer-skies");
+    public static final String MOD_ID = "nicer-skies";
+    public static final Logger LOGGER = LoggerFactory.getLogger(MOD_ID);
     private static NicerSkies INSTANCE;
 
     private Config config;
-    private SkyManager skyManager;
+    private NicerSkiesRenderer renderer;
 
     @Override
     public void onInitializeClient() {
@@ -26,7 +27,7 @@ public class NicerSkies implements ClientModInitializer {
                                                            .getConfigDir()
                                                            .toFile(), "nicerskies.json"));
 
-        this.skyManager = new SkyManager();
+        this.renderer = new NicerSkiesRenderer();
     }
 
     public static NicerSkies getInstance() {

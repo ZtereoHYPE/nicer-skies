@@ -6,11 +6,8 @@
   "mixins": [],
   "client": [
     "ClientLevelMixin",
-    "LevelRendererAccessor",
-    "LevelRendererInvoker",
     "LevelRendererMixin",
-    "LightTextureMixin",
-    "MinecraftMixin"
+    "SkyRendererMixin"
   ],
   "server": [],
   "injectors": {

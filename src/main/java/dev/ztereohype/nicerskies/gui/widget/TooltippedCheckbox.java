@@ -5,8 +5,7 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Checkbox;
 import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.network.chat.Component;
-
-import java.util.function.Consumer;
+import org.jspecify.annotations.NonNull;
 
 
 public class TooltippedCheckbox extends Checkbox {
@@ -16,8 +15,8 @@ public class TooltippedCheckbox extends Checkbox {
     }
 
     @Override
-    public void renderWidget(GuiGraphics guiGraphics, int i, int j, float f) {
+    public void renderContents(@NonNull GuiGraphics guiGraphics, int i, int j, float f) {
         this.setAlpha(this.active ? 1.0F : 0.5F);
-        super.renderWidget(guiGraphics, i, j, f);
+        super.renderContents(guiGraphics, i, j, f);
     }
 }
