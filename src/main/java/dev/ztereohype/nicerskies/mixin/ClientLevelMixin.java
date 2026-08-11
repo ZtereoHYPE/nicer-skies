@@ -20,11 +20,11 @@ public abstract class ClientLevelMixin implements ClientLevelAccessor {
     private long hashedSeed;
 
     @Inject(method = "<init>", at = @At("TAIL"))
-    private void saveHashedSeed(ClientPacketListener clientPacketListener, ClientLevel.ClientLevelData clientLevelData, ResourceKey resourceKey, Holder holder, int i, int j, LevelRenderer levelRenderer, boolean bl, long l, int k, CallbackInfo ci) {
-        this.hashedSeed = l; // store the seed to be able to regenerate things in settings
+    private void saveHashedSeed(ClientPacketListener connection, ClientLevel.ClientLevelData levelData, ResourceKey dimension, Holder dimensionType, int serverChunkRadius, int serverSimulationDistance, LevelRenderer levelRenderer, boolean isDebug, long biomeZoomSeed, int seaLevel, CallbackInfo ci) {
+        this.hashedSeed = biomeZoomSeed; // store the seed to be able to regenerate things in settings
 
         // build the required parts of the sky
-        NicerSkies.getInstance().getRenderer().generateSky(l);
+        NicerSkies.getInstance().getRenderer().generateSky(biomeZoomSeed);
     }
 
     @Override

@@ -3,6 +3,7 @@ package dev.ztereohype.nicerskies.sky.star;
 import com.mojang.blaze3d.buffers.GpuBuffer;
 import com.mojang.blaze3d.buffers.GpuBufferSlice;
 import com.mojang.blaze3d.pipeline.BlendFunction;
+import com.mojang.blaze3d.pipeline.ColorTargetState;
 import com.mojang.blaze3d.pipeline.RenderPipeline;
 import com.mojang.blaze3d.shaders.UniformType;
 import com.mojang.blaze3d.systems.RenderPass;
@@ -44,8 +45,7 @@ public class Starbox {
                           .withLocation(Identifier.fromNamespaceAndPath(NicerSkies.MOD_ID, "pipeline/twinkling_stars"))
                           .withVertexShader("core/position_color")
                           .withFragmentShader("core/position_color")
-                          .withBlend(BlendFunction.OVERLAY)
-                          .withDepthWrite(false)
+                          .withColorTargetState(new ColorTargetState(BlendFunction.OVERLAY))
                           .withVertexFormat(DefaultVertexFormat.POSITION_COLOR, VertexFormat.Mode.QUADS)
                           .build()
     );

@@ -3,7 +3,10 @@ package dev.ztereohype.nicerskies.sky.nebula;
 import com.mojang.blaze3d.buffers.GpuBuffer;
 import com.mojang.blaze3d.buffers.GpuBufferSlice;
 import com.mojang.blaze3d.pipeline.BlendFunction;
+import com.mojang.blaze3d.pipeline.ColorTargetState;
+import com.mojang.blaze3d.pipeline.DepthStencilState;
 import com.mojang.blaze3d.pipeline.RenderPipeline;
+import com.mojang.blaze3d.platform.CompareOp;
 import com.mojang.blaze3d.shaders.UniformType;
 import com.mojang.blaze3d.systems.RenderPass;
 import com.mojang.blaze3d.textures.AddressMode;
@@ -25,7 +28,6 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.RenderPipelines;
-import net.minecraft.client.renderer.state.SkyRenderState;
 import net.minecraft.client.renderer.texture.DynamicTexture;
 import net.minecraft.resources.Identifier;
 import net.minecraft.util.Mth;
@@ -54,8 +56,7 @@ public class Skybox {
                           .withVertexShader("core/position_tex")
                           .withFragmentShader("core/position_tex")
                           .withSampler("Sampler0")
-                          .withBlend(BlendFunction.OVERLAY)
-                          .withDepthWrite(false)
+                          .withColorTargetState(new ColorTargetState(BlendFunction.OVERLAY))
                           .withVertexFormat(DefaultVertexFormat.POSITION_TEX, VertexFormat.Mode.QUADS)
                           .build()
     );

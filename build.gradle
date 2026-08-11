@@ -1,5 +1,5 @@
 plugins {
-	id 'fabric-loom' version '1.16-SNAPSHOT'
+	id 'net.fabricmc.fabric-loom' version '1.17-SNAPSHOT'
 }
 
 version = project.mod_version + "+" + project.minecraft_version
@@ -21,19 +21,17 @@ repositories {
 dependencies {
 	// essentials & mappings
 	minecraft "com.mojang:minecraft:${project.minecraft_version}"
-	modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
-	mappings loom.officialMojangMappings()
+	implementation "net.fabricmc:fabric-loader:${project.loader_version}"
 
 	// apis
-	modImplementation "com.terraformersmc:modmenu:${project.modmenu_version}"
-	modRuntimeOnly include(fabricApi.module("fabric-command-api-v2", project.fabric_version))
-	modRuntimeOnly include(fabricApi.module("fabric-lifecycle-events-v1", project.fabric_version))
+	implementation "com.terraformersmc:modmenu:${project.modmenu_version}"
+	localRuntime include(fabricApi.module("fabric-command-api-v2", project.fabric_version))
+	localRuntime include(fabricApi.module("fabric-lifecycle-events-v1", project.fabric_version))
 
 	// devenv mods
-	modRuntimeOnly("com.terraformersmc:modmenu:${project.modmenu_version}") { transitive = false }
-	modRuntimeOnly fabricApi.module("fabric-screen-api-v1", project.fabric_version)
-	modRuntimeOnly fabricApi.module("fabric-resource-loader-v0", project.fabric_version)
-	modRuntimeOnly fabricApi.module("fabric-key-binding-api-v1", project.fabric_version)
+	localRuntime("com.terraformersmc:modmenu:${project.modmenu_version}") { transitive = false }
+	localRuntime fabricApi.module("fabric-screen-api-v1", project.fabric_version)
+	localRuntime fabricApi.module("fabric-resource-loader-v0", project.fabric_version)
 
 	// libraries
 	compileOnly "org.projectlombok:lombok:${project.lombok_version}"
@@ -56,8 +54,8 @@ processResources {
 java {
 	withSourcesJar()
 
-	sourceCompatibility = JavaVersion.VERSION_21
-	targetCompatibility = JavaVersion.VERSION_21
+	sourceCompatibility = JavaVersion.VERSION_25
+	targetCompatibility = JavaVersion.VERSION_25
 }
 
 jar {

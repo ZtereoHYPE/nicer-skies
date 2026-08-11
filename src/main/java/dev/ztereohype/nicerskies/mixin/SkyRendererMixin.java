@@ -39,26 +39,26 @@ abstract class SkyRendererMixin {
                      ordinal = 3,
                      shift = At.Shift.BEFORE)
     )
-    private void renderNebulas(PoseStack poseStack, float f, float g, float h, MoonPhase moonPhase, float i, float j, CallbackInfo ci) {
+    private void renderNebulas(PoseStack poseStack, float sunAngle, float moonAngle, float starAngle, MoonPhase moonPhase, float rainBrightness, float starBrightness, CallbackInfo ci) {
         Config config = NicerSkies.getInstance().getConfig();
         NicerSkiesRenderer nicerSkiesRenderer = NicerSkies.getInstance().getRenderer();
 
         if (config.areNebulasEnabled() && nicerSkiesRenderer.getSkybox() != null) {
             poseStack.pushPose();
-            poseStack.mulPose(Axis.XP.rotation(h));
-            float brightness = j * 2.0f; // max star brightness is 0.5
+            poseStack.mulPose(Axis.XP.rotation(starAngle));
+            float brightness = starBrightness * 2.0f; // max star brightness is 0.5
             nicerSkiesRenderer.getSkybox().render(poseStack, brightness);
             poseStack.popPose();
         }
     }
 
     @Inject(method = "renderStars", at = @At("HEAD"), cancellable = true)
-    private void renderTwinklingStars(float f, PoseStack poseStack, CallbackInfo ci) {
+    private void renderTwinklingStars(float starBrightness, PoseStack poseStack, CallbackInfo ci) {
         Config config = NicerSkies.getInstance().getConfig();
         NicerSkiesRenderer nicerSkiesRenderer = NicerSkies.getInstance().getRenderer();
 
         if (config.areTwinlkingStarsEnabled() && nicerSkiesRenderer.getStarbox() != null) {
-            nicerSkiesRenderer.getStarbox().render(poseStack, f);
+            nicerSkiesRenderer.getStarbox().render(poseStack, starBrightness);
             ci.cancel();
         }
     }

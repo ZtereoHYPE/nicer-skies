@@ -1,7 +1,7 @@
 package dev.ztereohype.nicerskies.gui.widget;
 
 import net.minecraft.client.gui.Font;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.Checkbox;
 import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.network.chat.Component;
@@ -15,8 +15,8 @@ public class TooltippedCheckbox extends Checkbox {
     }
 
     @Override
-    public void renderContents(@NonNull GuiGraphics guiGraphics, int i, int j, float f) {
+    public void extractContents(@NonNull GuiGraphicsExtractor guiGraphics, int i, int j, float f) {
         this.setAlpha(this.active ? 1.0F : 0.5F);
-        super.renderContents(guiGraphics, i, j, f);
+        super.extractContents(guiGraphics, i, j, f);
     }
 }

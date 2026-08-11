@@ -8,8 +8,10 @@ import dev.ztereohype.nicerskies.gui.widget.TooltippedCheckbox;
 import dev.ztereohype.nicerskies.gui.widget.TooltippedSliderButton;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.Button;
+import net.minecraft.client.gui.components.MultiLineTextWidget;
+import net.minecraft.client.gui.components.StringWidget;
 import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
@@ -55,8 +57,23 @@ public class ConfigScreen extends Screen {
         int nebulaBaseColourAmount = newConfig.getNebulaConfig().getBaseColourAmount();
         float nebulaNoiseScale = newConfig.getNebulaConfig().getNebulaNoiseScale();
 
-        int Y = 60;
+        var titleString = new StringWidget(this.title, this.font);
+        titleString.setPosition(this.width / 2 - titleString.getWidth() / 2, 10);
+        addRenderableWidget(titleString);
 
+        var featuresString = new StringWidget(Component.translatable("nicer_skies.menu.subtitle.feature_toggles"), this.font);
+        featuresString.setPosition(this.width / 4 - featuresString.getWidth() / 2, 36);
+        addRenderableWidget(featuresString);
+
+        var nebulaString = new StringWidget(Component.translatable("nicer_skies.menu.subtitle.nebula_settings"), this.font);
+        nebulaString.setPosition(3 * this.width / 4 - nebulaString.getWidth() / 2, 36);
+        addRenderableWidget(nebulaString);
+
+        var warningString = new MultiLineTextWidget(20, 160, Component.translatable("nicer_skies.menu.compatibility_warning"), this.font)
+                .setMaxWidth(this.width / 2 - 40);
+        addRenderableWidget(warningString);
+
+        int Y = 60;
         addRenderableWidget(new TooltippedCheckbox(20, Y, Component.translatable("nicer_skies.option.render_nebulas"), f, renderNebulas, (cb, selected) -> {
             newConfig.setRenderNebulas(selected);
             invalidated = true;
@@ -147,20 +164,11 @@ public class ConfigScreen extends Screen {
     }
 
     @Override
-    public void render(GuiGraphics g, int mouseX, int mouseY, float partialTick) {
+    public void extractRenderState(GuiGraphicsExtractor g, int mouseX, int mouseY, float partialTick) {
         this.resetBtn.active = !isDefaultNebulaSettings();
         this.applyBtn.active = this.invalidated;
 
-        super.render(g, mouseX, mouseY, partialTick);
-
-        g.drawCenteredString(this.font, this.title, this.width / 2, 10, ARGB.white(255));
-        g.drawCenteredString(this.font, Component.translatable("nicer_skies.menu.subtitle.feature_toggles"),
-                this.width / 4, 36, ARGB.white(255));
-        g.drawCenteredString(this.font, Component.translatable("nicer_skies.menu.subtitle.nebula_settings"),
-                3 * this.width / 4, 36, ARGB.white(255));
-
-        drawWrappedComponent(g, Component.translatable("nicer_skies.menu.compatibility_warning"), 20, 160,
-                this.width / 2 - 40);
+        super.extractRenderState(g, mouseX, mouseY, partialTick);
     }
 
     @Override
@@ -184,17 +192,6 @@ public class ConfigScreen extends Screen {
 
     private boolean isDefaultNebulaSettings() {
         return newConfig.getNebulaConfig().equals(Config.DEFAULT_CONFIG.getNebulaConfig());
-    }
-
-    private void drawWrappedComponent(GuiGraphics g, FormattedText component, int x, int y, int wrapWidth) {
-        Minecraft mc = Minecraft.getInstance();
-        List<FormattedText> lines = mc.font.getSplitter().splitLines(component, wrapWidth, Style.EMPTY);
-
-        int amount = lines.size();
-        for (int i = 0; i < amount; i++) {
-            FormattedText renderable = lines.get(i);
-            g.drawString(font, renderable.getString(), x, y + i * 9, 0xFFFFFFFF);
-        }
     }
 
     private float mapScaleToValue(double value) {

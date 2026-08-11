@@ -1,15 +1,11 @@
 package dev.ztereohype.nicerskies.mixin;
 
-import com.mojang.blaze3d.buffers.GpuBufferSlice;
 import dev.ztereohype.nicerskies.NicerSkies;
 import dev.ztereohype.nicerskies.config.Config;
 import dev.ztereohype.nicerskies.sky.NicerSkiesRenderer;
 import net.minecraft.client.renderer.LevelRenderer;
-import net.minecraft.client.renderer.SkyRenderer;
-import net.minecraft.client.renderer.state.SkyRenderState;
 import net.minecraft.util.profiling.Profiler;
 import net.minecraft.util.profiling.ProfilerFiller;
-import net.minecraft.world.level.dimension.DimensionType;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
